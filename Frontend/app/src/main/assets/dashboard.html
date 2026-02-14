@@ -1,0 +1,850 @@
+<!DOCTYPE html>
+<html lang="en">
+<head>
+    <meta charset="UTF-8">
+    <meta name="viewport" content="width=device-width, initial-scale=1.0">
+    <title data-i18n-key="page_title">Farming Dashboard</title>
+    <link rel="preconnect" href="https://fonts.googleapis.com">
+    <link rel="preconnect" href="https://fonts.gstatic.com" crossorigin>
+    <link href="https://fonts.googleapis.com/css2?family=Inter:wght@400;500;600;700&display=swap" rel="stylesheet">
+    <script src="https://cdn.tailwindcss.com"></script>
+    <style>
+        body {
+            font-family: 'Inter', sans-serif;
+            background-color: #F0FFF0;
+            padding-bottom: 80px;
+        }
+
+        .floating-emoji-container {
+            position: absolute;
+            top: 0;
+            left: 0;
+            width: 100%;
+            height: 100%;
+            pointer-events: none;
+            overflow: hidden;
+            z-index: 0;
+        }
+        .floating-emoji {
+            position: absolute;
+            opacity: 0.15;
+            animation-name: float-and-wave-card;
+            animation-iteration-count: infinite;
+            animation-timing-function: linear;
+            font-size: 2rem;
+        }
+
+        @keyframes float-and-wave-card {
+            0% { transform: translate(0, 0) scale(1); }
+            25% { transform: translate(2rem, -1rem) scale(1.1); }
+            50% { transform: translate(0, -2rem) scale(1.2); }
+            75% { transform: translate(-2rem, -1rem) scale(1.1); }
+            100% { transform: translate(0, 0) scale(1); }
+        }
+
+        .clickable:hover {
+            background-color: #f0fdf4;
+            transform: translateY(-2px);
+            transition: all 0.2s ease;
+        }
+        .clickable:active {
+            transform: scale(0.98);
+        }
+
+        .message-box {
+            position: fixed;
+            top: 2rem;
+            left: 50%;
+            transform: translateX(-50%);
+            background-color: rgba(52, 211, 153, 0.9);
+            color: white;
+            padding: 1rem 2rem;
+            border-radius: 1rem;
+            box-shadow: 0 4px 6px rgba(0, 0, 0, 0.1);
+            z-index: 1000;
+            display: none;
+            text-align: center;
+        }
+
+        .priority-high { background-color: #fee2e2; color: #991b1b; }
+        .priority-medium { background-color: #fef3c7; color: #92400e; }
+        .priority-low { background-color: #dcfce7; color: #166534; }
+
+        .nav-bar {
+            position: fixed;
+            bottom: 0;
+            left: 0;
+            right: 0;
+            background: white;
+            box-shadow: 0 -4px 6px rgba(0, 0, 0, 0.1);
+            z-index: 100;
+        }
+
+        .nav-item {
+            flex: 1;
+            display: flex;
+            flex-direction: column;
+            align-items: center;
+            padding: 0.75rem 0;
+            cursor: pointer;
+            transition: all 0.2s ease;
+            border-top: 3px solid transparent;
+        }
+
+        .nav-item:hover {
+            background-color: #f0fdf4;
+        }
+
+        .nav-item.active {
+            color: #16a34a;
+            border-top-color: #16a34a;
+        }
+
+        .nav-item.active .nav-icon {
+            transform: scale(1.1);
+        }
+
+        .nav-icon {
+            font-size: 1.5rem;
+            transition: transform 0.2s ease;
+        }
+
+        .nav-label {
+            font-size: 0.75rem;
+            margin-top: 0.25rem;
+            font-weight: 500;
+        }
+
+        .task-checkbox {
+            width: 24px;
+            height: 24px;
+            border: 2px solid #16a34a;
+            border-radius: 6px;
+            cursor: pointer;
+            transition: all 0.2s ease;
+            flex-shrink: 0;
+        }
+
+        .task-checkbox:hover {
+            background-color: #dcfce7;
+        }
+
+        .task-checkbox.checked {
+            background-color: #16a34a;
+            position: relative;
+        }
+
+        .task-checkbox.checked::after {
+            content: '✓';
+            position: absolute;
+            color: white;
+            font-weight: bold;
+            top: 50%;
+            left: 50%;
+            transform: translate(-50%, -50%);
+        }
+
+        .progress-ring {
+            transform: rotate(-90deg);
+        }
+
+        .progress-ring-circle {
+            transition: stroke-dashoffset 0.5s ease;
+        }
+
+        @keyframes pulse {
+            0%, 100% { opacity: 1; }
+            50% { opacity: 0.7; }
+        }
+
+        .pulse-animation {
+            animation: pulse 2s ease-in-out infinite;
+        }
+
+        .lang-toggle-button {
+            background-color: #dcfce7;
+            color: #16a34a;
+            padding: 0.5rem 0.75rem;
+            border-radius: 9999px;
+            font-size: 0.75rem;
+            font-weight: 600;
+            transition: all 0.2s ease;
+            cursor: pointer;
+            box-shadow: 0 1px 3px rgba(0, 0, 0, 0.05);
+        }
+        .lang-toggle-button:hover {
+            background-color: #bbf7d0;
+        }
+        .lang-toggle-button:active {
+            transform: scale(0.95);
+        }
+    </style>
+</head>
+<body class="min-h-screen">
+
+<div id="message-box" class="message-box"></div>
+
+<div class="w-full max-w-md mx-auto space-y-4 p-4">
+
+    <!-- Header Card with Weather and Date -->
+    <div class="bg-white p-6 rounded-3xl shadow-lg relative overflow-hidden">
+        <div class="floating-emoji-container" id="headerEmojis"></div>
+        <div class="relative z-10">
+            <div class="flex items-center justify-between mb-4">
+                <div class="flex items-start">
+                    <div>
+                        <h1 class="text-2xl font-bold text-gray-800" data-i18n-key="greeting_title">Good Morning! 🌅</h1>
+                        <p class="text-sm text-gray-500" id="currentDate"></p>
+                    </div>
+                </div>
+                <div class="flex flex-col items-end">
+                    <!-- Language Toggle Button -->
+                    <button id="langToggleButton" onclick="toggleLanguage()" class="lang-toggle-button mb-3">ML</button>
+
+                    <div class="text-right">
+                        <div class="text-3xl">☀️</div>
+                        <p class="text-sm font-semibold text-gray-700">28°C</p>
+                        <p class="text-xs text-gray-500" data-i18n-key="weather_sunny">Sunny</p>
+                    </div>
+                </div>
+            </div>
+            <div class="bg-green-50 p-3 rounded-xl">
+                <p class="text-sm text-green-800" data-i18n-key="season_info">🌱 <span class="font-semibold">Tomato Season:</span> Day 45 of 110</p>
+            </div>
+        </div>
+    </div>
+
+    <!-- Progress Overview Card -->
+    <div class="bg-white p-6 rounded-3xl shadow-lg relative overflow-hidden">
+        <div class="floating-emoji-container" id="progressEmojis"></div>
+        <div class="relative z-10">
+            <h2 class="text-xl font-bold text-gray-800 mb-4" data-i18n-key="progress_title">Today's Progress</h2>
+            <div class="flex items-center justify-between">
+                <div class="flex-1">
+                    <div class="flex items-center space-x-3 mb-2">
+                        <svg class="progress-ring" width="80" height="80">
+                            <circle class="text-gray-200" stroke="currentColor" stroke-width="6" fill="transparent" r="34" cx="40" cy="40"/>
+                            <circle class="progress-ring-circle text-green-600" stroke="currentColor" stroke-width="6" fill="transparent" r="34" cx="40" cy="40"
+                                    stroke-dasharray="213.628" stroke-dashoffset="106.814" id="progressCircle"/>
+                        </svg>
+                        <div>
+                            <p class="text-3xl font-bold text-gray-800"><span id="completedTasks">2</span>/<span id="totalTasks">5</span></p>
+                            <p class="text-sm text-gray-500" data-i18n-key="tasks_completed_label">Tasks Completed</p>
+                        </div>
+                    </div>
+                </div>
+                <div class="text-4xl pulse-animation">🎯</div>
+            </div>
+        </div>
+    </div>
+
+    <!-- Today's Tasks Section -->
+    <div class="bg-white p-6 rounded-3xl shadow-lg relative overflow-hidden">
+        <div class="floating-emoji-container" id="tasksEmojis"></div>
+        <div class="relative z-10">
+            <div class="flex items-center justify-between mb-4">
+                <h2 class="text-xl font-bold text-gray-800" data-i18n-key="tasks_title">Today's Tasks</h2>
+                <button onclick="viewAllTasks()" class="text-sm text-green-600 font-semibold hover:text-green-700" data-i18n-key="view_all_tasks">
+                    View All →
+                </button>
+            </div>
+            <div class="space-y-3" id="todayTasksList">
+                <!-- Tasks will be populated by JavaScript -->
+            </div>
+        </div>
+    </div>
+
+    <!-- Quick Actions Grid -->
+    <div class="grid grid-cols-2 gap-4">
+        <div onclick="navigateToRoadmap()" class="bg-white p-6 rounded-3xl shadow-lg relative overflow-hidden clickable cursor-pointer">
+            <div class="floating-emoji-container" id="roadmapEmojis"></div>
+            <div class="relative z-10 text-center">
+                <div class="text-4xl mb-2">🗺️</div>
+                <h3 class="text-sm font-semibold text-gray-800" data-i18n-key="roadmap_action">Roadmap</h3>
+            </div>
+        </div>
+
+        <div onclick="navigateToSchemes()" class="bg-white p-6 rounded-3xl shadow-lg relative overflow-hidden clickable cursor-pointer">
+            <div class="floating-emoji-container" id="schemesEmojis"></div>
+            <div class="relative z-10 text-center">
+                <div class="text-4xl mb-2">📋</div>
+                <h3 class="text-sm font-semibold text-gray-800" data-i18n-key="schemes_action">Schemes</h3>
+            </div>
+        </div>
+
+        <div onclick="navigateToShopping()" class="bg-white p-6 rounded-3xl shadow-lg relative overflow-hidden clickable cursor-pointer">
+            <div class="floating-emoji-container" id="shoppingEmojis"></div>
+            <div class="relative z-10 text-center">
+                <div class="text-4xl mb-2">🛒</div>
+                <h3 class="text-sm font-semibold text-gray-800" data-i18n-key="shopping_action">Shopping</h3>
+            </div>
+        </div>
+
+        <div onclick="viewWeather()" class="bg-white p-6 rounded-3xl shadow-lg relative overflow-hidden clickable cursor-pointer">
+            <div class="floating-emoji-container" id="weatherEmojis"></div>
+            <div class="relative z-10 text-center">
+                <div class="text-4xl mb-2">🌦️</div>
+                <h3 class="text-sm font-semibold text-gray-800" data-i18n-key="weather_action">Weather</h3>
+            </div>
+        </div>
+    </div>
+
+    <!-- Tips Card -->
+    <div class="bg-gradient-to-r from-green-50 to-emerald-50 p-6 rounded-3xl shadow-lg relative overflow-hidden">
+        <div class="floating-emoji-container" id="tipsEmojis"></div>
+        <div class="relative z-10">
+            <div class="flex items-start space-x-3">
+                <div class="text-3xl">💡</div>
+                <div>
+                    <h3 class="text-lg font-bold text-gray-800 mb-1" data-i18n-key="tip_title">Today's Tip</h3>
+                    <p class="text-sm text-gray-700" data-i18n-key="tip_body">Water your tomato plants early in the morning to reduce evaporation and prevent fungal diseases. Aim for 1-2 inches per week!</p>
+                </div>
+            </div>
+        </div>
+    </div>
+
+</div>
+
+<!-- Bottom Navigation Bar -->
+<div class="nav-bar">
+    <div class="flex justify-around max-w-md mx-auto">
+        <div class="nav-item active" onclick="navigateToDashboard()">
+            <div class="nav-icon">🏠</div>
+            <div class="nav-label" data-i18n-key="nav_home">Home</div>
+        </div>
+        <div class="nav-item" onclick="navigateToRoadmap()">
+            <div class="nav-icon">🗺️</div>
+            <div class="nav-label" data-i18n-key="nav_roadmap">Roadmap</div>
+        </div>
+        <div class="nav-item" onclick="navigateToSchemes()">
+            <div class="nav-icon">📋</div>
+            <div class="nav-label" data-i18n-key="nav_schemes">Schemes</div>
+        </div>
+        <div class="nav-item" onclick="navigateToShopping()">
+            <div class="nav-icon">🛒</div>
+            <div class="nav-label" data-i18n-key="nav_shop">Shop</div>
+        </div>
+    </div>
+</div>
+
+<!-- Floating AI Assistant Button (Updated) -->
+<button id="aiAssistantButton" onclick="openVoiceAssistant()" class="fixed bottom-24 right-4 w-16 h-16 bg-green-600 text-white border-4 border-white rounded-full shadow-2xl flex items-center justify-center text-3xl z-20 transition-all hover:bg-green-700 active:scale-95">
+    🎤
+</button>
+
+<!-- AI Assistant Modal -->
+<div id="aiModal" class="fixed inset-0 bg-gray-900 bg-opacity-75 hidden flex items-end justify-center z-[200]">
+    <div class="bg-white w-full max-w-md p-6 rounded-t-3xl shadow-2xl transition-transform duration-300 ease-out transform translate-y-0">
+        <div class="flex justify-between items-center mb-4">
+            <h3 class="text-xl font-bold text-green-700" data-i18n-key="assistant_title">Farm AI Assistant</h3>
+            <button onclick="closeVoiceAssistant()" class="text-gray-500 hover:text-gray-800 text-2xl">
+                &times;
+            </button>
+        </div>
+
+        <div id="aiConversation" class="h-60 overflow-y-auto p-3 bg-gray-50 rounded-lg mb-4 text-sm space-y-2 border border-gray-200">
+            <!-- Messages go here -->
+        </div>
+
+        <div class="flex space-x-2">
+            <input type="text" id="aiUserInput"
+                   class="flex-1 p-3 border border-gray-300 rounded-xl focus:ring-green-500 focus:border-green-500"
+                   data-i18n-key="assistant_placeholder">
+            <button onclick="sendQuery()" id="sendQueryButton" class="p-3 bg-green-600 text-white rounded-xl hover:bg-green-700 transition-colors">
+                ➡️
+            </button>
+        </div>
+        <button onclick="startVoiceInput()" id="startVoiceButton" class="w-full mt-3 p-3 bg-blue-500 text-white rounded-xl hover:bg-blue-600 transition-colors flex items-center justify-center space-x-2">
+            <span id="voiceButtonText" data-i18n-key="voice_button_start">🎤 Start Voice Input (Simulated)</span>
+        </button>
+    </div>
+</div>
+
+
+<script>
+    // --- Gemini API Configuration ---
+    const GEMINI_API_URL = `https://generativelanguage.googleapis.com/v1beta/models/gemini-2.5-flash-preview-05-20:generateContent?key=`;
+    const apiKey = ""; // API key is provided by the canvas environment
+
+    // --- Internationalization (i18n) Configuration ---
+    let currentLang = 'en';
+    const translations = {
+        en: {
+            // Static content
+            page_title: "Farming Dashboard",
+            greeting_title: "Good Morning! 🌅",
+            weather_sunny: "Sunny",
+            season_info: "🌱 Tomato Season: Day 45 of 110",
+            progress_title: "Today's Progress",
+            tasks_completed_label: "Tasks Completed",
+            tasks_title: "Today's Tasks",
+            view_all_tasks: "View All →",
+            roadmap_action: "Roadmap",
+            schemes_action: "Schemes",
+            shopping_action: "Shopping",
+            weather_action: "Weather",
+            tip_title: "Today's Tip",
+            tip_body: "Water your tomato plants early in the morning to reduce evaporation and prevent fungal diseases. Aim for 1-2 inches per week!",
+            nav_home: "Home",
+            nav_roadmap: "Roadmap",
+            nav_schemes: "Schemes",
+            nav_shop: "Shop",
+            // AI Assistant Content
+            assistant_title: "Farm AI Assistant",
+            assistant_placeholder: "Ask your farming question...",
+            message_ai_opening: "Assistant is ready. Ask me anything about farming!",
+            message_ai_user_prompt: "You: ",
+            message_ai_loading: "AI Assistant is thinking...",
+            voice_button_start: "🎤 Start Voice Input (Simulated)",
+            voice_button_listening: "🔴 Listening...",
+            voice_button_processing: "🧠 Processing...",
+            message_ai_api_error: "Sorry, I ran into an API error. Try again.",
+            // Messages
+            task_1: "💧 Water tomato plants",
+            task_2: "✂️ Prune suckers from plants",
+            task_3: "🐛 Check for pests",
+            task_4: "🥄 Apply fertilizer",
+            task_5: "📝 Update farm log",
+            priority_high: "HIGH",
+            priority_medium: "MEDIUM",
+            priority_low: "LOW",
+            message_task_complete: "✅ Task completed! Great job!",
+            message_weather_soon: "Weather forecast feature coming soon! ☀️",
+            message_on_dashboard: "Already on Dashboard",
+            message_enter_question: "Please enter a question or use voice input."
+        },
+        ml: { // Malayalam
+            // Static content
+            page_title: "കൃഷി ഡാഷ്ബോർഡ്",
+            greeting_title: "സുപ്രഭാതം! 🌅",
+            weather_sunny: "തെളിഞ്ഞ കാലാവസ്ഥ",
+            season_info: "🌱 തക്കാളി സീസൺ: 110-ൽ 45-ാം ദിവസം",
+            progress_title: "ഇന്നത്തെ പുരോഗതി",
+            tasks_completed_label: "പൂർത്തിയാക്കിയ ജോലികൾ",
+            tasks_title: "ഇന്നത്തെ ജോലികൾ",
+            view_all_tasks: "എല്ലാം കാണുക →",
+            roadmap_action: "റോഡ്മാപ്പ്",
+            schemes_action: "പദ്ധതികൾ",
+            shopping_action: "ഷോപ്പിംഗ്",
+            weather_action: "കാലാവസ്ഥ",
+            tip_title: "ഇന്നത്തെ നുറുങ്ങ്",
+            tip_body: "തക്കാളി ചെടികൾക്ക് ബാഷ്പീകരണം കുറയ്ക്കുന്നതിനും ഫംഗസ് രോഗങ്ങൾ തടയുന്നതിനും അതിരാവിലെ വെള്ളം നൽകുക. ആഴ്ചയിൽ 1-2 ഇഞ്ച് ലക്ഷ്യമിടുക!",
+            nav_home: "ഹോം",
+            nav_roadmap: "റോഡ്മാപ്പ്",
+            nav_schemes: "പദ്ധതികൾ",
+            nav_shop: "ഷോപ്പ്",
+            // AI Assistant Content
+            assistant_title: "ഫാം എഐ അസിസ്റ്റന്റ്",
+            assistant_placeholder: "നിങ്ങളുടെ കൃഷി ചോദ്യം ചോദിക്കുക...",
+            message_ai_opening: "അസിസ്റ്റന്റ് തയ്യാറാണ്. കൃഷിയെക്കുറിച്ച് എന്തും ചോദിക്കാം!",
+            message_ai_user_prompt: "നിങ്ങൾ: ",
+            message_ai_loading: "എഐ അസിസ്റ്റന്റ് ആലോചിക്കുന്നു...",
+            voice_button_start: "🎤 വോയിസ് ഇൻപുട്ട് ആരംഭിക്കുക (അനുകരിച്ചത്)",
+            voice_button_listening: "🔴 കേൾക്കുന്നു...",
+            voice_button_processing: "🧠 പ്രോസസ്സ് ചെയ്യുന്നു...",
+            message_ai_api_error: "ക്ഷമിക്കണം, API-യിൽ ഒരു പിശക് സംഭവിച്ചു. വീണ്ടും ശ്രമിക്കുക.",
+            // Messages
+            task_1: "💧 തക്കാളി ചെടികൾക്ക് വെള്ളം നൽകുക",
+            task_2: "✂️ ചെടികളിൽ നിന്ന് ചിമ്പുകൾ നീക്കം ചെയ്യുക",
+            task_3: "🐛 കീടങ്ങളെ പരിശോധിക്കുക",
+            task_4: "🥄 വളം ചേർക്കുക",
+            task_5: "📝 ഫാം രേഖ അപ്ഡേറ്റ് ചെയ്യുക",
+            priority_high: "ഉയർന്നത്",
+            priority_medium: "ഇടത്തരം",
+            priority_low: "കുറഞ്ഞത്",
+            message_task_complete: "✅ ജോലി പൂർത്തിയാക്കി! നന്നായി!",
+            message_weather_soon: "കാലാവസ്ഥാ പ്രവചന സവിശേഷത ഉടൻ വരുന്നു! ☀️",
+            message_on_dashboard: "ഇതിനകം ഡാഷ്‌ബോർഡിൽ",
+            message_enter_question: "ദയവായി ഒരു ചോദ്യം നൽകുക അല്ലെങ്കിൽ വോയിസ് ഇൻപുട്ട് ഉപയോഗിക്കുക."
+        }
+    };
+
+    // --- Core i18n Functions ---
+
+    function translatePage() {
+        // 1. Update static elements via data-i18n-key
+        document.querySelectorAll('[data-i18n-key]').forEach(element => {
+            const key = element.getAttribute('data-i18n-key');
+            if (translations[currentLang][key]) {
+                // Special handling for elements where we only want to translate a portion
+                if (key === 'season_info') {
+                    // Update the text while keeping the emoji and the count/day numbers
+                    const text = translations[currentLang][key];
+                    element.innerHTML = text.replace(/(\d+)/g, '<b>$1</b>'); // Optionally bold numbers
+                } else if (element.tagName === 'INPUT' && key === 'assistant_placeholder') {
+                    // Handle placeholder translation for the AI input field
+                    element.placeholder = translations[currentLang][key];
+                } else {
+                    element.textContent = translations[currentLang][key];
+                }
+            }
+        });
+
+        // 2. Re-render dynamic elements (Tasks)
+        renderTasks();
+
+        // 3. Update the language toggle button text
+        const toggleButton = document.getElementById('langToggleButton');
+        if (toggleButton) {
+            toggleButton.textContent = currentLang === 'en' ? 'ML' : 'EN';
+        }
+    }
+
+    function toggleLanguage() {
+        currentLang = currentLang === 'en' ? 'ml' : 'en';
+        translatePage();
+        // Store language preference if needed (e.g., localStorage)
+    }
+
+    // --- Dynamic Content Functions (Updated for i18n) ---
+
+    // Sample tasks data (Keys used here match keys in the translations map)
+    let tasksData = [
+        { id: 1, titleKey: "task_1", time: "6:00 AM - 7:00 AM", priority: "high", completed: false },
+        { id: 2, titleKey: "task_2", time: "8:00 AM - 9:00 AM", priority: "high", completed: false },
+        { id: 3, titleKey: "task_3", time: "10:00 AM - 10:30 AM", priority: "medium", completed: false },
+        { id: 4, titleKey: "task_4", time: "11:00 AM - 12:00 PM", priority: "medium", completed: false },
+        { id: 5, titleKey: "task_5", time: "6:00 PM - 6:30 PM", priority: "low", completed: false }
+    ];
+
+    function showMessage(key, duration = 3000) {
+        const messageBox = document.getElementById('message-box');
+        messageBox.textContent = translations[currentLang][key] || key;
+        messageBox.style.display = 'block';
+        setTimeout(() => {
+            messageBox.style.display = 'none';
+        }, duration);
+    }
+
+    function renderTasks() {
+        const container = document.getElementById('todayTasksList');
+        container.innerHTML = '';
+
+        tasksData.forEach(task => {
+            const taskElement = document.createElement('div');
+            taskElement.className = `flex items-start space-x-3 p-4 rounded-xl border border-gray-100 ${task.completed ? 'bg-gray-50 opacity-60' : 'bg-slate-50'}`;
+
+            const priorityClass = `priority-${task.priority}`;
+            const priorityTextKey = `priority_${task.priority}`;
+
+            const taskTitle = translations[currentLang][task.titleKey] || task.titleKey;
+            const priorityLabel = translations[currentLang][priorityTextKey] || task.priority.toUpperCase();
+
+            taskElement.innerHTML = `
+                <div class="task-checkbox ${task.completed ? 'checked' : ''}" onclick="toggleTask(${task.id})"></div>
+                <div class="flex-1 ${task.completed ? 'line-through' : ''}">
+                    <h4 class="text-sm font-semibold text-gray-800">${taskTitle}</h4>
+                    <p class="text-xs text-gray-500 mt-1">⏰ ${task.time}</p>
+                </div>
+                <div class="text-xs font-semibold px-2 py-1 rounded-full ${priorityClass}">${priorityLabel}</div>
+            `;
+            container.appendChild(taskElement);
+        });
+
+        updateProgress();
+    }
+
+    function toggleTask(taskId) {
+        const task = tasksData.find(t => t.id === taskId);
+        if (task) {
+            task.completed = !task.completed;
+            renderTasks();
+            if (task.completed) {
+                showMessage('message_task_complete');
+            }
+        }
+    }
+
+    // --- Helper & Nav Functions (Original, slightly modified) ---
+
+    function updateProgress() {
+        const completed = tasksData.filter(t => t.completed).length;
+        const total = tasksData.length;
+        const percentage = (completed / total) * 100;
+
+        document.getElementById('completedTasks').textContent = completed;
+        document.getElementById('totalTasks').textContent = total;
+
+        const circle = document.getElementById('progressCircle');
+        const circumference = 213.628;
+        const offset = circumference - (percentage / 100) * circumference;
+        circle.style.strokeDashoffset = offset;
+    }
+
+    function setCurrentDate() {
+        // Use currentLang to set the date locale
+        const date = new Date();
+        const options = { weekday: 'long', year: 'numeric', month: 'long', day: 'numeric' };
+        // The locale string for Malayalam is 'ml-IN'
+        document.getElementById('currentDate').textContent = date.toLocaleDateString(currentLang === 'ml' ? 'ml-IN' : 'en-US', options);
+    }
+
+    function createEmoji(container) {
+        const emojis = ['🥕', '🍎', '🍓', '🥬', '🥦', '🌽', '🍊', '🍅', '🌱'];
+        const emoji = document.createElement('span');
+        emoji.className = 'floating-emoji';
+        emoji.textContent = emojis[Math.floor(Math.random() * emojis.length)];
+
+        const startX = Math.random() * 100;
+        const startY = Math.random() * 100;
+        const size = 1.5 + Math.random() * 1.5;
+        const duration = 10 + Math.random() * 5;
+
+        emoji.style.left = `${startX}%`;
+        emoji.style.top = `${startY}%`;
+        emoji.style.fontSize = `${size}rem`;
+        emoji.style.animationDuration = `${duration}s`;
+        emoji.style.animationDelay = `${Math.random() * duration}s`;
+
+        container.appendChild(emoji);
+    }
+
+    function populateContainerWithEmojis(container, count) {
+        for (let i = 0; i < count; i++) {
+            createEmoji(container);
+        }
+    }
+
+    // Navigation functions
+    function navigateToDashboard() {
+        // The message now uses the i18n lookup key
+        showMessage('message_on_dashboard');
+    }
+
+    function navigateToRoadmap() {
+        window.location.href = 'small_scale_roadmap.html';
+    }
+
+    function navigateToSchemes() {
+        window.location.href = 'gov_schemes.html';
+    }
+
+    function navigateToShopping() {
+        window.location.href = 'shopping.html';
+    }
+
+    function viewAllTasks() {
+        window.location.href = 'small_scale_tasklist.html';
+    }
+
+    function viewWeather() {
+        // The message now uses the i18n lookup key
+        showMessage('message_weather_soon');
+    }
+
+    // --- AI Assistant Functions ---
+
+    function openVoiceAssistant() {
+        const modal = document.getElementById('aiModal');
+        modal.classList.remove('hidden');
+        // Clear conversation and add initial message when opening
+        document.getElementById('aiConversation').innerHTML = '';
+        addBotMessage('AI', translations[currentLang].message_ai_opening);
+        // Ensure input field is translated
+        translatePage();
+    }
+
+    function closeVoiceAssistant() {
+        document.getElementById('aiModal').classList.add('hidden');
+    }
+
+    // Function to handle exponential backoff for API calls
+    async function fetchWithExponentialBackoff(url, options, maxRetries = 5) {
+        for (let i = 0; i < maxRetries; i++) {
+            try {
+                const response = await fetch(url, options);
+                if (response.status !== 429) {
+                    // If not a rate limit error, or successful, return
+                    return response;
+                }
+                // Rate limit (429), wait and retry
+            } catch (error) {
+                // Non-rate limit network error, wait and retry
+            }
+
+            // Wait for 2^i seconds with jitter
+            const delay = Math.pow(2, i) * 1000 + (Math.random() * 1000);
+            await new Promise(resolve => setTimeout(resolve, delay));
+        }
+        throw new Error(translations[currentLang].message_ai_api_error);
+    }
+
+    function addBotMessage(sender, text) {
+        const conversation = document.getElementById('aiConversation');
+        const message = document.createElement('div');
+        message.className = 'p-2 rounded-lg bg-green-100 text-sm break-words';
+        message.innerHTML = `<strong>${sender}:</strong> ${text}`;
+        conversation.appendChild(message);
+        conversation.scrollTop = conversation.scrollHeight;
+    }
+
+    function addUserMessage(text) {
+        const conversation = document.getElementById('aiConversation');
+        const message = document.createElement('div');
+        message.className = 'p-2 rounded-lg bg-blue-100 text-right text-sm break-words';
+        message.innerHTML = `<strong>${translations[currentLang].message_ai_user_prompt}</strong> ${text}`;
+        conversation.appendChild(message);
+        conversation.scrollTop = conversation.scrollHeight;
+    }
+
+    async function startVoiceInput() {
+        // This simulates the entire Voice-to-Text-to-AI-to-Text cycle.
+        const voiceButton = document.getElementById('startVoiceButton');
+        const inputField = document.getElementById('aiUserInput');
+
+        if (voiceButton.disabled) return; // Prevent double click
+
+        const originalTextKey = 'voice_button_start';
+        const listeningKey = 'voice_button_listening';
+        const processingKey = 'voice_button_processing';
+
+        // 1. Simulate STT phase
+        voiceButton.disabled = true;
+
+        // Set listening state
+        voiceButton.classList.remove('bg-blue-500', 'bg-yellow-500');
+        voiceButton.classList.add('bg-red-500');
+        document.getElementById('voiceButtonText').textContent = translations[currentLang][listeningKey];
+
+        // Simulating time taken for user to speak (2 seconds)
+        await new Promise(resolve => setTimeout(resolve, 2000));
+
+        // For simulation, we assume the user spoke this query:
+        const simulatedQuery = currentLang === 'en'
+            ? "What is the best way to deal with common tomato pests in humid weather?"
+            : "ഈർപ്പമുള്ള കാലാവസ്ഥയിൽ തക്കാളിയിലെ സാധാരണ കീടങ്ങളെ കൈകാര്യം ചെയ്യാനുള്ള ഏറ്റവും നല്ല മാർഗ്ഗം എന്താണ്?";
+
+        // 2. Set processing state and call LLM
+        voiceButton.classList.remove('bg-red-500');
+        voiceButton.classList.add('bg-yellow-500');
+        document.getElementById('voiceButtonText').textContent = translations[currentLang][processingKey];
+
+        inputField.value = simulatedQuery;
+        await sendQuery(true); // Send the query generated by "voice"
+
+        // 3. Reset state
+        voiceButton.disabled = false;
+        voiceButton.classList.remove('bg-yellow-500', 'bg-red-500');
+        voiceButton.classList.add('bg-blue-500');
+        document.getElementById('voiceButtonText').textContent = translations[currentLang][originalTextKey];
+        inputField.value = ''; // Clear input after processing
+    }
+
+    async function sendQuery(isSimulatedVoice = false) {
+        const userInput = document.getElementById('aiUserInput').value;
+        const inputField = document.getElementById('aiUserInput');
+        const sendButton = document.getElementById('sendQueryButton');
+
+        if (!userInput.trim()) {
+            showMessage('message_enter_question');
+            return;
+        }
+
+        // Add user message to conversation
+        addUserMessage(userInput);
+
+        // Show loading state and clear input
+        const originalSendHTML = sendButton.innerHTML;
+        sendButton.innerHTML = '...';
+        sendButton.disabled = true;
+        inputField.value = '';
+        inputField.disabled = true;
+
+        // Add a temporary loading message from the bot
+        const loaderId = 'loader-' + Date.now();
+        addBotMessage('AI', `<span id="${loaderId}" class="text-gray-500">${translations[currentLang].message_ai_loading}</span>`);
+
+
+        try {
+            const systemPrompt = "You are a helpful and expert agricultural assistant focused on small-scale farming. Keep your responses concise, practical, and action-oriented. Address the user's query directly.";
+            const userQuery = userInput;
+
+            const payload = {
+                contents: [{ parts: [{ text: userQuery }] }],
+                // Use Google Search for up-to-date and grounded information
+                tools: [{ "google_search": {} }],
+                systemInstruction: {
+                    parts: [{ text: systemPrompt }]
+                },
+            };
+
+            const apiUrl = `${GEMINI_API_URL}${apiKey}`;
+
+            const response = await fetchWithExponentialBackoff(apiUrl, {
+                method: 'POST',
+                headers: { 'Content-Type': 'application/json' },
+                body: JSON.stringify(payload)
+            });
+
+            const result = await response.json();
+            const candidate = result.candidates?.[0];
+
+            let aiResponseText = translations[currentLang].message_ai_api_error;
+
+            if (candidate && candidate.content?.parts?.[0]?.text) {
+                aiResponseText = candidate.content.parts[0].text;
+
+                // Extract grounding sources
+                let sources = [];
+                const groundingMetadata = candidate.groundingMetadata;
+                if (groundingMetadata && groundingMetadata.groundingAttributions) {
+                    sources = groundingMetadata.groundingAttributions
+                        .map(attribution => ({
+                            uri: attribution.web?.uri,
+                            title: attribution.web?.title,
+                        }))
+                        .filter(source => source.uri && source.title);
+
+                    if (sources.length > 0) {
+                        // Append sources as a small link list
+                        aiResponseText += '<br><br><span class="text-xs text-gray-600">Source(s):</span>';
+                        sources.slice(0, 2).forEach((source, index) => {
+                            aiResponseText += `<br><a href="${source.uri}" target="_blank" class="text-xs text-green-700 hover:underline">${index + 1}. ${source.title.substring(0, 50)}...</a>`;
+                        });
+                    }
+                }
+            }
+
+            // Remove loader and display final response
+            const loaderElement = document.getElementById(loaderId);
+            if (loaderElement) {
+                loaderElement.parentNode.remove();
+            }
+            addBotMessage('AI', aiResponseText);
+
+        } catch (e) {
+            // Remove loader and display error
+            const loaderElement = document.getElementById(loaderId);
+            if (loaderElement) {
+                 loaderElement.parentNode.remove();
+            }
+            addBotMessage('AI', translations[currentLang].message_ai_api_error);
+        } finally {
+            // Reset controls
+            sendButton.innerHTML = originalSendHTML;
+            sendButton.disabled = false;
+            inputField.disabled = false;
+            inputField.focus();
+        }
+    }
+
+
+    // Initialize page
+    document.addEventListener('DOMContentLoaded', () => {
+        // Set up initial language state (English default)
+        translatePage();
+        setCurrentDate();
+
+        // Populate floating emojis in all containers
+        populateContainerWithEmojis(document.getElementById('headerEmojis'), 8);
+        populateContainerWithEmojis(document.getElementById('progressEmojis'), 6);
+        populateContainerWithEmojis(document.getElementById('tasksEmojis'), 8);
+        populateContainerWithEmojis(document.getElementById('roadmapEmojis'), 3);
+        populateContainerWithEmojis(document.getElementById('schemesEmojis'), 3);
+        populateContainerWithEmojis(document.getElementById('shoppingEmojis'), 3);
+        populateContainerWithEmojis(document.getElementById('weatherEmojis'), 3);
+        populateContainerWithEmojis(document.getElementById('tipsEmojis'), 5);
+    });
+</script>
+</body>
+</html>

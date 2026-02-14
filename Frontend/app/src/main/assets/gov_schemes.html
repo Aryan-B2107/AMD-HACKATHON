@@ -1,0 +1,458 @@
+<!DOCTYPE html>
+<html lang="en">
+<head>
+    <meta charset="UTF-8" />
+    <meta name="viewport" content="width=device-width, initial-scale=1" />
+    <title id="pageTitle">Farming Schemes</title>
+    <link rel="preconnect" href="https://fonts.googleapis.com" />
+    <link rel="preconnect" href="https://fonts.gstatic.com" crossorigin />
+    <link
+            href="https://fonts.googleapis.com/css2?family=Inter:wght@400;500;600;700&display=swap"
+            rel="stylesheet"
+    />
+    <script src="https://cdn.tailwindcss.com"></script>
+    <style>
+        body {
+          font-family: 'Inter', sans-serif;
+          background-color: #F0FFF0;
+          padding-bottom: 80px;
+          padding-top: 5rem;
+        }
+        .floating-emoji-container {
+          position: absolute;
+          top: 0;
+          left: 0;
+          width: 100%;
+          height: 100%;
+          pointer-events: none;
+          overflow: hidden;
+          z-index: 0;
+        }
+        .floating-emoji {
+          position: absolute;
+          opacity: 0.15;
+          animation-name: float-and-wave-card;
+          animation-iteration-count: infinite;
+          animation-timing-function: linear;
+          font-size: 2rem;
+        }
+        @keyframes float-and-wave-card {
+          0% {
+            transform: translate(0, 0) scale(1);
+          }
+          25% {
+            transform: translate(2rem, -1rem) scale(1.1);
+          }
+          50% {
+            transform: translate(0, -2rem) scale(1.2);
+          }
+          75% {
+            transform: translate(-2rem, -1rem) scale(1.1);
+          }
+          100% {
+            transform: translate(0, 0) scale(1);
+          }
+        }
+        .clickable:hover {
+          background-color: #f0fdf4;
+          transform: translateY(-4px);
+          transition: all 0.3s ease;
+        }
+        .clickable:active {
+          transform: scale(0.98);
+        }
+        .message-box {
+          position: fixed;
+          top: 2rem;
+          left: 50%;
+          transform: translateX(-50%);
+          background-color: rgba(52, 211, 153, 0.9);
+          color: white;
+          padding: 1rem 2rem;
+          border-radius: 1rem;
+          box-shadow: 0 4px 6px rgba(0, 0, 0, 0.1);
+          z-index: 1000;
+          display: none;
+          text-align: center;
+        }
+        .nav-bar {
+          position: fixed;
+          bottom: 0;
+          left: 0;
+          right: 0;
+          background: white;
+          box-shadow: 0 -4px 6px rgba(0, 0, 0, 0.1);
+          z-index: 100;
+        }
+        .nav-item {
+          flex: 1;
+          display: flex;
+          flex-direction: column;
+          align-items: center;
+          padding: 0.75rem 0;
+          cursor: pointer;
+          transition: all 0.2s ease;
+          border-top: 3px solid transparent;
+        }
+        .nav-item:hover {
+          background-color: #f0fdf4;
+        }
+        .nav-item.active {
+          color: #16a34a;
+          border-top-color: #16a34a;
+        }
+        .nav-item.active .nav-icon {
+          transform: scale(1.1);
+        }
+        .nav-icon {
+          font-size: 1.5rem;
+          transition: transform 0.2s ease;
+        }
+        .nav-label {
+          font-size: 0.75rem;
+          margin-top: 0.25rem;
+          font-weight: 500;
+        }
+        .section-title {
+          font-size: 1.5rem;
+          font-weight: 700;
+          color: #166534;
+          margin: 2rem 0 1rem 0;
+          border-bottom: 2px solid #dcfce7;
+          padding-bottom: 0.25rem;
+        }
+        .scheme-card {
+          cursor: pointer;
+          transition: all 0.3s ease;
+          text-decoration: none;
+          display: block;
+          background: white;
+          border-radius: 1.5rem;
+          padding: 1.5rem;
+          margin-bottom: 1rem;
+          box-shadow: 0 5px 15px rgb(0 0 0 / 0.05);
+          position: relative;
+        }
+        .scheme-card:hover {
+          transform: translateY(-6px);
+          box-shadow: 0 20px 25px -5px rgb(0 0 0 / 0.15), 0 10px 10px -5px rgb(0 0 0 / 0.08);
+        }
+        .scheme-card:active {
+          transform: translateY(-2px);
+        }
+        .scheme-title {
+          font-weight: 700;
+          font-size: 1.25rem;
+          color: #166534;
+          margin-bottom: 0.25rem;
+        }
+        .scheme-category {
+          display: inline-block;
+          padding: 0.25rem 0.75rem;
+          background: #dcfce7;
+          color: #166534;
+          border-radius: 9999px;
+          font-size: 0.75rem;
+          font-weight: 600;
+          margin-bottom: 0.75rem;
+        }
+        .scheme-desc {
+          color: #4b5563;
+          font-size: 1rem;
+          margin-bottom: 1rem;
+        }
+        .scheme-link-icon {
+          position: absolute;
+          right: 1.5rem;
+          top: 50%;
+          transform: translateY(-50%);
+          font-size: 1.5rem;
+          transition: transform 0.2s ease;
+          color: #16a34a;
+        }
+        .scheme-card:hover .scheme-link-icon {
+          transform: translate(0.25rem, -50%);
+        }
+    </style>
+</head>
+<body class="min-h-screen">
+
+<div id="message-box" class="message-box"></div>
+
+<!-- Custom Fixed Back Button -->
+<button
+        onclick="window.location.href = 'dashboard.html';"
+        class="fixed top-4 left-4 z-20 p-3 bg-white rounded-full shadow-xl text-green-700 hover:bg-green-50 transition transform active:scale-95"
+        title="Back to Dashboard"
+>
+    <svg class="w-6 h-6" fill="none" stroke="currentColor" viewBox="0 0 24 24" xmlns="http://www.w3.org/2000/svg">
+        <path stroke-linecap="round" stroke-linejoin="round" stroke-width="2.5" d="M10 19l-7-7m0 0l7-7m-7 7h18"></path>
+    </svg>
+</button>
+
+<div class="w-full max-w-md mx-auto space-y-4 p-4">
+
+    <!-- Header Card -->
+    <div class="bg-white p-6 rounded-3xl shadow-lg relative overflow-hidden mt-4">
+        <div class="floating-emoji-container" id="headerEmojis"></div>
+        <div class="relative z-10">
+            <div class="flex items-center justify-between mb-2">
+                <div>
+                    <h1 class="text-2xl font-bold text-gray-800 ml-8" id="headerTitle">Farming Schemes 📋</h1>
+                    <p class="text-sm text-gray-500 ml-8" id="headerSubtitle">Explore Kerala & Central govt schemes</p>
+                </div>
+                <!-- Language Toggle Button -->
+                <button
+                        id="langToggle"
+                        onclick="toggleLanguage()"
+                        class="p-2 bg-green-200 text-green-800 text-sm font-semibold rounded-lg hover:bg-green-300 transition"
+                >
+                    ML
+                </button>
+            </div>
+            <div class="bg-green-50 p-3 rounded-xl mt-4">
+                <p class="text-xs text-green-800">💡 <span class="font-semibold" id="tipMessage">Tip: Tap scheme for details & application.</span></p>
+            </div>
+        </div>
+    </div>
+
+    <!-- Central Government Schemes Section -->
+    <h2 class="section-title" id="centralTitle">Central Government Schemes</h2>
+    <div class="space-y-3" id="centralSchemesContainer"></div>
+
+    <!-- Kerala Government Schemes Section -->
+    <h2 class="section-title" id="keralaTitle">Kerala Government Schemes</h2>
+    <div class="space-y-3" id="keralaSchemesContainer"></div>
+</div>
+
+<!-- Bottom Navigation Bar -->
+<div class="nav-bar">
+    <div class="flex justify-around max-w-md mx-auto">
+        <div class="nav-item" onclick="navigateToDashboard()">
+            <div class="nav-icon">🏠</div>
+            <div class="nav-label" id="navHome">Home</div>
+        </div>
+        <div class="nav-item" onclick="navigateToRoadmap()">
+            <div class="nav-icon">🗺️</div>
+            <div class="nav-label" id="navRoadmap">Roadmap</div>
+        </div>
+        <div class="nav-item active" onclick="navigateToSchemes()">
+            <div class="nav-icon">📋</div>
+            <div class="nav-label" id="navSchemes">Schemes</div>
+        </div>
+        <div class="nav-item" onclick="navigateToShopping()">
+            <div class="nav-icon">🛒</div>
+            <div class="nav-label" id="navShop">Shop</div>
+        </div>
+    </div>
+</div>
+
+<script>
+    let currentLang = 'en';
+
+    const translations = {
+        en: {
+            pageTitle: 'Farming Schemes',
+            headerTitle: 'Farming Schemes 📋',
+            headerSubtitle: 'Explore Kerala & Central govt schemes',
+            tipMessage: 'Tip: Tap scheme for details & application.',
+            centralTitle: 'Central Government Schemes',
+            keralaTitle: 'Kerala Government Schemes',
+            navHome: 'Home',
+            navRoadmap: 'Roadmap',
+            navSchemes: 'Schemes',
+            navShop: 'Shop',
+            langToggle: 'ML' // Display Malayalam name when currently in English
+        },
+        ml: {
+            pageTitle: 'കാർഷിക പദ്ധതികൾ',
+            headerTitle: 'കാർഷിക പദ്ധതികൾ 📋',
+            headerSubtitle: 'കേരള-യും കേന്ദ്ര-വും',
+            tipMessage: 'വിവരങ്ങൾക്കും അപേക്ഷകൾക്കുമായി സ്കീമിൽ ടാപ്പ് ചെയ്യുക.',
+            centralTitle: 'കേന്ദ്ര സർക്കാർ പദ്ധതികൾ',
+            keralaTitle: 'കേരള സർക്കാർ പദ്ധതികൾ',
+            navHome: 'വീട്',
+            navRoadmap: 'റോഡ് മാപ്പ്',
+            navSchemes: 'പദ്ധതികൾ',
+            navShop: 'കട',
+            langToggle: 'En' // Display English name when currently in Malayalam
+        }
+    };
+
+    const schemesData = {
+        en: {
+            central: [
+                { title: 'India Farmers Portal', description: 'Government portal for farmers information and schemes.', url: 'https://india.gov.in/farmers-portal', category: 'Central Gov' },
+                { title: 'Agricultural Welfare', description: 'Ministry of Agriculture & Farmers Welfare official site.', url: 'https://agriwelfare.gov.in', category: 'Central Gov' },
+                { title: 'India Services Portal', description: 'Access government services online including agri schemes.', url: 'https://services.india.gov.in', category: 'Central Gov' }
+            ],
+            kerala: [
+                { title: 'Kerala Agriculture Department', description: 'Official department site for agriculture schemes in Kerala.', url: 'https://keralaagriculture.gov.in', category: 'Kerala Gov' },
+                { title: 'Kathir - Kerala Govt Agriculture', description: 'Kerala agriculture project Kathir portal.', url: 'https://kathir.kerala.gov.in', category: 'Kerala Gov' },
+                { title: 'Kerala AIMS', description: 'Agricultural information management system Kerala.', url: 'https://aims.kerala.gov.in', category: 'Kerala Gov' },
+                { title: 'India Services Portal', description: 'Access various government services online.', url: 'https://services.india.gov.in', category: 'Kerala Gov' },
+                { title: 'Kerala Cooperation Department', description: 'Kerala government cooperative societies information and schemes.', url: 'https://cooperation.kerala.gov.in', category: 'Kerala Gov' }
+            ]
+        },
+        ml: {
+            central: [
+                { title: 'ഇന്ത്യ കർഷക പോർട്ടൽ', description: 'കർഷകർക്കുള്ള വിവരങ്ങൾക്കും പദ്ധതികൾക്കുമുള്ള സർക്കാർ പോർട്ടൽ.', url: 'https://india.gov.in/farmers-portal', category: 'കേന്ദ്ര സർക്കാർ' },
+                { title: 'കാർഷിക ക്ഷേമം', description: 'കൃഷി, കർഷക ക്ഷേമ മന്ത്രാലയത്തിന്റെ ഔദ്യോഗിക വെബ്സൈറ്റ്.', url: 'https://agriwelfare.gov.in', category: 'കേന്ദ്ര സർക്കാർ' },
+                { title: 'ഇന്ത്യ സേവന പോർട്ടൽ', description: 'കാർഷിക പദ്ധതികൾ ഉൾപ്പെടെയുള്ള സർക്കാർ സേവനങ്ങൾ ഓൺലൈനിൽ ലഭ്യമാക്കുന്നു.', url: 'https://services.india.gov.in', category: 'കേന്ദ്ര സർക്കാർ' }
+            ],
+            kerala: [
+                { title: 'കേരള കൃഷി വകുപ്പ്', description: 'കേരളത്തിലെ കാർഷിക പദ്ധതികൾക്കായുള്ള ഔദ്യോഗിക വകുപ്പ് വെബ്സൈറ്റ്.', url: 'https://keralaagriculture.gov.in', category: 'കേരള സർക്കാർ' },
+                { title: 'കതിർ - കേരള സർക്കാർ കൃഷി', description: 'കേരള കാർഷിക പദ്ധതിയായ കതിർ പോർട്ടൽ.', url: 'https://kathir.kerala.gov.in', category: 'കേരള സർക്കാർ' },
+                { title: 'കേരള എയിംസ്', description: 'കേരളത്തിലെ കാർഷിക വിവര മാനേജ്മെന്റ് സംവിധാനം.', url: 'https://aims.kerala.gov.in', category: 'കേരള സർക്കാർ' },
+                { title: 'ഇന്ത്യ സേവന പോർട്ടൽ', description: 'വിവിധ സർക്കാർ സേവനങ്ങൾ ഓൺലൈനിൽ ലഭ്യമാക്കുന്നു.', url: 'https://services.india.gov.in', category: 'കേരള സർക്കാർ' },
+                { title: 'കേരള സഹകരണ വകുപ്പ്', description: 'കേരള സർക്കാർ സഹകരണ സംഘങ്ങളെക്കുറിച്ചുള്ള വിവരങ്ങളും പദ്ധതികളും.', url: 'https://cooperation.kerala.gov.in', category: 'കേരള സർക്കാർ' }
+            ]
+        }
+    };
+
+    function getTranslatedText(key) {
+        return translations[currentLang][key] || translations['en'][key];
+    }
+
+    function toggleLanguage() {
+        currentLang = currentLang === 'en' ? 'ml' : 'en';
+        updateUILabels();
+        renderSchemes();
+    }
+
+    // Function to update all static text elements
+    function updateUILabels() {
+        document.getElementById('pageTitle').textContent = getTranslatedText('pageTitle');
+        document.getElementById('headerTitle').innerHTML = getTranslatedText('headerTitle');
+        document.getElementById('headerSubtitle').textContent = getTranslatedText('headerSubtitle');
+        document.getElementById('tipMessage').textContent = getTranslatedText('tipMessage');
+        document.getElementById('centralTitle').textContent = getTranslatedText('centralTitle');
+        document.getElementById('keralaTitle').textContent = getTranslatedText('keralaTitle');
+
+        document.getElementById('navHome').textContent = getTranslatedText('navHome');
+        document.getElementById('navRoadmap').textContent = getTranslatedText('navRoadmap');
+        document.getElementById('navSchemes').textContent = getTranslatedText('navSchemes');
+        document.getElementById('navShop').textContent = getTranslatedText('navShop');
+
+        // Update the language toggle button text
+        document.getElementById('langToggle').textContent = getTranslatedText('langToggle');
+    }
+
+    // Floating emojis for header (unchanged)
+    function createEmoji(container) {
+      const emojis = ['🥕', '🍎', '🍓', '🥬', '🥦', '🌽', '🍊', '🍅', '🌱'];
+      const emoji = document.createElement('span');
+      emoji.className = 'floating-emoji';
+      emoji.textContent = emojis[Math.floor(Math.random() * emojis.length)];
+      // ... rest of createEmoji logic ...
+      const startX = Math.random() * 100;
+      const startY = Math.random() * 100;
+      const size = 1.5 + Math.random() * 1.5;
+      const duration = 10 + Math.random() * 5;
+
+      emoji.style.left = `${startX}%`;
+      emoji.style.top = `${startY}%`;
+      emoji.style.fontSize = `${size}rem`;
+      emoji.style.animationDuration = `${duration}s`;
+      emoji.style.animationDelay = `${Math.random() * duration}s`;
+
+      container.appendChild(emoji);
+    }
+
+    function populateContainerWithEmojis(container, count) {
+      for (let i = 0; i < count; i++) {
+        createEmoji(container);
+      }
+    }
+
+    function openExternalLink(url) {
+      if (window.Android && window.Android.openExternalUrl) {
+        window.Android.openExternalUrl(url);
+      } else {
+        window.open(url, '_blank');
+      }
+    }
+
+    // Render schemes using the current language data
+    function renderSchemes() {
+      const centralContainer = document.getElementById('centralSchemesContainer');
+      const keralaContainer = document.getElementById('keralaSchemesContainer');
+      centralContainer.innerHTML = '';
+      keralaContainer.innerHTML = '';
+
+      const data = schemesData[currentLang];
+
+      data.central.forEach(scheme => {
+        const card = createSchemeCard(scheme);
+        centralContainer.appendChild(card);
+      });
+
+      data.kerala.forEach(scheme => {
+        const card = createSchemeCard(scheme);
+        keralaContainer.appendChild(card);
+      });
+    }
+
+    // Create a scheme card DOM element for scheme json object
+    function createSchemeCard(scheme) {
+      const card = document.createElement('div');
+      card.className = 'scheme-card clickable';
+      card.onclick = () => openExternalLink(scheme.url);
+      card.innerHTML = `
+        <div>
+          <div class="scheme-title">${scheme.title}</div>
+          <span class="scheme-category">${scheme.category ?? ''}</span>
+          <p class="scheme-desc">${scheme.description}</p>
+          <span class="scheme-link-icon">→</span>
+        </div>
+      `;
+      return card;
+    }
+
+    // Navigation functions (unchanged)
+    function navigateToDashboard() {
+      if (window.Android && window.Android.navigateToDashboard) {
+        window.Android.navigateToDashboard();
+      } else {
+        window.location.href = 'dashboard.html';
+      }
+    }
+
+    function navigateToRoadmap() {
+      if (window.Android && window.Android.navigateToRoadmap) {
+        window.Android.navigateToRoadmap();
+      } else {
+        window.location.href = 'small_scale_roadmap.html';
+      }
+    }
+
+    function navigateToSchemes() {
+      showMessage('Already on Schemes page');
+    }
+
+    function navigateToShopping() {
+      if (window.Android && window.Android.navigateToShopping) {
+        window.Android.navigateToShopping();
+      } else {
+        window.location.href = 'shopping.html';
+      }
+    }
+
+    function showMessage(message, duration = 3000) {
+      const messageBox = document.getElementById('message-box');
+      messageBox.textContent = message;
+      messageBox.style.display = 'block';
+      setTimeout(() => {
+        messageBox.style.display = 'none';
+      }, duration);
+    }
+
+    document.addEventListener('DOMContentLoaded', () => {
+      populateContainerWithEmojis(document.getElementById('headerEmojis'), 8);
+      // Initialize with English labels and data
+      updateUILabels();
+      renderSchemes();
+    });
+</script>
+</body>
+</html>

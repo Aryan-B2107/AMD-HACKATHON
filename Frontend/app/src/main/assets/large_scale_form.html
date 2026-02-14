@@ -1,0 +1,642 @@
+<!DOCTYPE html>
+<html lang="en">
+<head>
+    <meta charset="UTF-8">
+    <meta name="viewport" content="width=device-width, initial-scale=1.0, user-scalable=no">
+    <title>Dynamic Environment Form</title>
+    <!-- React and ReactDOM for the dynamic form components -->
+    <script src="https://cdnjs.cloudflare.com/ajax/libs/react/18.2.0/umd/react.production.min.js"></script>
+    <script src="https://cdnjs.cloudflare.com/ajax/libs/react-dom/18.2.0/umd/react-dom.production.min.js"></script>
+    <!-- Babel for JSX compilation -->
+    <script src="https://cdnjs.cloudflare.com/ajax/libs/babel-standalone/7.23.5/babel.min.js"></script>
+    <!-- Tailwind CSS CDN for modern, utility-first styling -->
+    <script src="https://cdn.tailwindcss.com"></script>
+    <!-- Inter font -->
+    <link rel="preconnect" href="https://fonts.googleapis.com">
+    <link rel="preconnect" href="https://fonts.gstatic.com" crossorigin>
+    <link href="https://fonts.googleapis.com/css2?family=Inter:wght@400;500;600;700&display=swap" rel="stylesheet">
+
+    <style>
+        /* Base styles to remove default margins and box-sizing */
+        * {
+            margin: 0;
+            padding: 0;
+            box-sizing: border-box;
+            -webkit-tap-highlight-color: transparent;
+        }
+
+        /* Define a consistent font and smooth scrolling behavior */
+        body {
+            font-family: 'Inter', sans-serif;
+            -webkit-font-smoothing: antialiased;
+            -moz-osx-font-smoothing: grayscale;
+            background-color: #F0FFF0; /* Matching the roadmap's minty green background */
+        }
+
+        /* Apply a fluid animation on page load */
+        #root {
+            animation: fadeIn 0.5s ease-out;
+        }
+
+        /* Fade-in and fade-out animations for page transitions */
+        @keyframes fadeIn {
+            from { opacity: 0; }
+            to { opacity: 1; }
+        }
+
+        .fade-out {
+            animation: fadeOut 0.4s ease-out forwards;
+        }
+
+        @keyframes fadeOut {
+            from { opacity: 1; }
+            to { opacity: 0; }
+        }
+
+        /* Custom styling for the select dropdown arrow */
+        select {
+            background-image: url("data:image/svg+xml;charset=UTF-8,%3csvg xmlns='http://www.w3.org/2000/svg' viewBox='0 0 24 24' fill='none' stroke='currentColor' stroke-width='2' stroke-linecap='round' stroke-linejoin='round'%3e%3cpolyline points='6,9 12,15 18,9'%3e%3c/polyline%3e%3c/svg%3e");
+            background-repeat: no-repeat;
+            background-position: right 12px center;
+            background-size: 16px;
+            padding-right: 40px;
+        }
+
+        /* Styles for floating background emojis inside containers */
+        .floating-emoji-container {
+            position: absolute;
+            top: 0;
+            left: 0;
+            width: 100%;
+            height: 100%;
+            pointer-events: none; /* Allows clicks to pass through */
+            overflow: hidden;
+            z-index: 0; /* Ensures emojis are behind content but inside the card */
+        }
+        .floating-emoji {
+            position: absolute;
+            opacity: 0.15; /* Subtler opacity */
+            animation-name: float-and-wave-card;
+            animation-iteration-count: infinite;
+            animation-timing-function: linear;
+            font-size: 2rem;
+        }
+
+        /* Keyframes for floating animation inside a smaller container */
+        @keyframes float-and-wave-card {
+            0% { transform: translate(0, 0) scale(1); }
+            25% { transform: translate(2rem, -1rem) scale(1.1); }
+            50% { transform: translate(0, -2rem) scale(1.2); }
+            75% { transform: translate(-2rem, -1rem) scale(1.1); }
+            100% { transform: translate(0, 0) scale(1); }
+        }
+
+        /* Hover effects */
+        .clickable:hover {
+            background-color: rgba(248, 250, 252, 0.8);
+        }
+        .clickable:active {
+            transform: scale(0.98);
+        }
+    </style>
+</head>
+<body class="min-h-screen flex flex-col items-center">
+<div id="root"></div>
+
+<script type="text/babel">
+    const { useState, useEffect, useRef } = React;
+
+    // Function to create a single floating emoji element inside a specified container
+    const createEmoji = (container) => {
+        const emojis = ['🌾', '🚜', '💧', '🌱', '🌿', '🍅', '🥕', '🌽'];
+        const emoji = document.createElement('span');
+        emoji.className = 'floating-emoji';
+        emoji.textContent = emojis[Math.floor(Math.random() * emojis.length)];
+
+        // Randomize position, size, and animation
+        const startX = Math.random() * 100;
+        const startY = Math.random() * 100;
+        const size = 1.5 + Math.random() * 1.5; // 1.5 to 3rem
+        const duration = 10 + Math.random() * 5; // 10 to 15 seconds
+
+        emoji.style.left = `${startX}%`;
+        emoji.style.top = `${startY}%`;
+        emoji.style.fontSize = `${size}rem`;
+        emoji.style.animationDuration = `${duration}s`;
+        emoji.style.animationDelay = `${Math.random() * duration}s`;
+
+        container.appendChild(emoji);
+    };
+
+    // Function to populate a container with a certain number of emojis
+    const populateContainerWithEmojis = (container, count) => {
+        for (let i = 0; i < count; i++) {
+            createEmoji(container);
+        }
+    };
+
+    // Component for floating emojis
+    const FloatingEmojiContainer = ({ count = 8 }) => {
+        const containerRef = useRef(null);
+
+        useEffect(() => {
+            if (containerRef.current) {
+                // Clear any existing emojis
+                containerRef.current.innerHTML = '';
+                populateContainerWithEmojis(containerRef.current, count);
+            }
+        }, [count]);
+
+        return <div ref={containerRef} className="floating-emoji-container" />;
+    };
+
+    // Component for a standard text input field
+    const TextInput = ({ field, value, onChange, error }) => (
+        <div className="mb-4">
+            <label htmlFor={field.id} className="block mb-2 text-gray-800 font-medium relative z-10">{field.label}</label>
+            <input
+                type={field.inputType || 'text'}
+                id={field.id}
+                value={value || ''}
+                onChange={(e) => onChange(field.id, e.target.value)}
+                placeholder={field.placeholder}
+                required={field.required}
+                className="w-full p-3 border-2 border-gray-200 rounded-xl text-gray-800 bg-white/90 focus:outline-none focus:border-green-600 focus:ring-2 focus:ring-green-600/20 transition-all relative z-10 shadow-sm"
+            />
+            {error && <div className="text-red-600 text-sm mt-1 relative z-10">{error}</div>}
+        </div>
+    );
+
+    // Component for a select dropdown field
+    const SelectInput = ({ field, value, onChange, error }) => (
+        <div className="mb-4">
+            <label htmlFor={field.id} className="block mb-2 text-gray-800 font-medium relative z-10">{field.label}</label>
+            <select
+                id={field.id}
+                value={value || ''}
+                onChange={(e) => onChange(field.id, e.target.value)}
+                required={field.required}
+                className="w-full p-3 border-2 border-gray-200 rounded-xl text-gray-800 bg-white/90 focus:outline-none focus:border-green-600 focus:ring-2 focus:ring-green-600/20 transition-all cursor-pointer appearance-none relative z-10 shadow-sm"
+            >
+                <option value="">{field.placeholder || 'Select an option'}</option>
+                {field.options.map(option => (
+                    <option key={option.value} value={option.value}>
+                        {option.label}
+                    </option>
+                ))}
+            </select>
+            {error && <div className="text-red-600 text-sm mt-1 relative z-10">{error}</div>}
+        </div>
+    );
+
+    // Component for a textarea field
+    const TextAreaInput = ({ field, value, onChange, error }) => (
+        <div className="mb-4">
+            <label htmlFor={field.id} className="block mb-2 text-gray-800 font-medium relative z-10">{field.label}</label>
+            <textarea
+                id={field.id}
+                value={value || ''}
+                onChange={(e) => onChange(field.id, e.target.value)}
+                placeholder={field.placeholder}
+                required={field.required}
+                className="w-full p-3 border-2 border-gray-200 rounded-xl text-gray-800 bg-white/90 focus:outline-none focus:border-green-600 focus:ring-2 focus:ring-green-600/20 transition-all min-h-[80px] resize-y relative z-10 shadow-sm"
+            />
+            {error && <div className="text-red-600 text-sm mt-1 relative z-10">{error}</div>}
+        </div>
+    );
+
+    // Component for a group of checkboxes
+    const CheckboxGroup = ({ field, value, onChange, error }) => (
+        <div className="mb-4">
+            <label className="block mb-2 text-gray-800 font-medium relative z-10">{field.label}</label>
+            <div className="flex flex-col gap-2">
+                {field.options.map(option => (
+                    <div key={option.value} className="flex items-center p-3 bg-slate-50 rounded-xl border border-gray-100 cursor-pointer transition-colors clickable min-h-[48px] shadow-sm relative overflow-hidden">
+                        <FloatingEmojiContainer count={3} />
+                        <input
+                            type="checkbox"
+                            id={`${field.id}-${option.value}`}
+                            checked={(value || []).includes(option.value)}
+                            onChange={(e) => {
+                                const currentValues = value || [];
+                                const newValues = e.target.checked
+                                    ? [...currentValues, option.value]
+                                    : currentValues.filter(v => v !== option.value);
+                                onChange(field.id, newValues);
+                            }}
+                            className="w-5 h-5 mr-3 accent-green-600 cursor-pointer relative z-10"
+                        />
+                        <label htmlFor={`${field.id}-${option.value}`} className="flex-1 cursor-pointer text-gray-800 text-sm m-0 relative z-10">{option.label}</label>
+                    </div>
+                ))}
+            </div>
+            {error && <div className="text-red-600 text-sm mt-1 relative z-10">{error}</div>}
+        </div>
+    );
+
+    // Component for a group of radio buttons
+    const RadioGroup = ({ field, value, onChange, error }) => (
+        <div className="mb-4">
+            <label className="block mb-2 text-gray-800 font-medium relative z-10">{field.label}</label>
+            <div className="flex flex-col gap-2">
+                {field.options.map(option => (
+                    <div key={option.value} className="flex items-center p-3 bg-slate-50 rounded-xl border border-gray-100 cursor-pointer transition-colors clickable min-h-[48px] shadow-sm relative overflow-hidden">
+                        <FloatingEmojiContainer count={3} />
+                        <input
+                            type="radio"
+                            id={`${field.id}-${option.value}`}
+                            name={field.id}
+                            value={option.value}
+                            checked={value === option.value}
+                            onChange={(e) => onChange(field.id, e.target.value)}
+                            className="w-5 h-5 mr-3 accent-green-600 cursor-pointer relative z-10"
+                        />
+                        <label htmlFor={`${field.id}-${option.value}`} className="flex-1 cursor-pointer text-gray-800 text-sm m-0 relative z-10">{option.label}</label>
+                    </div>
+                ))}
+            </div>
+            {error && <div className="text-red-600 text-sm mt-1 relative z-10">{error}</div>}
+        </div>
+    );
+
+    // Renders the correct input component based on the field type
+    const FieldRenderer = ({ field, value, onChange, error }) => {
+        switch (field.type) {
+            case 'text':
+            case 'email':
+            case 'number':
+                return <TextInput field={field} value={value} onChange={onChange} error={error} />;
+            case 'select':
+                return <SelectInput field={field} value={value} onChange={onChange} error={error} />;
+            case 'textarea':
+                return <TextAreaInput field={field} value={value} onChange={onChange} error={error} />;
+            case 'checkbox':
+                return <CheckboxGroup field={field} value={value} onChange={onChange} error={error} />;
+            case 'radio':
+                return <RadioGroup field={field} value={value} onChange={onChange} error={error} />;
+            default:
+                return <TextInput field={field} value={value} onChange={onChange} error={error} />;
+        }
+    };
+
+    // Renders a row of fields
+    const FormRow = ({ fields, formData, onChange, errors }) => {
+        if (fields.length === 1) {
+            return (
+                <FieldRenderer
+                    field={fields[0]}
+                    value={formData[fields[0].id]}
+                    onChange={onChange}
+                    error={errors[fields[0].id]}
+                />
+            );
+        }
+
+        return (
+            <div className="flex flex-col md:flex-row gap-4 mb-4">
+                {fields.map(field => (
+                    <div key={field.id} className="flex-1">
+                        <FieldRenderer
+                            field={field}
+                            value={formData[field.id]}
+                            onChange={onChange}
+                            error={errors[field.id]}
+                        />
+                    </div>
+                ))}
+            </div>
+        );
+    };
+
+    // Renders a complete section of the form
+    const FormSection = ({ section, formData, onChange, errors }) => (
+        <div className="mb-6 p-6 bg-white rounded-2xl shadow-sm border border-gray-200 transition-colors duration-200 relative overflow-hidden">
+            <FloatingEmojiContainer count={10} />
+            <h3 className="text-xl font-semibold mb-4 text-gray-800 flex items-center gap-2 relative z-10">
+                {section.icon && <span className="text-2xl">{section.icon}</span>}
+                {section.title}
+            </h3>
+            <div className="relative z-10">
+                {section.rows.map((row, index) => (
+                    <FormRow
+                        key={index}
+                        fields={row}
+                        formData={formData}
+                        onChange={onChange}
+                        errors={errors}
+                    />
+                ))}
+            </div>
+        </div>
+    );
+
+    // The main component that renders the entire form
+    const DynamicForm = ({ config }) => {
+        const [formData, setFormData] = useState({});
+        const [errors, setErrors] = useState({});
+        const [isSubmitting, setIsSubmitting] = useState(false);
+
+        // Initialize form data with default values on config change
+        useEffect(() => {
+            const initialData = {};
+            config.sections.forEach(section => {
+                section.rows.forEach(row => {
+                    row.forEach(field => {
+                        if (field.defaultValue !== undefined) {
+                            initialData[field.id] = field.defaultValue;
+                        } else if (field.type === 'checkbox') {
+                            initialData[field.id] = [];
+                        }
+                    });
+                });
+            });
+            setFormData(initialData);
+        }, [config]);
+
+        // Handles changes to form fields and clears related errors
+        const handleFieldChange = (fieldId, value) => {
+            setFormData(prev => ({
+                ...prev,
+                [fieldId]: value
+            }));
+            if (errors[fieldId]) {
+                setErrors(prev => ({
+                    ...prev,
+                    [fieldId]: null
+                }));
+            }
+        };
+
+        // Validates the form data based on required fields and custom validation rules
+        const validateForm = () => {
+            const newErrors = {};
+            let isValid = true;
+            config.sections.forEach(section => {
+                section.rows.forEach(row => {
+                    row.forEach(field => {
+                        const value = formData[field.id];
+                        if (field.required && (!value || (Array.isArray(value) && value.length === 0) || (typeof value === 'string' && value.trim() === ''))) {
+                            newErrors[field.id] = `${field.label} is required`;
+                            isValid = false;
+                        } else if (field.validation && value) {
+                            const validationResult = field.validation(value);
+                            if (validationResult !== true) {
+                                newErrors[field.id] = validationResult;
+                                isValid = false;
+                            }
+                        }
+                    });
+                });
+            });
+            setErrors(newErrors);
+            return isValid;
+        };
+
+        // Handles form submission
+        const handleSubmit = async (e) => {
+            e.preventDefault();
+            if (!validateForm()) {
+                return;
+            }
+            setIsSubmitting(true);
+            try {
+                if (config.onSubmit) {
+                    await config.onSubmit(formData);
+                }
+                if (window.Android && window.Android.onFormSubmit) {
+                    window.Android.onFormSubmit(JSON.stringify(formData));
+                }
+                console.log('Form submitted:', formData);
+
+                // Add a slight delay for the user to see the "Submitting..." state
+                setTimeout(() => {
+                    window.location.href = 'large_scale_roadmap.html';
+                }, 500);
+
+            } catch (error) {
+                console.error('Submission error:', error);
+            } finally {
+                setIsSubmitting(false);
+            }
+        };
+
+        // Handles the "go back" button click with a fade-out effect
+        const handleGoBack = () => {
+            const root = document.getElementById('root');
+            root.classList.add('fade-out');
+            setTimeout(() => {
+                window.location.href = 'choose_scale.html';
+            }, 400);
+        };
+
+        return (
+            <div className="w-full space-y-6">
+                {/* Header Card - matching roadmap style */}
+                <div className="bg-white p-8 rounded-b-3xl shadow-lg flex flex-col items-center text-center">
+                    <div className="text-4xl mb-4">🌱</div>
+                    <h1 className="text-3xl font-bold text-gray-800 mb-2">{config.title}</h1>
+                    <p className="text-gray-500 mb-4">{config.description}</p>
+                    <button onClick={handleGoBack} className="text-2xl text-gray-600 hover:text-gray-800 transition-colors absolute top-6 left-6">
+                        ←
+                    </button>
+                </div>
+
+                {/* Form Container */}
+                <div className="max-w-screen-md mx-auto p-6">
+                    <form onSubmit={handleSubmit} className="space-y-6">
+                        {config.sections.map((section, index) => (
+                            <FormSection
+                                key={index}
+                                section={section}
+                                formData={formData}
+                                onChange={handleFieldChange}
+                                errors={errors}
+                            />
+                        ))}
+
+                        <div className="flex flex-col items-center justify-center w-full p-4">
+                            <button
+                                type="submit"
+                                className="w-full sm:w-auto px-8 py-4 bg-green-600 text-white font-semibold rounded-full shadow-md hover:bg-green-700 transition-colors duration-200 min-h-[48px] disabled:opacity-60 disabled:cursor-not-allowed disabled:transform-none disabled:shadow-none"
+                                disabled={isSubmitting}
+                            >
+                                {isSubmitting ? config.submittingText || 'Submitting...' : config.submitText || 'Create My Farming Roadmap 🌱'}
+                            </button>
+                        </div>
+                    </form>
+                </div>
+            </div>
+        );
+    };
+
+    // The default form configuration data
+    const defaultConfig = {
+        title: "Tell Us About Your Growing Environment",
+        description: "Help us create the perfect farming plan for your unique conditions",
+        submitText: "Create My Farming Roadmap 🌱",
+        submittingText: "Creating Roadmap...",
+        sections: [
+    {
+        "title": "Crop and Location",
+        "icon": "🌾",
+        "rows": [
+            [
+                {
+                    "id": "cropVariety",
+                    "type": "text",
+                    "label": "What is the specific crop and variety you are planting?",
+                    "placeholder": "e.g., Arka Samrat tomatoes, Pusa Basmati rice",
+                    "required": true
+                }
+            ],
+            [
+                {
+                    "id": "farmLocation",
+                    "type": "text",
+                    "label": "Please provide the precise geographic coordinates or a nearby city and state for your farm.",
+                    "placeholder": "e.g., Pune, Maharashtra or 18.5204° N, 73.8567° E",
+                    "required": true
+                }
+            ]
+        ]
+    },
+    {
+        "title": "Field and Soil",
+        "icon": "🚜",
+        "rows": [
+            [
+                {
+                    "id": "fieldSize",
+                    "type": "text",
+                    "label": "What is the total size of the area you will be cultivating?",
+                    "placeholder": "e.g., 50 acres, 10 hectares",
+                    "required": true
+                },
+                {
+                    "id": "soilType",
+                    "type": "text",
+                    "label": "What is the primary soil type in your fields?",
+                    "placeholder": "e.g., Clay loam, Sandy soil, Silty clay",
+                    "required": true
+                }
+            ],
+            [
+                {
+                    "id": "soilPh",
+                    "type": "text",
+                    "label": "What is your soil's pH level from a recent test?",
+                    "placeholder": "e.g., 7.2",
+                    "required": true
+                }
+            ],
+
+        ]
+    },
+    {
+        "title": "Water and Terrain",
+        "icon": "💧",
+        "rows": [
+            [
+                {
+                    "id": "irrigationMethod",
+                    "type": "text",
+                    "label": "How do you plan to irrigate?",
+                    "placeholder": "e.g., Drip irrigation, Center pivot, Rain-fed",
+                    "required": true
+                },
+                {
+                    "id": "waterSource",
+                    "type": "text",
+                    "label": "What is your primary water source?",
+                    "placeholder": "e.g., Well, River, Reservoir",
+                    "required": true
+                }
+            ],
+            [
+                {
+                    "id": "terrain",
+                    "type": "text",
+                    "label": "Is the land flat or sloped?",
+                    "placeholder": "e.g., Flat, Gentle slope, Steep slope",
+                    "required": true
+                }
+            ]
+        ]
+    }
+]
+
+    };
+
+    // The main App component
+    const App = () => {
+        const [config, setConfig] = useState(defaultConfig);
+
+        useEffect(() => {
+            if (window.formConfig) {
+                try {
+                    const customConfig = JSON.parse(window.formConfig);
+                    setConfig(customConfig);
+                } catch (error) {
+                    console.error('Error parsing form config:', error);
+                }
+            }
+        }, []);
+
+        return <DynamicForm config={config} />;
+    };
+
+    // Render the App component into the root element
+    ReactDOM.render(<App />, document.getElementById('root'));
+
+    // Global function to update the form configuration dynamically
+    window.updateFormConfig = (jsonConfig) => {
+        try {
+            window.formConfig = jsonConfig;
+            const config = JSON.parse(jsonConfig);
+            ReactDOM.render(<App />, document.getElementById('root'));
+        } catch (error) {
+            console.error('Error updating form config:', error);
+        }
+    };
+
+    // Example configurations for demonstration
+    window.exampleConfigs = {
+        simple: {
+            title: "Simple Contact Form",
+            description: "Tell us about yourself",
+            submitText: "Send Message",
+            sections: [
+                {
+                    title: "Basic Information",
+                    rows: [
+                        [
+                            {
+                                id: "name",
+                                type: "text",
+                                label: "Full Name",
+                                required: true
+                            },
+                            {
+                                id: "email",
+                                type: "email",
+                                label: "Email Address",
+                                required: true
+                            }
+                        ],
+                        [
+                            {
+                                id: "message",
+                                type: "textarea",
+                                label: "Message",
+                                placeholder: "Your message here...",
+                                required: true
+                            }
+                        ]
+                    ]
+                }
+            ]
+        }
+    };
+</script>
+</body>
+</html>

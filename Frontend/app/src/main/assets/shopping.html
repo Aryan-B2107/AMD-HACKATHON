@@ -1,0 +1,571 @@
+<!DOCTYPE html>
+<html lang="en">
+<head>
+    <meta charset="UTF-8">
+    <meta name="viewport" content="width=device-width, initial-scale=1.0">
+    <title id="pageTitle">Farming Shop</title>
+    <link rel="preconnect" href="https://fonts.googleapis.com">
+    <link rel="preconnect" href="https://fonts.gstatic.com" crossorigin>
+    <link href="https://fonts.googleapis.com/css2?family=Inter:wght@400;500;600;700&display=swap" rel="stylesheet">
+    <script src="https://cdn.tailwindcss.com"></script>
+    <style>
+        body {
+            font-family: 'Inter', sans-serif;
+            background-color: #F0FFF0;
+            padding-bottom: 80px;
+            /* Added padding-top to account for the new fixed back button and language toggle */
+            padding-top: 5rem;
+        }
+
+        .floating-emoji-container {
+            position: absolute;
+            top: 0;
+            left: 0;
+            width: 100%;
+            height: 100%;
+            pointer-events: none;
+            overflow: hidden;
+            z-index: 0;
+        }
+        .floating-emoji {
+            position: absolute;
+            opacity: 0.15;
+            animation-name: float-and-wave-card;
+            animation-iteration-count: infinite;
+            animation-timing-function: linear;
+            font-size: 2rem;
+        }
+
+        @keyframes float-and-wave-card {
+            0% { transform: translate(0, 0) scale(1); }
+            25% { transform: translate(2rem, -1rem) scale(1.1); }
+            50% { transform: translate(0, -2rem) scale(1.2); }
+            75% { transform: translate(-2rem, -1rem) scale(1.1); }
+            100% { transform: translate(0, 0) scale(1); }
+        }
+
+        .clickable:hover {
+            background-color: #f0fdf4;
+            transform: translateY(-4px);
+            transition: all 0.3s ease;
+        }
+        .clickable:active {
+            transform: scale(0.98);
+        }
+
+        .message-box {
+            position: fixed;
+            top: 2rem;
+            left: 50%;
+            transform: translateX(-50%);
+            background-color: rgba(52, 211, 153, 0.9);
+            color: white;
+            padding: 1rem 2rem;
+            border-radius: 1rem;
+            box-shadow: 0 4px 6px rgba(0, 0, 0, 0.1);
+            z-index: 1000;
+            display: none;
+            text-align: center;
+        }
+
+        .nav-bar {
+            position: fixed;
+            bottom: 0;
+            left: 0;
+            right: 0;
+            background: white;
+            box-shadow: 0 -4px 6px rgba(0, 0, 0, 0.1);
+            z-index: 100;
+        }
+
+        .nav-item {
+            flex: 1;
+            display: flex;
+            flex-direction: column;
+            align-items: center;
+            padding: 0.75rem 0;
+            cursor: pointer;
+            transition: all 0.2s ease;
+            border-top: 3px solid transparent;
+        }
+
+        .nav-item:hover {
+            background-color: #f0fdf4;
+        }
+
+        .nav-item.active {
+            color: #16a34a;
+            border-top-color: #16a34a;
+        }
+
+        .nav-item.active .nav-icon {
+            transform: scale(1.1);
+        }
+
+        .nav-icon {
+            font-size: 1.5rem;
+            transition: transform 0.2s ease;
+        }
+
+        .nav-label {
+            font-size: 0.75rem;
+            margin-top: 0.25rem;
+            font-weight: 500;
+        }
+
+        .shop-card {
+            cursor: pointer;
+            transition: all 0.3s ease;
+            text-decoration: none;
+            display: block;
+        }
+
+        .shop-card:hover {
+            transform: translateY(-6px);
+            box-shadow: 0 20px 25px -5px rgba(0, 0, 0, 0.15), 0 10px 10px -5px rgba(0, 0, 0, 0.08);
+        }
+
+        .shop-card:active {
+            transform: translateY(-2px);
+        }
+
+        .shop-image {
+            width: 100%;
+            height: 140px;
+            object-fit: cover;
+            border-radius: 1rem;
+            background: linear-gradient(135deg, #f0fdf4 0%, #dcfce7 100%);
+            display: flex;
+            align-items: center;
+            justify-content: center;
+            font-size: 4rem;
+        }
+
+        .category-badge {
+            display: inline-block;
+            padding: 0.25rem 0.75rem;
+            background: #dcfce7;
+            color: #166534;
+            border-radius: 9999px;
+            font-size: 0.75rem;
+            font-weight: 600;
+        }
+
+        .external-link-icon {
+            display: inline-block;
+            transition: transform 0.2s ease;
+        }
+
+        .shop-card:hover .external-link-icon {
+            transform: translateX(4px);
+        }
+    </style>
+</head>
+<body class="min-h-screen">
+
+<div id="message-box" class="message-box"></div>
+
+<!-- Custom Fixed Controls - Back Button (LEFT) -->
+<button
+        onclick="window.location.href = 'dashboard.html';"
+        class="fixed top-4 left-4 z-20 p-3 bg-white rounded-full shadow-xl text-green-700 hover:bg-green-50 transition transform active:scale-95"
+        id="backButton"
+        title="Back to Dashboard"
+>
+    <!-- Simple back arrow SVG icon -->
+    <svg class="w-6 h-6" fill="none" stroke="currentColor" viewBox="0 0 24 24" xmlns="http://www.w3.org/2000/svg">
+        <path stroke-linecap="round" stroke-linejoin="round" stroke-width="2.5" d="M10 19l-7-7m0 0l7-7m-7 7h18"></path>
+    </svg>
+</button>
+
+<!-- Language Toggle Button (RIGHT) -->
+<button
+        onclick="toggleLanguage()"
+        class="fixed top-4 right-4 z-20 p-3 px-4 bg-green-100 rounded-full shadow-xl text-green-800 font-semibold hover:bg-green-200 transition transform active:scale-95 text-sm"
+        id="langToggle"
+        title="Switch Language"
+>
+    EN
+</button>
+
+
+<div class="w-full max-w-md mx-auto space-y-4 p-4">
+
+    <!-- Header Card -->
+    <div class="bg-white p-6 rounded-3xl shadow-lg relative overflow-hidden mt-4">
+        <div class="floating-emoji-container" id="headerEmojis"></div>
+        <div class="relative z-10">
+            <div class="flex items-center justify-between mb-2">
+                <div>
+                    <!-- The header title is shifted slightly right to compensate for the fixed back button -->
+                    <h1 class="text-2xl font-bold text-gray-800 ml-8" id="headerTitle">Farm Shop 🛒</h1>
+                    <p class="text-sm text-gray-500 ml-8" id="headerSubtitle">Buy bulk farming supplies online</p>
+                </div>
+                <div class="text-5xl">🌾</div>
+            </div>
+            <div class="bg-green-50 p-3 rounded-xl mt-4">
+                <p class="text-xs text-green-800">
+                    <span id="tipPrefix" class="font-semibold">💡 Tip:</span>
+                    <span id="tipText">Compare prices across platforms for best deals!</span>
+                </p>
+            </div>
+        </div>
+    </div>
+
+    <!-- Shopping Platforms Section -->
+    <div class="space-y-3" id="shopsContainer">
+        <!-- Shop cards will be populated by JavaScript -->
+    </div>
+
+</div>
+
+<!-- Bottom Navigation Bar -->
+<div class="nav-bar">
+    <div class="flex justify-around max-w-md mx-auto">
+        <div class="nav-item" onclick="navigateToDashboard()">
+            <div class="nav-icon">🏠</div>
+            <div class="nav-label" id="navHome">Home</div>
+        </div>
+        <div class="nav-item" onclick="navigateToRoadmap()">
+            <div class="nav-icon">🗺️</div>
+            <div class="nav-label" id="navRoadmap">Roadmap</div>
+        </div>
+        <div class="nav-item" onclick="navigateToSchemes()">
+            <div class="nav-icon">📋</div>
+            <div class="nav-label" id="navSchemes">Schemes</div>
+        </div>
+        <div class="nav-item active" onclick="navigateToShopping()">
+            <div class="nav-icon">🛒</div>
+            <div class="nav-label" id="navShop">Shop</div>
+        </div>
+    </div>
+</div>
+
+<script>
+    // --- Global Language and Translation Setup ---
+    let currentLang = localStorage.getItem('appLang') || 'en'; // Default to English
+
+    const translations = {
+        en: {
+            title: "Farming Shop",
+            back_to_dashboard: "Back to Dashboard",
+            header_title: "Farm Shop 🛒",
+            header_subtitle: "Buy bulk farming supplies online",
+            tip_prefix: "💡 Tip:",
+            tip_text: "Compare prices across platforms for best deals!",
+            nav_home: "Home",
+            nav_roadmap: "Roadmap",
+            nav_schemes: "Schemes",
+            nav_shop: "Shop",
+            message_on_shop: "Already on Shopping page"
+        },
+        ml: {
+            title: "കൃഷി കട", // Krishi Kada
+            back_to_dashboard: "ഡാഷ്ബോർഡിലേക്ക് തിരികെ", // Dashboardilekku Thirike
+            header_title: "കൃഷി കട 🛒",
+            header_subtitle: "വൻതോതിൽ കൃഷി സാധനങ്ങൾ ഓൺലൈനായി വാങ്ങുക", // Vanthotil Krishi Sadhanangal Online-ayi Vanguka
+            tip_prefix: "💡 സൂചന:", // Soochana:
+            tip_text: "മികച്ച ഓഫറുകൾക്കായി വിവിധ പ്ലാറ്റ്‌ഫോമുകളിലെ വിലകൾ താരതമ്യം ചെയ്യുക!", // Mikacha Offerukalkkayi Vibhinna Platformukalile Vilakal Tharamathamyam Cheyyuka!
+            nav_home: "ഹോം", // Home
+            nav_roadmap: "റോഡ്‌മാപ്പ്", // Roadmap
+            nav_schemes: "പദ്ധതികൾ", // Paddhathikal
+            nav_shop: "ഷോപ്പ്", // Shop
+            message_on_shop: "നിലവിൽ ഷോപ്പിംഗ് പേജിലാണ്" // Nilavil Shopping Pageilanu
+        }
+    };
+
+    /**
+     * Translates static UI elements based on the currentLang.
+     */
+    function translateUI() {
+        const t = translations[currentLang];
+        document.getElementById('pageTitle').textContent = t.title;
+        document.getElementById('backButton').title = t.back_to_dashboard;
+        document.getElementById('headerTitle').textContent = t.header_title;
+        document.getElementById('headerSubtitle').textContent = t.header_subtitle;
+        document.getElementById('tipPrefix').textContent = t.tip_prefix;
+        document.getElementById('tipText').textContent = t.tip_text;
+
+        document.getElementById('navHome').textContent = t.nav_home;
+        document.getElementById('navRoadmap').textContent = t.nav_roadmap;
+        document.getElementById('navSchemes').textContent = t.nav_schemes;
+        document.getElementById('navShop').textContent = t.nav_shop;
+
+        // Update language toggle button text
+        document.getElementById('langToggle').textContent = currentLang.toUpperCase();
+
+        renderShops(); // Re-render dynamic content with new language
+    }
+
+    /**
+     * Toggles the current language between English and Malayalam.
+     */
+    function toggleLanguage() {
+        currentLang = currentLang === 'en' ? 'ml' : 'en';
+        localStorage.setItem('appLang', currentLang);
+        translateUI();
+    }
+    // --- End Global Language and Translation Setup ---
+
+
+    // Shopping platforms data - NOW WITH MALAYALAM FIELDS
+    let shoppingPlatforms = [
+        {
+            id: 1,
+            name: 'Kisan Mart',
+            description: 'Complete range of agricultural inputs and farming equipment',
+            description_ml: 'കൃഷിക്ക് ആവശ്യമായ സാധനങ്ങളുടെയും ഉപകരണങ്ങളുടെയും സമ്പൂർണ്ണ ശ്രേണി',
+            category: 'All Products',
+            category_ml: 'എല്ലാ ഉൽപ്പന്നങ്ങളും',
+            url: 'https://kisanmart.online.com',
+            icon: '🌾',
+            offers: 'Free delivery on orders above ₹50,000',
+            offers_ml: '₹50,000-ന് മുകളിലുള്ള ഓർഡറുകൾക്ക് സൗജന്യ ഡെലിവറി'
+        },
+        {
+            id: 2,
+            name: 'BigHaat',
+            description: 'Seeds, fertilizers, pesticides and farm equipment',
+            description_ml: 'വിത്തുകൾ, വളങ്ങൾ, കീടനാശിനികൾ, കാർഷിക ഉപകരണങ്ങൾ',
+            category: 'Seeds & Fertilizers',
+            category_ml: 'വിത്തുകളും വളങ്ങളും',
+            url: 'https://www.bighaat.com',
+            icon: '🌱',
+            offers: 'Up to 20% off on bulk orders',
+            offers_ml: 'വൻതോതിലുള്ള ഓർഡറുകൾക്ക് 20% വരെ കിഴിവ്'
+        },
+        {
+            id: 3,
+            name: 'AgroStar',
+            description: 'Quality agri-inputs with expert advice',
+            description_ml: 'വിദഗ്ദ്ധോപദേശത്തോടുകൂടിയ ഗുണമേന്മയുള്ള കാർഷിക ഉൽപ്പന്നങ്ങൾ',
+            category: 'Pesticides & Tools',
+            category_ml: 'കീടനാശിനികളും ഉപകരണങ്ങളും',
+            url: 'https://www.agrostar.in',
+            icon: '🛡️',
+            offers: 'Expert agronomist consultation included',
+            offers_ml: 'വിദഗ്ദ്ധ കാർഷികോപദേഷ്ടാവിന്റെ കൺസൾട്ടേഷൻ ഉൾപ്പെടുന്നു'
+        },
+        {
+            id: 4,
+            name: 'Dehaat',
+            description: 'End-to-end agricultural services and products',
+            description_ml: 'സമഗ്രമായ കാർഷിക സേവനങ്ങളും ഉൽപ്പന്നങ്ങളും',
+            category: 'All Products',
+            category_ml: 'എല്ലാ ഉൽപ്പന്നങ്ങളും',
+            url: 'https://www.dehaat.com',
+            icon: '🚜',
+            offers: 'Credit facility available',
+            offers_ml: 'ക്രെഡിറ്റ് സൗകര്യം ലഭ്യമാണ്'
+        },
+        {
+            id: 5,
+            name: 'Ninjacart',
+            description: 'Fresh produce supply chain and agri solutions',
+            description_ml: 'പുതിയ ഉൽപ്പന്ന വിതരണ ശൃംഖലയും കാർഷിക പരിഹാരങ്ങളും',
+            category: 'Produce & Supplies',
+            category_ml: 'ഉൽപ്പന്നങ്ങളും വിതരണങ്ങളും',
+            url: 'https://www.ninjacart.com',
+            icon: '🥬',
+            offers: 'Direct from farm to market',
+            offers_ml: 'കൃഷിയിടത്തിൽ നിന്ന് നേരിട്ട് വിപണിയിലേക്ക്'
+        },
+        {
+            id: 6,
+            name: 'Gramophone',
+            description: 'Smart farming solutions and agri-inputs',
+            description_ml: 'സ്മാർട്ട് കൃഷി പരിഹാരങ്ങളും കാർഷിക ഉൽപ്പന്നങ്ങളും',
+            category: 'Smart Farming',
+            category_ml: 'സ്മാർട്ട് കൃഷി',
+            url: 'https://www.gramophone.in',
+            icon: '📱',
+            offers: 'AI-powered crop advisory',
+            offers_ml: 'AI അധിഷ്ഠിത വിള ഉപദേശം'
+        },
+        {
+            id: 7,
+            name: 'Tractor Junction',
+            description: 'New & used tractors, implements and equipment',
+            description_ml: 'പുതിയതും ഉപയോഗിച്ചതുമായ ട്രാക്ടറുകളും ഉപകരണങ്ങളും',
+            category: 'Heavy Equipment',
+            category_ml: 'വലിയ ഉപകരണങ്ങൾ',
+            url: 'https://www.tractorjunction.com',
+            icon: '🚜',
+            offers: 'Easy EMI options available',
+            offers_ml: 'എളുപ്പമുള്ള EMI ഓപ്ഷനുകൾ ലഭ്യമാണ്'
+        },
+        {
+            id: 8,
+            name: 'Fasal',
+            description: 'IoT-based precision farming and crop management',
+            description_ml: 'IoT അടിസ്ഥാനമാക്കിയുള്ള കൃത്യതാ കൃഷിയും വിള പരിപാലനവും',
+            category: 'Technology',
+            category_ml: 'സാങ്കേതികവിദ്യ',
+            url: 'https://www.fasal.co',
+            icon: '💧',
+            offers: 'Smart irrigation solutions',
+            offers_ml: 'സ്മാർട്ട് ജലസേചന പരിഹാരങ്ങൾ'
+        }
+    ];
+
+    function showMessage(message, duration = 3000) {
+        const messageBox = document.getElementById('message-box');
+        messageBox.textContent = message;
+        messageBox.style.display = 'block';
+        setTimeout(() => {
+            messageBox.style.display = 'none';
+        }, duration);
+    }
+
+    function createEmoji(container) {
+        const emojis = ['🥕', '🍎', '🍓', '🥬', '🥦', '🌽', '🍊', '🍅', '🌱'];
+        const emoji = document.createElement('span');
+        emoji.className = 'floating-emoji';
+        emoji.textContent = emojis[Math.floor(Math.random() * emojis.length)];
+
+        const startX = Math.random() * 100;
+        const startY = Math.random() * 100;
+        const size = 1.5 + Math.random() * 1.5;
+        const duration = 10 + Math.random() * 5;
+
+        emoji.style.left = `${startX}%`;
+        emoji.style.top = `${startY}%`;
+        emoji.style.fontSize = `${size}rem`;
+        emoji.style.animationDuration = `${duration}s`;
+        emoji.style.animationDelay = `${Math.random() * duration}s`;
+
+        container.appendChild(emoji);
+    }
+
+    function populateContainerWithEmojis(container, count) {
+        for (let i = 0; i < count; i++) {
+            createEmoji(container);
+        }
+    }
+
+    /**
+     * Handles opening external URLs.
+     * @param {string} url The external URL to open.
+     */
+    function openExternalLink(url) {
+        if (window.Android && window.Android.openExternalUrl) {
+            console.log("Delegating external URL to Kotlin:", url);
+            window.Android.openExternalUrl(url);
+        } else {
+            console.warn("Native bridge 'window.Android.openExternalUrl' not found. Opening URL directly in a new tab.");
+            window.open(url, '_blank');
+        }
+    }
+
+
+    function renderShops() {
+        const container = document.getElementById('shopsContainer');
+        container.innerHTML = '';
+
+        // Determine which fields to use based on the current language
+        const categoryKey = currentLang === 'ml' ? 'category_ml' : 'category';
+        const descriptionKey = currentLang === 'ml' ? 'description_ml' : 'description';
+        const offersKey = currentLang === 'ml' ? 'offers_ml' : 'offers';
+
+        shoppingPlatforms.forEach(shop => {
+            const shopCard = document.createElement('div');
+            shopCard.className = 'shop-card bg-white p-5 rounded-3xl shadow-lg relative overflow-hidden block';
+            shopCard.onclick = () => openExternalLink(shop.url);
+
+            const emojiContainer = document.createElement('div');
+            emojiContainer.className = 'floating-emoji-container';
+            shopCard.appendChild(emojiContainer);
+            populateContainerWithEmojis(emojiContainer, 5);
+
+            // Check if using image or icon
+            const imageContent = shop.imageUrl
+                ? `<img src="${shop.imageUrl}" alt="${shop.name}" class="shop-image" />`
+                : `<div class="shop-image">${shop.icon}</div>`;
+
+            shopCard.innerHTML += `
+                <div class="relative z-10">
+                    <div class="mb-4">
+                        ${imageContent}
+                    </div>
+
+                    <div class="space-y-2">
+                        <div class="flex items-start justify-between">
+                            <div class="flex-1">
+                                <h3 class="text-lg font-bold text-gray-800">${shop.name}</h3>
+                                <span class="category-badge mt-1 inline-block">${shop[categoryKey]}</span>
+                            </div>
+                            <span class="external-link-icon text-2xl">→</span>
+                        </div>
+
+                        <p class="text-sm text-gray-600">${shop[descriptionKey]}</p>
+
+                        <div class="bg-green-50 p-3 rounded-xl mt-3">
+                            <p class="text-xs text-green-800">🎁 <span class="font-semibold">${shop[offersKey]}</span></p>
+                        </div>
+                    </div>
+                </div>
+            `;
+
+            container.appendChild(shopCard);
+        });
+    }
+
+    // Navigation functions for the bottom bar
+    function navigateToDashboard() {
+        if (window.Android && window.Android.navigateToDashboard) {
+            window.Android.navigateToDashboard();
+        } else {
+            window.location.href = 'dashboard.html';
+        }
+    }
+
+    function navigateToRoadmap() {
+        if (window.Android && window.Android.navigateToRoadmap) {
+            window.Android.navigateToRoadmap();
+        } else {
+            window.location.href = 'small_scale_roadmap.html';
+        }
+    }
+
+    function navigateToSchemes() {
+        if (window.Android && window.Android.navigateToSchemes) {
+            window.Android.navigateToSchemes();
+        } else {
+            window.location.href = 'gov_schemes.html';
+        }
+    }
+
+    function navigateToShopping() {
+        const message = translations[currentLang].message_on_shop;
+        if (window.Android && window.Android.navigateToShopping) {
+            window.Android.navigateToShopping();
+        } else {
+            showMessage(message);
+        }
+    }
+
+    // Public API for updating shopping platforms from Kotlin (updated to handle new fields)
+    window.updateShoppingPlatforms = function(newPlatforms) {
+        try {
+            if (typeof newPlatforms === 'string') {
+                shoppingPlatforms = JSON.parse(newPlatforms);
+            } else {
+                shoppingPlatforms = newPlatforms;
+            }
+            renderShops();
+            return true;
+        } catch (e) {
+            console.error('Error updating shopping platforms:', e);
+            return false;
+        }
+    };
+
+    // Initialize page
+    document.addEventListener('DOMContentLoaded', () => {
+        populateContainerWithEmojis(document.getElementById('headerEmojis'), 8);
+        // Load the initial language state
+        translateUI();
+    });
+</script>
+</body>
+</html>

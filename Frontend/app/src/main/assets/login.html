@@ -1,0 +1,612 @@
+<!DOCTYPE html>
+<html lang="en">
+<head>
+    <meta charset="UTF-8">
+    <meta name="viewport" content="width=device-width, initial-scale=1.0, user-scalable=no">
+    <title>Farm Guidance - Login</title>
+    <script src="https://cdnjs.cloudflare.com/ajax/libs/react/18.2.0/umd/react.production.min.js"></script>
+    <script src="https://cdnjs.cloudflare.com/ajax/libs/react-dom/18.2.0/umd/react-dom.production.min.js"></script>
+    <script src="https://cdnjs.cloudflare.com/ajax/libs/babel-standalone/7.23.5/babel.min.js"></script>
+    <style>
+        * {
+            margin: 0;
+            padding: 0;
+            box-sizing: border-box;
+            -webkit-tap-highlight-color: transparent;
+        }
+
+        body {
+            font-family: -apple-system, BlinkMacSystemFont, 'Segoe UI', Roboto, sans-serif;
+            background: linear-gradient(135deg, #e8f5e8 0%, #f0f8e8 100%);
+            min-height: 100vh;
+            color: #2d4a2d;
+            line-height: 1.5;
+            -webkit-font-smoothing: antialiased;
+            -moz-osx-font-smoothing: grayscale;
+            display: flex;
+            align-items: center;
+            justify-content: center;
+            padding: 20px;
+        }
+
+        #root {
+            width: 100%;
+            max-width: 400px;
+        }
+
+        .login-container {
+            background: rgba(255, 255, 255, 0.95);
+            border-radius: 20px;
+            padding: 32px 24px;
+            box-shadow: 0 8px 32px rgba(0, 0, 0, 0.1);
+            backdrop-filter: blur(10px);
+            border: 1px solid rgba(255, 255, 255, 0.3);
+            width: 100%;
+        }
+
+        .logo-section {
+            text-align: center;
+            margin-bottom: 32px;
+        }
+
+        .logo {
+            font-size: 48px;
+            margin-bottom: 16px;
+            display: block;
+        }
+
+        .app-name {
+            font-size: 28px;
+            font-weight: 700;
+            color: #4a7c4a;
+            margin-bottom: 8px;
+            letter-spacing: -0.5px;
+        }
+
+        .app-tagline {
+            font-size: 16px;
+            color: #6b8e6b;
+            font-style: italic;
+            margin-bottom: 8px;
+        }
+
+        .welcome-text {
+            font-size: 14px;
+            color: #7ba77b;
+            font-weight: 500;
+        }
+
+        .form-section {
+            margin-bottom: 24px;
+        }
+
+        .form-group {
+            margin-bottom: 20px;
+            position: relative;
+        }
+
+        .input-label {
+            display: block;
+            margin-bottom: 8px;
+            color: #4a7c4a;
+            font-weight: 600;
+            font-size: 14px;
+            letter-spacing: 0.3px;
+        }
+
+        .input-field {
+            width: 100%;
+            padding: 16px;
+            border: 2px solid #e0f0e0;
+            border-radius: 12px;
+            font-size: 16px;
+            background: rgba(255, 255, 255, 0.9);
+            transition: all 0.3s ease;
+            color: #2d4a2d;
+            -webkit-appearance: none;
+            appearance: none;
+            min-height: 56px;
+        }
+
+        .input-field:focus {
+            outline: none;
+            border-color: #7ba77b;
+            box-shadow: 0 0 0 3px rgba(123, 167, 123, 0.15);
+            background: white;
+            transform: translateY(-1px);
+        }
+
+        .input-field::placeholder {
+            color: #9bb89b;
+            opacity: 1;
+        }
+
+        .password-container {
+            position: relative;
+        }
+
+        .password-toggle {
+            position: absolute;
+            right: 16px;
+            top: 50%;
+            transform: translateY(-50%);
+            background: none;
+            border: none;
+            color: #7ba77b;
+            cursor: pointer;
+            font-size: 14px;
+            font-weight: 500;
+            padding: 4px;
+            min-height: 32px;
+            min-width: 48px;
+        }
+
+        .error-message {
+            color: #d32f2f;
+            font-size: 12px;
+            margin-top: 6px;
+            font-weight: 500;
+            padding-left: 4px;
+        }
+
+        .login-btn {
+            background: linear-gradient(135deg, #7ba77b 0%, #6b966b 100%);
+            color: white;
+            border: none;
+            padding: 18px 32px;
+            border-radius: 16px;
+            font-size: 16px;
+            font-weight: 700;
+            cursor: pointer;
+            transition: all 0.3s ease;
+            box-shadow: 0 6px 20px rgba(123, 167, 123, 0.3);
+            width: 100%;
+            min-height: 56px;
+            letter-spacing: 0.3px;
+            text-transform: uppercase;
+        }
+
+        .login-btn:active {
+            transform: translateY(2px);
+            box-shadow: 0 3px 15px rgba(123, 167, 123, 0.4);
+        }
+
+        .login-btn:disabled {
+            opacity: 0.6;
+            cursor: not-allowed;
+            transform: none;
+        }
+
+        .forgot-password {
+            text-align: center;
+            margin-top: 20px;
+        }
+
+        .forgot-password a {
+            color: #7ba77b;
+            text-decoration: none;
+            font-size: 14px;
+            font-weight: 500;
+            border-bottom: 1px solid transparent;
+            transition: border-color 0.2s ease;
+        }
+
+        .forgot-password a:active {
+            border-bottom-color: #7ba77b;
+        }
+
+        .divider {
+            display: flex;
+            align-items: center;
+            margin: 28px 0;
+            color: #9bb89b;
+            font-size: 14px;
+        }
+
+        .divider::before,
+        .divider::after {
+            content: '';
+            flex: 1;
+            height: 1px;
+            background: #e0f0e0;
+        }
+
+        .divider span {
+            padding: 0 16px;
+            background: rgba(255, 255, 255, 0.95);
+        }
+
+        .social-login {
+            margin-bottom: 24px;
+        }
+
+        .social-btn {
+            width: 100%;
+            padding: 16px;
+            border: 2px solid #e0f0e0;
+            border-radius: 12px;
+            background: white;
+            color: #2d4a2d;
+            font-size: 16px;
+            font-weight: 600;
+            cursor: pointer;
+            transition: all 0.2s ease;
+            display: flex;
+            align-items: center;
+            justify-content: center;
+            gap: 12px;
+            margin-bottom: 12px;
+            min-height: 56px;
+        }
+
+        .social-btn:active {
+            transform: translateY(1px);
+            border-color: #7ba77b;
+            background: #f8fdf8;
+        }
+
+        .signup-prompt {
+            text-align: center;
+            margin-top: 24px;
+            padding-top: 20px;
+            border-top: 1px solid #e0f0e0;
+            color: #6b8e6b;
+            font-size: 14px;
+        }
+
+        .signup-prompt a {
+            color: #7ba77b;
+            text-decoration: none;
+            font-weight: 700;
+            margin-left: 4px;
+        }
+
+        .signup-prompt a:active {
+            text-decoration: underline;
+        }
+
+        .loading-spinner {
+            display: inline-block;
+            width: 20px;
+            height: 20px;
+            border: 2px solid transparent;
+            border-top: 2px solid white;
+            border-radius: 50%;
+            animation: spin 1s linear infinite;
+            margin-right: 8px;
+        }
+
+        @keyframes spin {
+            0% { transform: rotate(0deg); }
+            100% { transform: rotate(360deg); }
+        }
+
+        /* Remember me checkbox */
+        .remember-me {
+            display: flex;
+            align-items: center;
+            margin: 16px 0;
+        }
+
+        .remember-me input[type="checkbox"] {
+            width: 18px;
+            height: 18px;
+            margin-right: 8px;
+            accent-color: #7ba77b;
+            cursor: pointer;
+        }
+
+        .remember-me label {
+            color: #6b8e6b;
+            font-size: 14px;
+            font-weight: 500;
+            cursor: pointer;
+            flex: 1;
+        }
+
+        /* Responsive adjustments */
+        @media screen and (max-width: 480px) {
+            body {
+                padding: 16px;
+            }
+
+            .login-container {
+                padding: 24px 20px;
+                border-radius: 16px;
+            }
+
+            .app-name {
+                font-size: 24px;
+            }
+
+            .logo {
+                font-size: 40px;
+            }
+        }
+
+        @media screen and (max-height: 700px) {
+            body {
+                align-items: flex-start;
+                padding-top: 40px;
+            }
+
+            .logo-section {
+                margin-bottom: 24px;
+            }
+        }
+
+        /* Android WebView specific optimizations */
+        @media screen and (min-resolution: 2dppx) {
+            .input-field, .login-btn, .social-btn {
+                border-width: 1px;
+            }
+        }
+
+        /* Focus states for accessibility */
+        .login-btn:focus-visible,
+        .social-btn:focus-visible,
+        .input-field:focus-visible {
+            outline: 2px solid #7ba77b;
+            outline-offset: 2px;
+        }
+    </style>
+</head>
+<body>
+<div id="root"></div>
+
+<script type="text/babel">
+    const { useState } = React;
+
+    const LoginForm = () => {
+        const [formData, setFormData] = useState({
+            email: '',
+            password: '',
+            rememberMe: false
+        });
+        const [errors, setErrors] = useState({});
+        const [isLoading, setIsLoading] = useState(false);
+        const [showPassword, setShowPassword] = useState(false);
+
+        const handleInputChange = (field, value) => {
+            setFormData(prev => ({
+                ...prev,
+                [field]: value
+            }));
+
+            // Clear error when user starts typing
+            if (errors[field]) {
+                setErrors(prev => ({
+                    ...prev,
+                    [field]: ''
+                }));
+            }
+        };
+
+        const validateForm = () => {
+            const newErrors = {};
+
+            if (!formData.email.trim()) {
+                newErrors.email = 'Email is required';
+            } else if (!/\S+@\S+\.\S+/.test(formData.email)) {
+                newErrors.email = 'Please enter a valid email';
+            }
+
+            if (!formData.password.trim()) {
+                newErrors.password = 'Password is required';
+            } else if (formData.password.length < 6) {
+                newErrors.password = 'Password must be at least 6 characters';
+            }
+
+            setErrors(newErrors);
+            return Object.keys(newErrors).length === 0;
+        };
+
+        const handleLogin = async (e) => {
+            e.preventDefault();
+
+            if (!validateForm()) {
+                return;
+            }
+
+            // Check for specific admin credentials
+            if (formData.email === 'admin@gmail.com' && formData.password === '123456') {
+                console.log('Admin login successful. Redirecting to view_data.html');
+                window.location.href = 'view_data.html';
+                return;
+            }
+
+            setIsLoading(true);
+
+            try {
+                // Simulate API call for regular users
+                await new Promise(resolve => setTimeout(resolve, 1500));
+
+                // For Android WebView integration
+                if (window.Android && window.Android.onLogin) {
+                    window.Android.onLogin(JSON.stringify({
+                        email: formData.email,
+                        rememberMe: formData.rememberMe,
+                        timestamp: new Date().toISOString()
+                    }));
+                }
+
+                console.log('Login successful:', {
+                    email: formData.email,
+                    rememberMe: formData.rememberMe
+                });
+
+                // Redirect to choose scale page for regular users
+                window.location.href = 'choose_scale.html';
+
+            } catch (error) {
+                console.error('Login error:', error);
+                setErrors({ general: 'Login failed. Please try again.' });
+            } finally {
+                setIsLoading(false);
+            }
+        };
+
+        const handleSocialLogin = (provider) => {
+            console.log(`Social login with ${provider}`);
+
+            if (window.Android && window.Android.onSocialLogin) {
+                window.Android.onSocialLogin(provider);
+            }
+        };
+
+        const handleForgotPassword = () => {
+            console.log('Forgot password clicked');
+
+            if (window.Android && window.Android.onForgotPassword) {
+                window.Android.onForgotPassword();
+            }
+        };
+
+        const handleSignUp = () => {
+            console.log('Sign up clicked');
+
+            if (window.Android && window.Android.onSignUp) {
+                window.Android.onSignUp();
+            }
+        };
+
+        return (
+            <div className="login-container">
+                <div className="logo-section">
+                    <span className="logo">🌱</span>
+                    <div className="app-name">Farm Guidance</div>
+                    <div className="app-tagline">Grow Smarter, Harvest Better</div>
+                    <div className="welcome-text">Welcome back to your farming journey</div>
+                </div>
+
+                {errors.general && (
+                    <div className="error-message" style={{ textAlign: 'center', marginBottom: '20px' }}>
+                        {errors.general}
+                    </div>
+                )}
+
+                <form onSubmit={handleLogin}>
+                    <div className="form-section">
+                        <div className="form-group">
+                            <label className="input-label" htmlFor="email">Email Address</label>
+                            <input
+                                type="email"
+                                id="email"
+                                className="input-field"
+                                value={formData.email}
+                                onChange={(e) => handleInputChange('email', e.target.value)}
+                                placeholder="Enter your email"
+                                autoComplete="email"
+                                autoCapitalize="none"
+                            />
+                            {errors.email && <div className="error-message">{errors.email}</div>}
+                        </div>
+
+                        <div className="form-group">
+                            <label className="input-label" htmlFor="password">Password</label>
+                            <div className="password-container">
+                                <input
+                                    type={showPassword ? 'text' : 'password'}
+                                    id="password"
+                                    className="input-field"
+                                    value={formData.password}
+                                    onChange={(e) => handleInputChange('password', e.target.value)}
+                                    placeholder="Enter your password"
+                                    autoComplete="current-password"
+                                />
+                                <button
+                                    type="button"
+                                    className="password-toggle"
+                                    onClick={() => setShowPassword(!showPassword)}
+                                >
+                                    {showPassword ? 'Hide' : 'Show'}
+                                </button>
+                            </div>
+                            {errors.password && <div className="error-message">{errors.password}</div>}
+                        </div>
+
+                        <div className="remember-me">
+                            <input
+                                type="checkbox"
+                                id="rememberMe"
+                                checked={formData.rememberMe}
+                                onChange={(e) => handleInputChange('rememberMe', e.target.checked)}
+                            />
+                            <label htmlFor="rememberMe">Remember me on this device</label>
+                        </div>
+                    </div>
+
+                    <button
+                        type="submit"
+                        className="login-btn"
+                        disabled={isLoading}
+                    >
+                        {isLoading && <span className="loading-spinner"></span>}
+                        {isLoading ? 'Signing In...' : 'Sign In'}
+                    </button>
+
+                    <div className="forgot-password">
+                        <a href="#" onClick={(e) => { e.preventDefault(); handleForgotPassword(); }}>
+                            Forgot your password?
+                        </a>
+                    </div>
+                </form>
+
+                <div className="divider">
+                    <span>or continue with</span>
+                </div>
+
+                <div className="social-login">
+                    <button
+                        className="social-btn"
+                        onClick={() => handleSocialLogin('google')}
+                        type="button"
+                    >
+                        <span>🔍</span>
+                        Continue with Google
+                    </button>
+                    <button
+                        className="social-btn"
+                        onClick={() => handleSocialLogin('facebook')}
+                        type="button"
+                    >
+                        <span>📘</span>
+                        Continue with Facebook
+                    </button>
+                </div>
+
+                <div className="signup-prompt">
+                    Don't have an account?
+                    <a href="#" onClick={(e) => { e.preventDefault(); handleSignUp(); }}>
+                        Sign Up
+                    </a>
+                </div>
+            </div>
+        );
+    };
+
+    // Main App Component
+    const App = () => {
+        return <LoginForm />;
+    };
+
+    ReactDOM.render(<App />, document.getElementById('root'));
+
+    // Expose functions for Android WebView
+    window.setLoginError = (errorMessage) => {
+        // This would need to be implemented with state management
+        console.log('Login error from Android:', errorMessage);
+    };
+
+    window.prefillLogin = (email) => {
+        // This would need to be implemented with state management
+        console.log('Prefill email from Android:', email);
+    };
+
+    window.clearLoginForm = () => {
+        // This would need to be implemented with state management
+        console.log('Clear form from Android');
+    };
+</script>
+</body>
+</html>

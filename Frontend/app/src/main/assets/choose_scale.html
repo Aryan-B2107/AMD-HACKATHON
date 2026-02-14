@@ -1,0 +1,247 @@
+<!DOCTYPE html>
+<html lang="en">
+<head>
+    <meta charset="UTF-8">
+    <meta name="viewport" content="width=device-width, initial-scale=1.0">
+    <title>Choose Your Scale</title>
+    <link rel="preconnect" href="https://fonts.googleapis.com">
+    <link rel="preconnect" href="https://fonts.gstatic.com" crossorigin>
+    <link href="https://fonts.googleapis.com/css2?family=Inter:wght@400;500;600;700&display=swap" rel="stylesheet">
+    <script src="https://cdn.tailwindcss.com"></script>
+    <style>
+        body {
+            font-family: 'Inter', sans-serif;
+            background-color: #F0FFF0; /* A very light, minty green */
+            min-height: 100vh;
+        }
+
+        /* Reusable styles from the original theme */
+        .message-box {
+            position: fixed;
+            top: 2rem;
+            left: 50%;
+            transform: translateX(-50%);
+            background-color: rgba(52, 211, 153, 0.9);
+            color: white;
+            padding: 1rem 2rem;
+            border-radius: 1rem;
+            box-shadow: 0 4px 6px rgba(0, 0, 0, 0.1);
+            z-index: 1000;
+            display: none;
+            text-align: center;
+        }
+        .clickable:hover { @apply bg-green-50; }
+        .clickable:active { transform: scale(0.98); }
+
+        /* Styles for floating background emojis inside containers */
+        .floating-emoji-container {
+            position: absolute;
+            top: 0;
+            left: 0;
+            width: 100%;
+            height: 100%;
+            pointer-events: none; /* Allows clicks to pass through */
+            overflow: hidden;
+            z-index: 0; /* Ensures emojis are behind content but inside the card */
+        }
+        .floating-emoji {
+            position: absolute;
+            opacity: 0.15; /* Subtler opacity */
+            animation-name: float-and-wave-card;
+            animation-iteration-count: infinite;
+            animation-timing-function: linear;
+            font-size: 2rem;
+        }
+
+        /* Keyframes for floating animation inside a smaller container */
+        @keyframes float-and-wave-card {
+            0% { transform: translate(0, 0) scale(1); }
+            25% { transform: translate(2rem, -1rem) scale(1.1); }
+            50% { transform: translate(0, -2rem) scale(1.2); }
+            75% { transform: translate(-2rem, -1rem) scale(1.1); }
+            100% { transform: translate(0, 0) scale(1); }
+        }
+
+        /* Custom styles for this page's layout to fix the issue */
+        .full-page-container {
+            min-height: 100vh;
+            width: 100%; /* Ensure it spans the full width */
+            display: flex;
+            flex-direction: column;
+            align-items: center;
+            padding: 1rem;
+        }
+        .content-section {
+            display: flex;
+            flex-direction: column;
+            flex-grow: 1; /* Allow this section to grow and take up remaining space */
+            width: 100%;
+            justify-content: center; /* Center the buttons vertically */
+            gap: 1.5rem;
+            max-width: 500px; /* Optional: adds a max-width for very large screens */
+        }
+        .large-button {
+            display: flex;
+            align-items: center;
+            justify-content: center;
+            flex-grow: 1; /* Makes the buttons grow to fill space */
+            min-height: 15rem; /* Ensures a minimum height for smaller screens */
+            width: 100%;
+            padding: 1.5rem;
+            border-radius: 1.5rem; /* Large rounded corners */
+            font-size: 1.5rem;
+            font-weight: 600;
+            /* Removed 'color: white;' to allow Tailwind text class to take effect */
+            transition: all 0.2s ease-in-out;
+            box-shadow: 0 4px 6px rgba(0, 0, 0, 0.1);
+            text-align: center;
+            position: relative;
+            overflow: hidden;
+        }
+        .large-button:active {
+            transform: scale(0.98);
+        }
+        .large-button .icon {
+            font-size: 4rem; /* Larger emoji for visual impact */
+            margin-right: 1rem;
+        }
+        .back-button-container {
+            width: 100%;
+            padding-top: 2rem; /* Added padding to create space */
+            padding-bottom: 2rem;
+            text-align: center;
+        }
+        /* New styles for a better back button */
+        .better-back-button {
+            display: inline-flex;
+            align-items: center;
+            justify-content: center;
+            padding: 0.75rem 1.5rem;
+            border-radius: 9999px; /* Fully rounded pill shape */
+            font-size: 1rem;
+            font-weight: 500;
+            color: #386641;
+            background-color: #d1d9c9;
+            box-shadow: 0 2px 4px rgba(0, 0, 0, 0.1);
+            transition: all 0.2s ease-in-out;
+        }
+        .better-back-button:hover {
+            background-color: #a3b18a;
+            color: white;
+            box-shadow: 0 4px 8px rgba(0, 0, 0, 0.2);
+        }
+        .better-back-button:active {
+            transform: scale(0.95);
+        }
+    </style>
+</head>
+<body class="bg-[#F0FFF0]">
+
+<!-- Custom message box element -->
+<div id="message-box" class="message-box"></div>
+
+<!-- Main full-page container -->
+<div class="full-page-container">
+    <div class="w-full text-center p-4">
+        <h1 class="text-3xl font-bold text-gray-800 mb-2">What is your scale?</h1>
+        <p class="text-gray-500">Choose the option that best fits your farming project.</p>
+    </div>
+
+    <!-- Buttons Container -->
+    <div class="content-section">
+        <!-- Small Scale Button: Changed to white background with leafy green border and text -->
+        <button onclick="handleScaleSelect('small', 'small_scale_form.html')"
+                class="large-button bg-white hover:bg-green-50 border-4 border-[#386641] text-[#386641]">
+            <span class="relative z-10 flex items-center">
+                <span class="icon" role="img" aria-label="Small plant emoji">🌱</span>
+                Small Scale
+            </span>
+            <div class="floating-emoji-container"></div>
+        </button>
+
+        <!-- Large Scale Button: Changed to white background with leafy green border and text -->
+        <button onclick="handleScaleSelect('large', 'large_scale_form.html')"
+                class="large-button bg-white hover:bg-green-50 border-4 border-[#386641] text-[#386641]">
+            <span class="relative z-10 flex items-center">
+                <span class="icon" role="img" aria-label="Tractor emoji">🚜</span>
+                Large Scale
+            </span>
+            <div class="floating-emoji-container"></div>
+        </button>
+    </div>
+
+    <!-- Back Button -->
+    <div class="back-button-container">
+        <button onclick="handleBack()" class="better-back-button">
+            <svg xmlns="http://www.w3.org/2000/svg" class="h-5 w-5 mr-2" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2" stroke-linecap="round" stroke-linejoin="round">
+                <line x1="19" y1="12" x2="5" y2="12"></line>
+                <polyline points="12 19 5 12 12 5"></polyline>
+            </svg>
+            Back to Login
+        </button>
+    </div>
+</div>
+
+<script>
+    // Functions for background emojis and messages, reused from the original theme.
+    function showMessage(message, duration = 3000) {
+        const messageBox = document.getElementById('message-box');
+        messageBox.textContent = message;
+        messageBox.style.display = 'block';
+        setTimeout(() => {
+            messageBox.style.display = 'none';
+        }, duration);
+    }
+
+    function createEmoji(container) {
+        const emojis = ['🥕', '🍎', '🍓', '🥬', '🌾', '🌽', '🍊'];
+        const emoji = document.createElement('span');
+        emoji.className = 'floating-emoji';
+        emoji.textContent = emojis[Math.floor(Math.random() * emojis.length)];
+
+        const startX = Math.random() * 100;
+        const startY = Math.random() * 100;
+        const size = 1.5 + Math.random() * 1.5;
+        const duration = 10 + Math.random() * 5;
+
+        emoji.style.left = `${startX}%`;
+        emoji.style.top = `${startY}%`;
+        emoji.style.fontSize = `${size}rem`;
+        emoji.style.animationDuration = `${duration}s`;
+        emoji.style.animationDelay = `${Math.random() * duration}s`;
+
+        container.appendChild(emoji);
+    }
+
+    function populateContainerWithEmojis(container, count) {
+        for (let i = 0; i < count; i++) {
+            createEmoji(container);
+        }
+    }
+
+    // Function to handle the redirection for scale selection
+    function handleScaleSelect(scale, redirectPage) {
+        // Here you could add logic to communicate with an Android backend
+        // For a web-based app, this is where you'd redirect
+        showMessage(`You chose ${scale} farming. Redirecting...`);
+        setTimeout(() => {
+            window.location.href = redirectPage;
+        }, 1000);
+    }
+
+    // Function to handle the back button click
+    function handleBack() {
+        // Assuming 'login.html' is the page you want to go back to.
+        window.location.href = 'login.html';
+    }
+
+    // Initial render when the page loads
+    document.addEventListener('DOMContentLoaded', () => {
+        const containers = document.querySelectorAll('.floating-emoji-container');
+        containers.forEach(container => {
+            populateContainerWithEmojis(container, 15);
+        });
+    });
+</script>
+</body>
+</html>

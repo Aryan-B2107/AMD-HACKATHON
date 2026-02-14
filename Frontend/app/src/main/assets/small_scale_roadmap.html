@@ -1,0 +1,605 @@
+<!DOCTYPE html>
+<html lang="en">
+<head>
+    <meta charset="UTF-8">
+    <meta name="viewport" content="width=device-width, initial-scale=1.0">
+    <title data-i18n-key="page_title">Farming Roadmap</title>
+    <link rel="preconnect" href="https://fonts.googleapis.com">
+    <link rel="preconnect" href="https://fonts.gstatic.com" crossorigin>
+    <link href="https://fonts.googleapis.com/css2?family=Inter:wght@400;500;600;700&display=swap" rel="stylesheet">
+    <script src="https://cdn.tailwindcss.com"></script>
+    <style>
+        body {
+            font-family: 'Inter', sans-serif;
+            background-color: #F0FFF0; /* A very light, minty green */
+            /* IMPORTANT: Add padding for the fixed bottom nav bar */
+            padding-bottom: 80px;
+        }
+
+        /* --- NAVIGATION BAR STYLES --- */
+        .nav-bar {
+            position: fixed;
+            bottom: 0;
+            left: 0;
+            right: 0;
+            background: white;
+            box-shadow: 0 -4px 6px rgba(0, 0, 0, 0.1);
+            z-index: 100;
+        }
+
+        .nav-item {
+            flex: 1;
+            display: flex;
+            flex-direction: column;
+            align-items: center;
+            padding: 0.75rem 0;
+            cursor: pointer;
+            transition: all 0.2s ease;
+            border-top: 3px solid transparent;
+            color: #4b5563; /* Default text color */
+        }
+
+        .nav-item:hover {
+            background-color: #f0fdf4; /* Very light green on hover */
+        }
+
+        .nav-item.active {
+            color: #16a34a; /* Primary green for active text/icon */
+            border-top-color: #16a34a; /* Primary green border on top */
+        }
+
+        .nav-icon {
+            font-size: 1.5rem;
+            transition: transform 0.2s ease;
+        }
+
+        .nav-item.active .nav-icon {
+            transform: scale(1.1);
+        }
+
+        .nav-label {
+            font-size: 0.75rem;
+            margin-top: 0.25rem;
+            font-weight: 500;
+        }
+        /* --- END NAVIGATION BAR STYLES --- */
+
+
+        /* Custom styles for animations and interactivity */
+        .collapsible-content {
+            max-height: 0;
+            overflow: hidden;
+            transition: max-height 0.3s ease-out;
+        }
+        .collapsible-content.expanded {
+            max-height: 2000px; /* A large value to allow for smooth expansion */
+            transition: max-height 0.5s ease-in;
+        }
+        .chevron {
+            transition: transform 0.3s ease-in-out;
+        }
+        .chevron.rotated {
+            transform: rotate(180deg);
+        }
+        .priority-high { @apply bg-red-100 text-red-700; }
+        .priority-medium { @apply bg-yellow-100 text-yellow-700; }
+        .priority-low { @apply bg-green-100 text-green-700; }
+        .clickable:hover { @apply bg-green-50; }
+        .clickable:active { transform: scale(0.98); }
+
+        /* The custom message box */
+        .message-box {
+            position: fixed;
+            top: 2rem;
+            left: 50%;
+            transform: translateX(-50%);
+            background-color: rgba(52, 211, 153, 0.9);
+            color: white;
+            padding: 1rem 2rem;
+            border-radius: 1rem;
+            box-shadow: 0 4px 6px rgba(0, 0, 0, 0.1);
+            z-index: 1000;
+            display: none;
+            text-align: center;
+        }
+
+        /* Styles for floating background emojis inside containers */
+        .floating-emoji-container {
+            position: absolute;
+            top: 0;
+            left: 0;
+            width: 100%;
+            height: 100%;
+            pointer-events: none;
+            overflow: hidden;
+            z-index: 0;
+        }
+        .floating-emoji {
+            position: absolute;
+            opacity: 0.15;
+            animation-name: float-and-wave-card;
+            animation-iteration-count: infinite;
+            animation-timing-function: linear;
+            font-size: 2rem;
+        }
+        @keyframes float-and-wave-card {
+            0% { transform: translate(0, 0) scale(1); }
+            25% { transform: translate(2rem, -1rem) scale(1.1); }
+            50% { transform: translate(0, -2rem) scale(1.2); }
+            75% { transform: translate(-2rem, -1rem) scale(1.1); }
+            100% { transform: translate(0, 0) scale(1); }
+        }
+
+        .lang-toggle-button {
+            background-color: #dcfce7;
+            color: #16a34a;
+            padding: 0.5rem 0.75rem;
+            border-radius: 9999px;
+            font-size: 0.75rem;
+            font-weight: 600;
+            transition: all 0.2s ease;
+            cursor: pointer;
+            box-shadow: 0 1px 3px rgba(0, 0, 0, 0.05);
+        }
+        .lang-toggle-button:hover {
+            background-color: #bbf7d0;
+        }
+        .lang-toggle-button:active {
+            transform: scale(0.95);
+        }
+    </style>
+</head>
+<body class="min-h-screen flex flex-col items-center">
+
+<!-- Custom message box element -->
+<div id="message-box" class="message-box"></div>
+
+<div class="w-full space-y-6">
+
+    <!-- Header Card -->
+    <div class="bg-white p-8 rounded-b-3xl shadow-lg flex flex-col items-center text-center relative">
+        <div class="absolute top-4 right-4 z-10">
+            <button id="langToggleButton" onclick="toggleLanguage()" class="lang-toggle-button">ML</button>
+        </div>
+        <svg xmlns="http://www.w3.org/2000/svg" class="h-16 w-16 text-green-600 mb-4" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2" stroke-linecap="round" stroke-linejoin="round">
+            <path d="M12 2L2 7l10 5 10-5-10-5zM2 17l10 5 10-5M2 12l10 5 10-5"></path>
+        </svg>
+        <h1 class="text-3xl font-bold text-gray-800 mb-2" data-i18n-key="header_title">Farming Roadmap</h1>
+        <p class="text-gray-500 mb-8" data-i18n-key="header_subtitle">Your personalized guide to a successful harvest.</p>
+
+        <!-- Crop Info Box (Dynamic Content - will be updated by JS) -->
+        <div class="bg-green-50 p-4 rounded-xl text-left w-full max-w-sm">
+            <p class="text-sm text-gray-600 font-medium"><span data-i18n-key="crop_label">Crop:</span> <span id="cropName" class="font-semibold text-gray-800"></span></p>
+            <p class="text-sm text-gray-600 font-medium"><span data-i18n-key="duration_label">Total Duration:</span> <span id="cropDuration"></span></p>
+        </div>
+    </div>
+
+    <!-- Roadmap Container -->
+    <div class="roadmap-container max-w-xl mx-auto space-y-6 px-4">
+        <div id="roadmapPhases" class="space-y-6">
+            <!-- Phases will be populated by JavaScript -->
+        </div>
+    </div>
+
+</div>
+
+<!-- AI Voice Bot Floating Button -->
+<button id="voiceBotButton" onclick="startVoiceBot()"
+        class="fixed bottom-20 right-6 p-4
+               bg-green-600 text-white text-2xl
+               rounded-full shadow-xl hover:bg-green-700
+               transition-all duration-200 transform hover:scale-105 z-50">
+    🎤
+</button>
+
+<!-- BOTTOM NAVIGATION BAR (Now includes Shop) -->
+<div class="nav-bar">
+    <div class="flex justify-around max-w-xl mx-auto">
+        <div class="nav-item" onclick="navigateToDashboard()">
+            <div class="nav-icon">🏠</div>
+            <div class="nav-label">Home</div>
+        </div>
+        <!-- Set Roadmap as active since this is the Roadmap page -->
+        <div class="nav-item active" onclick="navigateToRoadmap()">
+            <div class="nav-icon">🗺️</div>
+            <div class="nav-label">Roadmap</div>
+        </div>
+        <div class="nav-item" onclick="navigateToSchemes()">
+            <div class="nav-icon">📋</div>
+            <div class="nav-label">Schemes</div>
+        </div>
+        <!-- New Shop Item -->
+        <div class="nav-item" onclick="navigateToShop()">
+            <div class="nav-icon">🛒</div>
+            <div class="nav-label">Shop</div>
+        </div>
+    </div>
+</div>
+<!-- END BOTTOM NAVIGATION BAR -->
+
+<script>
+    // --- Internationalization (i18n) Configuration ---
+    let currentLang = 'en';
+
+    // Static translations for UI elements (labels and messages)
+    const translations = {
+        en: {
+            page_title: "Farming Roadmap",
+            header_title: "Farming Roadmap",
+            header_subtitle: "Your personalized guide to a successful harvest.",
+            crop_label: "Crop:",
+            duration_label: "Total Duration:",
+            priority_high: "High Priority",
+            priority_medium: "Medium Priority",
+            priority_low: "Low Priority",
+            time_label: "Time:",
+            target_label: "Target:",
+            message_update_success: "Roadmap data updated successfully.",
+            message_voice: "AI Voice Bot initiated. Speaking in current language.",
+            message_dashboard: "Navigating to Dashboard...",
+            message_roadmap: "Navigating to Roadmap (Already here).",
+            message_schemes: "Navigating to Schemes...",
+            message_shop: "Navigating to Shop...",
+        },
+        ml: { // Malayalam
+            page_title: "കൃഷി റോഡ്മാപ്പ്",
+            header_title: "കൃഷി റോഡ്മാപ്പ്",
+            header_subtitle: "വിജയകരമായ വിളവെടുപ്പിനായുള്ള നിങ്ങളുടെ വ്യക്തിഗത ഗൈഡ്.",
+            crop_label: "വിള:",
+            duration_label: "ആകെ സമയം:",
+            priority_high: "ഉയർന്ന മുൻഗണന",
+            priority_medium: "ഇടത്തരം മുൻഗണന",
+            priority_low: "കുറഞ്ഞ മുൻഗണന",
+            time_label: "സമയം:",
+            target_label: "ലക്ഷ്യം:",
+            message_update_success: "റോഡ്മാപ്പ് ഡാറ്റ വിജയകരമായി അപ്‌ഡേറ്റ് ചെയ്‌തു.",
+            message_voice: "എ.ഐ. വോയിസ് ബോട്ട് ആരംഭിച്ചു. നിലവിലെ ഭാഷയിൽ സംസാരിക്കുന്നു.",
+            message_dashboard: "ഡാഷ്‌ബോർഡിലേക്ക് പോകുന്നു...",
+            message_roadmap: "റോഡ്‌മാപ്പിലേക്ക് പോകുന്നു (ഇവിടെത്തന്നെ).",
+            message_schemes: "പദ്ധതികളിലേക്ക് പോകുന്നു...",
+            message_shop: "ഷോപ്പിലേക്ക് പോകുന്നു...",
+        }
+    };
+
+    // --- Dynamic Roadmap Data (English) ---
+    const roadmapEN = {
+        crop: {
+            name: "Tomatoes (Cherry Variety)",
+            icon: "🍅",
+            totalDuration: "90-110 days",
+        },
+        phases: [
+            { id: 1, title: "Site Preparation", icon: "🏗️", duration: "Days 1-14", description: "2 weeks",
+                tasks: [
+                    { id: "prep1", title: "🧪 Soil Testing & Amendment", description: "Test and adjust soil pH to 6.0-6.8 for optimal tomato growth", estimatedTime: "2-3 hours", targetDays: "1-7", priority: "high" },
+                    { id: "prep2", title: "🏡 Bed Preparation", description: "Clear area, till soil 8-10 inches deep, create raised beds", estimatedTime: "4-6 hours", targetDays: "7-14", priority: "high" }
+                ]
+            },
+            { id: 2, title: "Seeding & Planting", icon: "🌱", duration: "Days 15-28", description: "2 weeks",
+                tasks: [
+                    { id: "seed1", title: "🌱 Start Seeds Indoors", description: "Start tomato seeds in trays 6-8 weeks before last frost date", estimatedTime: "1-2 hours", targetDays: "15-21", priority: "high" },
+                    { id: "seed2", title: "💧 Setup Irrigation", description: "Install drip irrigation or soaker hoses for consistent watering", estimatedTime: "3-4 hours", targetDays: "15-25", priority: "medium" }
+                ]
+            },
+            { id: 3, title: "Vegetative Growth", icon: "🌿", duration: "Days 29-56", description: "4 weeks",
+                tasks: [
+                    { id: "growth1", title: "🌱 Transplant Seedlings", description: "Move hardened seedlings outdoors after last frost threat", estimatedTime: "2-3 hours", targetDays: "29-35", priority: "high" },
+                    { id: "growth2", title: "🥄 First Fertilization", description: "Apply balanced fertilizer to establish strong root system", estimatedTime: "30 minutes", targetDays: "35-45", priority: "medium" },
+                    { id: "growth3", title: "🏗️ Install Supports", description: "Set up cages, stakes, or trellises for vine support", estimatedTime: "2-3 hours", targetDays: "35-50", priority: "high" }
+                ]
+            },
+            { id: 4, title: "Flowering & Fruit Set", icon: "🌸", duration: "Days 57-77", description: "3 weeks",
+                tasks: [
+                    { id: "flower1", title: "✂️ Pruning & Maintenance", description: "Remove suckers and lower leaves touching soil", estimatedTime: "30-45 minutes weekly", targetDays: "57-77", priority: "high" },
+                    { id: "flower2", title: "🌸 Monitor Flowering", description: "Ensure good pollination and watch for early fruit development", estimatedTime: "10 minutes daily", targetDays: "57-70", priority: "medium" },
+                    { id: "flower3", title: "🛡️ Pest Prevention", description: "Apply preventive neem oil spray for common pests", estimatedTime: "20-30 minutes", targetDays: "57-77", priority: "high" }
+                ]
+            },
+            { id: 5, title: "Harvest & Maintenance", icon: "🍅", duration: "Days 78-110", description: "4-5 weeks",
+                tasks: [
+                    { id: "harvest1", title: "🍅 Begin Harvesting", description: "Pick tomatoes when they show first blush of color", estimatedTime: "15-30 minutes daily", targetDays: "78-85", priority: "high" },
+                    { id: "harvest2", title: "🍅 Continuous Care", description: "Maintain consistent watering and fertilization schedule", estimatedTime: "20 minutes weekly", targetDays: "78-100", priority: "medium" },
+                    { id: "harvest3", title: "📦 Storage & Processing", description: "Properly store harvested tomatoes and plan preservation", estimatedTime: "Variable", targetDays: "78-110", priority: "low" }
+                ]
+            }
+        ]
+    };
+
+    // --- Dynamic Roadmap Data (Malayalam) ---
+    const roadmapML = {
+        crop: {
+            name: "തക്കാളി (ചെറി ഇനം)",
+            icon: "🍅",
+            totalDuration: "90-110 ദിവസം",
+        },
+        phases: [
+            { id: 1, title: "സ്ഥലം ഒരുക്കൽ", icon: "🏗️", duration: "1-14 ദിവസങ്ങൾ", description: "2 ആഴ്ച",
+                tasks: [
+                    { id: "prep1", title: "🧪 മണ്ണിന്റെ പരിശോധനയും പരിഷ്കരണവും", description: "തക്കാളി വളർച്ചയ്ക്ക് അനുയോജ്യമായ $6.0-6.8$ പി.എച്ച്. നിലവാരത്തിലേക്ക് മണ്ണ് പരിശോധിക്കുകയും ക്രമീകരിക്കുകയും ചെയ്യുക.", estimatedTime: "2-3 മണിക്കൂർ", targetDays: "1-7", priority: "high" },
+                    { id: "prep2", title: "🏡 കൃഷിയിടം ഒരുക്കൽ", description: "സ്ഥലം വൃത്തിയാക്കുക, മണ്ണ് $8-10$ ഇഞ്ച് ആഴത്തിൽ ഉഴുകുക, ഉയർത്തിയ തടങ്ങൾ ഉണ്ടാക്കുക.", estimatedTime: "4-6 മണിക്കൂർ", targetDays: "7-14", priority: "high" }
+                ]
+            },
+            { id: 2, title: "വിത്തുകൾ നടലും പറിച്ചുനടലും", icon: "🌱", duration: "15-28 ദിവസങ്ങൾ", description: "2 ആഴ്ച",
+                tasks: [
+                    { id: "seed1", title: "🌱 വിത്തുകൾ വീടിനുള്ളിൽ നടുക", description: "തക്കാളി വിത്തുകൾ അവസാന മഞ്ഞുവീഴ്ച തീയതിക്ക് $6-8$ ആഴ്ച മുമ്പ് ട്രേകളിൽ നടുക.", estimatedTime: "1-2 മണിക്കൂർ", targetDays: "15-21", priority: "high" },
+                    { id: "seed2", title: "💧 ജലസേചനം സജ്ജമാക്കുക", description: "സ്ഥിരമായി നനയ്ക്കുന്നതിനായി ഡ്രിപ്പ് ഇറിഗേഷൻ അല്ലെങ്കിൽ സോക്കർ ഹോസുകൾ സ്ഥാപിക്കുക.", estimatedTime: "3-4 മണിക്കൂർ", targetDays: "15-25", priority: "medium" }
+                ]
+            },
+            { id: 3, title: "കായിക വളർച്ച", icon: "🌿", duration: "29-56 ദിവസങ്ങൾ", description: "4 ആഴ്ച",
+                tasks: [
+                    { id: "growth1", title: "🌱 തൈകൾ പറിച്ചുനടുക", description: "അവസാന മഞ്ഞുവീഴ്ച ഭീഷണിക്ക് ശേഷം തൈകൾ പുറത്തേക്ക് മാറ്റുക.", estimatedTime: "2-3 മണിക്കൂർ", targetDays: "29-35", priority: "high" },
+                    { id: "growth2", title: "🥄 ആദ്യ വളപ്രയോഗം", description: "ശക്തമായ വേരുകൾ സ്ഥാപിക്കുന്നതിന് സമീകൃത വളം നൽകുക.", estimatedTime: "30 മിനിറ്റ്", targetDays: "35-45", priority: "medium" },
+                    { id: "growth3", title: "🏗️ താങ്ങുകൾ സ്ഥാപിക്കുക", description: "വള്ളികൾക്ക് താങ്ങായി കൂടുകൾ, കോലുകൾ അല്ലെങ്കിൽ ട്രെല്ലിസുകൾ സ്ഥാപിക്കുക.", estimatedTime: "2-3 മണിക്കൂർ", targetDays: "35-50", priority: "high" }
+                ]
+            },
+            { id: 4, title: "പൂവിടലും കായ്ഫലവും", icon: "🌸", duration: "57-77 ദിവസങ്ങൾ", description: "3 ആഴ്ച",
+                tasks: [
+                    { id: "flower1", title: "✂️ കമ്പ് വെട്ടലും പരിപാലനവും", description: "ചിമ്പുകളും മണ്ണിൽ തട്ടുന്ന താഴ്ന്ന ഇലകളും നീക്കം ചെയ്യുക.", estimatedTime: "ആഴ്ചയിൽ 30-45 മിനിറ്റ്", targetDays: "57-77", priority: "high" },
+                    { id: "flower2", title: "🌸 പൂവിടൽ നിരീക്ഷിക്കുക", description: "നല്ല പരാഗണം ഉറപ്പാക്കുകയും ആദ്യകാല കായ്കൾ ശ്രദ്ധിക്കുകയും ചെയ്യുക.", estimatedTime: "ദിവസവും 10 മിനിറ്റ്", targetDays: "57-70", priority: "medium" },
+                    { id: "flower3", title: "🛡️ കീടനിയന്ത്രണം", description: "സാധാരണ കീടങ്ങൾക്കായി വേപ്പെണ്ണ സ്പ്രേ പ്രയോഗിക്കുക.", estimatedTime: "20-30 മിനിറ്റ്", targetDays: "57-77", priority: "high" }
+                ]
+            },
+            { id: 5, title: "വിളവെടുപ്പും പരിപാലനവും", icon: "🍅", duration: "78-110 ദിവസങ്ങൾ", description: "4-5 ആഴ്ച",
+                tasks: [
+                    { id: "harvest1", title: "🍅 വിളവെടുപ്പ് ആരംഭിക്കുക", description: "തക്കാളിക്ക് ആദ്യത്തെ ചുവപ്പ് നിറം വരുമ്പോൾ പറിച്ചെടുക്കുക.", estimatedTime: "ദിവസവും 15-30 മിനിറ്റ്", targetDays: "78-85", priority: "high" },
+                    { id: "harvest2", title: "🍅 തുടർ പരിചരണം", description: "സ്ഥിരമായ നനവും വളപ്രയോഗവും നിലനിർത്തുക.", estimatedTime: "ആഴ്ചയിൽ 20 മിനിറ്റ്", targetDays: "78-100", priority: "medium" },
+                    { id: "harvest3", title: "📦 സംഭരണവും സംസ്കരണവും", description: "വിളവെടുത്ത തക്കാളി ശരിയായ രീതിയിൽ സൂക്ഷിക്കുകയും സംരക്ഷണം ആസൂത്രണം ചെയ്യുകയും ചെയ്യുക.", estimatedTime: "വ്യത്യാസപ്പെടാം", targetDays: "78-110", priority: "low" }
+                ]
+            }
+        ]
+    };
+
+    // Initial data set
+    let roadmapData = roadmapEN;
+
+    // --- Core i18n Functions ---
+
+    function translatePage() {
+        // 1. Update static elements via data-i18n-key
+        document.querySelectorAll('[data-i18n-key]').forEach(element => {
+            const key = element.getAttribute('data-i18n-key');
+            if (translations[currentLang][key]) {
+                element.textContent = translations[currentLang][key];
+            }
+        });
+
+        // 2. Select the correct roadmap data
+        roadmapData = currentLang === 'en' ? roadmapEN : roadmapML;
+
+        // 3. Re-render dynamic content (Roadmap)
+        renderRoadmap();
+
+        // 4. Update the language toggle button text
+        const toggleButton = document.getElementById('langToggleButton');
+        if (toggleButton) {
+            toggleButton.textContent = currentLang === 'en' ? 'ML' : 'EN';
+        }
+
+        // 5. Update the <title> tag
+        document.title = translations[currentLang].page_title;
+    }
+
+    function toggleLanguage() {
+        currentLang = currentLang === 'en' ? 'ml' : 'en';
+        translatePage();
+    }
+
+    // Custom message function to provide user feedback
+    function showMessage(key, duration = 3000) {
+        const messageBox = document.getElementById('message-box');
+        // Note: The showMessage logic is primarily for feedback/debugging,
+        // but the actual navigation will immediately change the page location.
+        messageBox.textContent = translations[currentLang][key] || key;
+        messageBox.style.display = 'block';
+        setTimeout(() => {
+            messageBox.style.display = 'none';
+        }, duration);
+    }
+
+
+    // Renders the full roadmap based on the current language data (roadmapData)
+    function renderRoadmap() {
+        const container = document.getElementById('roadmapPhases');
+        const cropNameElement = document.getElementById('cropName');
+        const cropDurationElement = document.getElementById('cropDuration');
+
+        if (!container || !cropNameElement || !cropDurationElement) return;
+
+        // Update header crop info
+        cropNameElement.textContent = roadmapData.crop.name;
+        cropDurationElement.textContent = roadmapData.crop.totalDuration;
+
+        container.innerHTML = ''; // Clear previous content
+
+        // Render phases and tasks
+        roadmapData.phases.forEach(phase => {
+            const phaseElement = document.createElement('div');
+            // Ensure phase cards have position: relative and overflow: hidden for emojis to work inside
+            phaseElement.className = 'phase-card bg-white p-6 rounded-2xl shadow-sm border border-gray-200 transition-colors duration-200 cursor-pointer clickable relative overflow-hidden';
+
+            // Add a container for the floating emojis at the top of the card
+            const emojiContainer = document.createElement('div');
+            emojiContainer.className = 'floating-emoji-container';
+            phaseElement.appendChild(emojiContainer);
+
+            // Populate this container with emojis
+            populateContainerWithEmojis(emojiContainer, 10); // Adjust number for visual density
+
+            // Phase Header with interactive element
+            const headerContent = document.createElement('div');
+            headerContent.className = 'flex items-center justify-between z-10 relative'; // z-index ensures content is above emojis
+            headerContent.setAttribute('data-id', phase.id);
+            headerContent.innerHTML = `
+                <div class="flex items-center space-x-4">
+                    <div class="text-3xl">${phase.icon}</div>
+                    <div>
+                        <h3 class="text-xl font-semibold text-gray-800">${phase.title}</h3>
+                        <p class="text-sm text-gray-500">${phase.duration} • ${phase.description}</p>
+                    </div>
+                </div>
+                <svg class="chevron h-6 w-6 text-gray-400" xmlns="http://www.w3.org/2000/svg" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2" stroke-linecap="round" stroke-linejoin="round">
+                    <polyline points="6 9 12 15 18 9"></polyline>
+                </svg>
+            `;
+            phaseElement.appendChild(headerContent);
+
+            const collapsibleContent = document.createElement('div');
+            collapsibleContent.className = 'collapsible-content space-y-4 mt-4 relative z-10';
+
+            // Render tasks inside the collapsible content
+            phase.tasks.forEach(task => {
+                const taskCard = document.createElement('div');
+                const priorityKey = `priority_${task.priority.toLowerCase()}`;
+                const priorityClass = `priority-${task.priority.toLowerCase()}`;
+                const priorityLabel = translations[currentLang][priorityKey] || task.priority;
+
+                // Add position:relative and overflow:hidden to task cards too
+                taskCard.className = 'task-card bg-slate-50 p-4 rounded-xl border border-gray-100 shadow-sm relative overflow-hidden';
+
+                const taskEmojiContainer = document.createElement('div');
+                taskEmojiContainer.className = 'floating-emoji-container';
+                taskCard.appendChild(taskEmojiContainer);
+                populateContainerWithEmojis(taskEmojiContainer, 5); // Fewer emojis for smaller cards
+
+                taskCard.innerHTML += `
+                    <h4 class="text-md font-semibold text-gray-700 relative z-10">${task.title}</h4>
+                    <p class="text-sm text-gray-600 my-2 relative z-10">${task.description}</p>
+                    <div class="flex items-center justify-between text-xs text-gray-400 mt-3 relative z-10">
+                        <span class="font-medium">${translations[currentLang].time_label} ${task.estimatedTime}</span>
+                        <span class="font-medium">${translations[currentLang].target_label} ${task.targetDays}</span>
+                    </div>
+                    <div class="text-xs font-semibold px-2 py-1 rounded-full ${priorityClass} mt-2 inline-block relative z-10">${priorityLabel}</div>
+                `;
+                collapsibleContent.appendChild(taskCard);
+            });
+
+            phaseElement.appendChild(collapsibleContent);
+
+            // Add event listener for collapsing/expanding
+            headerContent.addEventListener('click', (event) => {
+                const content = phaseElement.querySelector('.collapsible-content');
+                const chevron = phaseElement.querySelector('.chevron');
+                if (content.classList.contains('expanded')) {
+                    content.classList.remove('expanded');
+                    chevron.classList.remove('rotated');
+                } else {
+                    content.classList.add('expanded');
+                    chevron.classList.add('rotated');
+                }
+            });
+            container.appendChild(phaseElement);
+        });
+    }
+
+    // --- Navigation Bar Functions (UPDATED FOR NAVIGATION) ---
+
+    function navigateToDashboard() {
+        // Navigates to the Dashboard page as requested: dashboard.html
+        console.log("Navigating to dashboard.html");
+        window.location.href = 'dashboard.html';
+    }
+
+    function navigateToRoadmap() {
+        // Navigates to the specific Roadmap page as requested: small_scale_roadmap.html
+        console.log("Navigating to small_scale_roadmap.html");
+        window.location.href = 'small_scale_roadmap.html';
+    }
+
+    function navigateToSchemes() {
+        // Navigates to the Government Schemes page as requested: gov_schemes.html
+        console.log("Navigating to gov_schemes.html");
+        window.location.href = 'gov_schemes.html';
+    }
+
+    function navigateToShop() {
+        // Navigates to the Shop page as requested: shopping.html
+        console.log("Navigating to shopping.html");
+        window.location.href = 'shopping.html';
+    }
+
+    // Add function to handle the active state change for the nav bar
+    function setupNavBarInteraction() {
+        document.querySelectorAll('.nav-item').forEach(item => {
+            item.addEventListener('click', function() {
+                // Remove 'active' from all items
+                document.querySelectorAll('.nav-item').forEach(i => i.classList.remove('active'));
+                // Add 'active' to the clicked item
+                this.classList.add('active');
+            });
+        });
+    }
+
+    // --- Action Functions ---
+
+    // Function for the AI Voice Bot
+    function startVoiceBot() {
+        if (window.Android && window.Android.startVoiceBot) {
+            window.Android.startVoiceBot(currentLang); // Optionally pass current language to native app
+        } else {
+            showMessage('message_voice');
+        }
+    }
+
+    // Public API for updating the roadmap data (now handles language switch)
+    window.updateRoadmapData = function(newData, lang = 'en') {
+        try {
+            const dataToSet = typeof newData === 'string' ? JSON.parse(newData) : newData;
+
+            if (lang === 'ml') {
+                roadmapML.phases = dataToSet.phases;
+                roadmapML.crop = dataToSet.crop;
+            } else {
+                roadmapEN.phases = dataToSet.phases;
+                roadmapEN.crop = dataToSet.crop;
+            }
+
+            // If the current displayed language matches the updated data, re-render
+            if (currentLang === lang) {
+                roadmapData = currentLang === 'en' ? roadmapEN : roadmapML;
+                renderRoadmap();
+            }
+            showMessage('message_update_success');
+            return true;
+        } catch (e) {
+            console.error('Error updating roadmap data:', e);
+            return false;
+        }
+    };
+
+    // --- Background Emoji Functions ---
+    function createEmoji(container) {
+        const emojis = ['🥕', '🍎', '🍓', '🥬', '🥦', '🌽', '🍊'];
+        const emoji = document.createElement('span');
+        emoji.className = 'floating-emoji';
+        emoji.textContent = emojis[Math.floor(Math.random() * emojis.length)];
+
+        const startX = Math.random() * 100;
+        const startY = Math.random() * 100;
+        const size = 1.5 + Math.random() * 1.5;
+        const duration = 10 + Math.random() * 5;
+
+        emoji.style.left = `${startX}%`;
+        emoji.style.top = `${startY}%`;
+        emoji.style.fontSize = `${size}rem`;
+        emoji.style.animationDuration = `${duration}s`;
+        emoji.style.animationDelay = `${Math.random() * duration}s`;
+
+        container.appendChild(emoji);
+    }
+
+    function populateContainerWithEmojis(container, count) {
+        for (let i = 0; i < count; i++) {
+            createEmoji(container);
+        }
+    }
+
+    // Initial render when the page loads
+    document.addEventListener('DOMContentLoaded', () => {
+        // Start in English and translate the page
+        translatePage();
+        // Setup the nav bar click listener
+        setupNavBarInteraction();
+    });
+</script>
+</body>
+</html>

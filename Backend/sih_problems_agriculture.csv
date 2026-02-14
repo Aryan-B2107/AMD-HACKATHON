@@ -1,0 +1,315 @@
+s_no,organization,problem_title,category,ps_number,submitted_ideas,theme,detail_url,domain_category
+13,"AICTE, MIC-Student Innovation","Student Innovation×Problem Statement DetailsProblem Statement ID1536Problem Statement TitleStudent InnovationDescriptionDeveloping solutions, keeping in mind the need to enhance the primary sector of India - Agriculture and to manage and process our agriculture produceOrganizationAICTE, MIC-Student InnovationDepartmentMinistry of Education's Innovation Cell (MIC)CategoryHardwareThemeAgriculture, FoodTech & Rural DevelopmentYoutube LinkDataset LinkContact info",Problem Statement ID,1536,Problem Statement Title,Student Innovation,https://www.sih.gov.in/sih2024PS,agriculture
+25,Department of Science and Technology,"Development of a suction based low-cost flush (with less water usage) for deployment in rural areas.×Problem Statement DetailsProblem Statement ID1548Problem Statement TitleDevelopment of a suction based low-cost flush (with less water usage) for deployment in rural areas.DescriptionBackground: Access to proper sanitation facilities is a significant challenge in many rural areas. Traditional flush toilets require a substantial amount of water, which may not be readily available in these regions. Additionally, the cost and complexity of installing conventional plumbing systems can be prohibitive.
+Description: A suction-based flush system offers a potential solution by reducing water usage and simplifying installation and maintenance.
+Expected Solution: The problem statement is to develop a cost-effective, suction-based flush system that can be easily deployed in rural areas. The system should minimize water usage, be simple to install and maintain, and provide a hygienic and effective means of waste disposal.OrganizationDepartment of Science and TechnologyDepartmentDepartment of Science and TechnologyCategoryHardwareThemeMiscellaneousYoutube LinkDataset LinkContact info",Problem Statement ID,1548,Problem Statement Title,Development of a suction based low-cost flush (with less water usage) for deployment in rural areas.,https://www.sih.gov.in/sih2024PS,agriculture
+28,Ministry of Agriculture and Farmers Welfare,"Smart Irrigation System for Precision Farming×Problem Statement DetailsProblem Statement ID1554Problem Statement TitleSmart Irrigation System for Precision FarmingDescriptionBackground: Water scarcity is a major challenge in agriculture, leading to inefficient water use and reduced crop yields. Traditional irrigation methods often result in overuse or underuse of water.
+Description: Develop a smart irrigation system that utilizes sensors and IoT technology to monitor soil moisture levels and weather conditions. This system will provide real-time data to farmers, enabling them to make informed decisions on irrigation scheduling, thus optimizing water usage and enhancing crop yield.
+Expected Solution: A smart irrigation module integrated with moisture sensors and a mobile application to provide farmers with timely irrigation alerts and recommendations based on real-time data.OrganizationMinistry of Agriculture and Farmers WelfareDepartmentUniversity of Agricultural Sciences, Dharwad (UASD), The Indian Council of Agricultural ResearchCategoryHardwareThemeAgriculture, FoodTech & Rural DevelopmentYoutube LinkDataset LinkContact info",Problem Statement ID,1554,Problem Statement Title,Smart Irrigation System for Precision Farming,https://www.sih.gov.in/sih2024PS,agriculture
+35,"Ministry of Fisheries, Animal Husbandry and Dairying","Affordable, Sustainable, and User-friendly Solutions for Semen Dose Storage and Distribution×Problem Statement DetailsProblem Statement ID1561Problem Statement TitleAffordable, Sustainable, and User-friendly Solutions for Semen Dose Storage and DistributionDescriptionBackground: lndia has emerged as leading milk producer country in the world, however productivity of dairy animals is very low. To improve the productivity of animals a major focus area is to breed these animals using semen from high genetic merit bulls through Artificial lnsemination (Al). Al enables farmers to access the best bull (male) genetics. Farmers can improve the production, health traits, fertility and longevity of their dairy cattle by using a balanced approach to breeding. Animal health is also improved through the use of Al.
+Description: For Al, the semen is inseminated into the female by placing a portion of it either in a collected or diluted form into the cervix or uterus by mechanical methods at the proper time and under most hygienic conditions. Ensuring the integrity of the cold chain from Semen Production centres to the farmer's destination, where semen is utilized for artificial insemination, is crucial for the effective functioning of the Al delivery
+system in lndia.
+Semen doses are currently stored and transported using liquid nitrogen and specialized containers. However, significant losses of liquid nitrogen occur during storage and transportation, leading to escalated costs for maintaining the cold chain. The cost of liquid nitrogen itself is an issue. Mishandling of liquid nitrogen poses potential health hazards. The bulky and heavy nature of liquid nitrogen storage containers necessitates considerable resou rces for transportation.
+Expected solution:
+. There is a need to explore and promote alternative, cost-effective, and long-lasting methods for the storage and transportation of semen doses
+. The design, material, type of insulation of storage containers can also help in cost effectiveness, reduction in losses, compactness and ease of carrying to facilitate efficient distribution.OrganizationMinistry of Fisheries, Animal Husbandry and DairyingDepartmentDepartment of Animal Husbandry & DairyingCategoryHardwareThemeAgriculture, FoodTech & Rural DevelopmentYoutube LinkDataset LinkContact info",Problem Statement ID,1561,Problem Statement Title,"Affordable, Sustainable, and User-friendly Solutions for Semen Dose Storage and Distribution",https://www.sih.gov.in/sih2024PS,agriculture
+41,Ministry of Jal Shakti,"Grey Water Management (GWM) - Designing low-cost testing kits capable of detecting bacterial, faecal, and microbial contaminants in groundwater.×Problem Statement DetailsProblem Statement ID1567Problem Statement TitleGrey Water Management (GWM) - Designing low-cost testing kits capable of detecting bacterial, faecal, and microbial contaminants in groundwater.DescriptionBackground and Description: In Grey Water Management, the appropriate technology interventions should be consistent with the broad principles of Reduce (i.e. Judicious use of fresh water which will result in less generation of a minimum quantity of grey water) Reuse (i.e. reuse of grey water for Kitchen garden, and treated water for irrigating crops, toilet flushing, vehicle washing etc.) and Recharge (i.e. adoption of technologies such as soakage pit and leach pit). Greywater Management is encouraged to be implemented as close to source as possible to reduce cost and complexity. Preferably, greywater should be managed at the household level, with community-level management as a secondary option, and management at the Drain End Point considered only as a last resort.  Expected Solutions: a. Designing low-cost testing kits capable of detecting bacterial, faecal, and microbial contaminants in groundwater. b. Implementing technical solutions to mitigate water contamination, especially removal of contaminants, before discharge into rivers and lakes. C. Mechanism for treating grey water and black water together in densely populated areas preferably having low land implication.OrganizationMinistry of Jal ShaktiDepartmentDepartment of Drinking Water and Sanitation (DDWS)CategoryHardwareThemeClean & Green TechnologyYoutube LinkDataset LinkContact info",Problem Statement ID,1567,Problem Statement Title,"Grey Water Management (GWM) - Designing low-cost testing kits capable of detecting bacterial, faecal, and microbial contaminants in groundwater.",https://www.sih.gov.in/sih2024PS,agriculture
+43,Ministry of Jal Shakti,"Personalized testing kits for testing Residual Chlorine level at delivery points×Problem Statement DetailsProblem Statement ID1569Problem Statement TitlePersonalized testing kits for testing Residual Chlorine level at delivery pointsDescriptionBackground and Description: The Jal Jeevan Mission (JJM) is a flagship initiative of the Government of India aimed at ensuring safe and sustainable drinking water to all rural households in the country. An essential aspect of the mission's success is not only ensuring access to water but also guaranteering its quality. Residual chlorine/Silver ion levels indicate the efficacy of water disinfection, bacteriological contamination poses significant health risks. Existing methods for testing water quality at the household level often lack reliability, accessibility, and affordability. The main aim of the technology challenge is to develop three distinct personalised testing kits (For measuring Residual chlorine, residual silver ion and/or for Bacteriological contamination) that are cost-effective, easy to use, and could measure both residual chlorine levels and bacteriological contamination at the household level. Thse devices are intented to empower rural communities to conduct their own assessments of water quality, enabling prompt action to ensure safe drinking water. Expected Solutions: i. The device should be portable and accurate in detecting low levels of residual chlorine (As per BIS 10500: 2012, acceptable limit: 0.2 mg/liter), residual silver ions and/or bacteriological contamination (E. coli & Total coliform- As per BIS 10500: 2012, it shall not be detectable in any 100 ml of sample), ensuring reliable results comparable to laboratory-grade equipment. ii. The detected value indicates the level of chlorine/silver ion/bacteria (E.Coli) present in 100 ml water. The output of the test should be in digital mode; iii. The personalized testing kits should be affordable for rural households, easy to carry & use and requiring minimal training for operation by individuals. iv. The personalized testing kits should be robust and able to withstand harsh environmental conditions prevalent in rural India, suhc as temperature fulctuations and humidity. v. Quick turnaround time for obtaining results, allowing households to promptly assess water safety; vi. The personalized testing kits should easy to calibrate; vii. Low operation and maintenance; viii. Ensure compliance with relevant regulatory requirments and standards for water quality testing in India; ix. The personalized testing kits should be charged by lithium (should work for minimum 24 hrs aftr getting fully charged) or another type of battery; x. Poses no risks to users or the environment during operation and disposal.OrganizationMinistry of Jal ShaktiDepartmentDepartment of Drinking Water and Sanitation (DDWS)CategoryHardwareThemeSmart AutomationYoutube LinkDataset LinkContact info",Problem Statement ID,1569,Problem Statement Title,Personalized testing kits for testing Residual Chlorine level at delivery points,https://www.sih.gov.in/sih2024PS,agriculture
+45,Ministry of Jal Shakti,"Drone-based Intelligent ET sensing system and irrigation water use accounting system for irrigation commands.×Problem Statement DetailsProblem Statement ID1571Problem Statement TitleDrone-based Intelligent ET sensing system and irrigation water use accounting system for irrigation commands.DescriptionBackground: The use of Earth Observation Satellite (EOS) technology for estimation of seasonal Actual Evapotranspiration (AET) of crops at various growth stages is well establishd. Due to low levels of water metering in irrigation, it is challenging to control theft from canals and unauthorized ground water extractions. Therefore, ET based technologies can enforce water accounting / auditing and thus enhance Water Use Efficiency (WUE). 
+However, the EOS based ET technology has certain limitations i.e. low accuracy under cloudy conditions and low resolutions. Therefore, the drone-based ET systems can be used to bridge this data gap. 
+Description: The idea is to estimate the actual water consumption by the crops (i.e. AET) in a targeted irrigated command area (ranging from 50 Ha to 5000 Ha) with the help of a drone based system. This system should have a portable drone control module along with an in-built Artificial Intelligence and Machine Learning (AI&ML) mechanism to work out AET and calibrate against the satellite-based ET inputs. Once integrated with cadastral maps, it should be tailored for individual farm level water control. 
+Expected Solution: A drone fitted with suitable ET sensing system to bridge the data gaps/limitations from Satellite based ET system for calculation of Actual Evapotranspiration (AET) of different crops under survey. The AI&ML algorithm using historical data and satellite based inputs should be able to give various Key Performance Indicators (KPI) at farm level like (i) Type of Crop; (ii) Crop monitoring (seeding/sowing/harvest/ disease etc); (iii) Water Auditing/Water Accounting: (iv) Over irrigated vs under irrigated/Ground water use; etc. 
+These KPI's can provide an insight of farmer irrigation decision-making; estimation of irrigation water use; farmer irrigation behavior heuristics and management practices, including the scheduling and efficiency of irrigation decisions. The software model can be polished over time in different irrigation commands to improve the accuracy and reliability of irrigation water use estimation. This will give a complete control of water use and agriculture productivity at field through remote sensing and help in increasing the Groundwater Level in critical unsafe areas.OrganizationMinistry of Jal ShaktiDepartmentDepartment of WR, RD & GRCategoryHardwareThemeRobotics and DronesYoutube LinkDataset LinkContact info",Problem Statement ID,1571,Problem Statement Title,Drone-based Intelligent ET sensing system and irrigation water use accounting system for irrigation commands.,https://www.sih.gov.in/sih2024PS,agriculture
+70,"AICTE, MIC-Student Innovation","Student Innovation×Problem Statement DetailsProblem Statement ID1596Problem Statement TitleStudent InnovationDescriptionDeveloping solutions, keeping in mind the need to enhance the primary sector of India - Agriculture and to manage and process our agriculture produceOrganizationAICTE, MIC-Student InnovationDepartmentMinistry of Education's Innovation Cell (MIC)CategorySoftwareThemeAgriculture, FoodTech & Rural DevelopmentYoutube LinkDataset LinkContact info",Problem Statement ID,1596,Problem Statement Title,Student Innovation,https://www.sih.gov.in/sih2024PS,agriculture
+85,Government of Himachal Pardesh,"Drone-Based Intelligent System for Apple Orchard Management in Himachal Pradesh×Problem Statement DetailsProblem Statement ID1611Problem Statement TitleDrone-Based Intelligent System for Apple Orchard Management in Himachal PradeshDescriptionBackground: Himachal Pradesh, a northern state in India, is renowned for its apple production, contributing significantly to the local economy and livelihoods. With an annual apple production of approximately 600,000 metric tons, the region's apple orchards face challenges related to tree health monitoring, nutrient management, pest and disease control, and accurate production estimation. Traditional methods for managing these aspects are labor-intensive, time-consuming, and often lack precision. Modern technology, particularly drone-based systems, offers a promising solution to enhance efficiency, accuracy, and profitability in apple orchard management.
+Description:
+1. Monitoring Tree Health
+Objective: Utilize drone technology to monitor the health of apple trees across extensive orchards efficiently.
+Method:
+├ö├ç├│ Multispectral Imaging: Drones equipped with multispectral cameras will capture detailed images of apple orchards. These images can be analyzed to assess various health parameters such as chlorophyll content, leaf moisture, and overall vitality of the trees.
+├ö├ç├│ Thermal Imaging: Thermal sensors can detect temperature variations in the canopy, helping identify water stress and early signs of disease or pest infestation.
+Implementation:
+├ö├ç├│ Regular drone flights over the orchards, especially during critical growth stages.
+├ö├ç├│ Image analysis using AI algorithms to detect anomalies and provide actionable insights to farmers.
+2. Managing Nutrients, Pests, and Diseases
+Objective: Develop an integrated pest and nutrient management system using drones for precise application and monitoring.
+Method:
+├ö├ç├│ Precision Agriculture: Drones can apply fertilizers, pesticides, and fungicides precisely where needed, reducing wastage and environmental impact.
+├ö├ç├│ Real-Time Monitoring: Continuous monitoring for signs of nutrient deficiencies, pest outbreaks, or disease symptoms using advanced imaging techniques.
+├ö├ç├│ Data Analytics: Use of machine learning to predict pest and disease outbreaks based on historical data and current environmental conditions.
+Implementation:
+├ö├ç├│ Implementing a scheduled drone surveillance program to monitor and apply treatments as needed.
+├ö├ç├│ Training local farmers on interpreting data and taking timely actions based on drone-generated reports.
+3. Production Estimation
+Objective: Accurately estimate apple production to facilitate better planning and market strategies.
+Method:
+├ö├ç├│ Image Analysis: Using high-resolution images to count blossoms and estimate fruit set.
+├ö├ç├│ Machine Learning Models: Developing models that predict yield based on factors like tree health, climatic conditions, and historical yield data.
+Implementation:
+├ö├ç├│ Conducting pre-harvest drone surveys to estimate production.
+├ö├ç├│ Using data to optimize logistics, storage, and market supply.
+4. Creating Marketing Tools
+Objective: Leverage technology to create effective marketing tools that enhance the visibility and profitability of apple produce.
+Method:
+├ö├ç├│ Virtual Tours: Creating virtual tours of apple orchards using drone footage to attract tourists and buyers.
+├ö├ç├│ Traceability Systems: Implementing blockchain-based traceability to provide end consumers with information about the origin, quality, and journey of apples.
+├ö├ç├│ Digital Marketing: Using drone-generated content for promotional campaigns on social media and other digital platforms.
+Implementation:
+├ö├ç├│ Developing a user-friendly platform for virtual tours and traceability information.
+├ö├ç├│ Collaborating with marketing experts to create engaging content and campaigns.
+Expected Solution:
+The implementation of a drone-based intelligent system in the apple orchards of Himachal Pradesh is expected to bring multiple benefits:
+1. Enhanced Tree Health Monitoring: Improved early detection of health issues will lead to timely interventions, resulting in healthier trees and better yields.
+2. Efficient Nutrient and Pest Management: Precision application of inputs will reduce costs and environmental impact while maintaining high productivity.
+3. Accurate Production Estimation: Reliable yield forecasts will aid in better planning and decision-making, reducing wastage and maximizing profits.
+4. Innovative Marketing Tools: Advanced marketing strategies will increase the visibility of Himachal apples in national and international markets, boosting sales and brand recognition.OrganizationGovernment of Himachal PardeshDepartmentABVGIET, Pragtinagar, Department of Technical Education Himachal PradeshCategoryHardwareThemeAgriculture, FoodTech & Rural DevelopmentYoutube LinkDataset LinkContact info",Problem Statement ID,1611,Problem Statement Title,Drone-Based Intelligent System for Apple Orchard Management in Himachal Pradesh,https://www.sih.gov.in/sih2024PS,agriculture
+108,Ministry of Agriculture and Farmers Welfare,"Mobile App for Direct Market Access for Farmers×Problem Statement DetailsProblem Statement ID1637Problem Statement TitleMobile App for Direct Market Access for FarmersDescriptionBackground: Farmers often face challenges in accessing markets, leading to lower income due to middlemen. This gap restricts their ability to sell produce at fair prices.
+Description: Create a mobile application that connects farmers directly with consumers and retailers. The app should include features for listing produce, negotiating prices, and managing transactions, thereby reducing dependence on intermediaries.
+Expected Solution: A user-friendly mobile platform that enables farmers to showcase their products and connect with buyers directly, enhancing their income potential.OrganizationMinistry of Agriculture and Farmers WelfareDepartmentUniversity of Agricultural Sciences, Dharwad (UASD), The Indian Council of Agricultural ResearchCategorySoftwareThemeAgriculture, FoodTech & Rural DevelopmentYoutube LinkDataset LinkContact info",Problem Statement ID,1637,Problem Statement Title,Mobile App for Direct Market Access for Farmers,https://www.sih.gov.in/sih2024PS,agriculture
+109,Ministry of Agriculture and Farmers Welfare,"AI-Driven Crop Disease Prediction and Management System×Problem Statement DetailsProblem Statement ID1638Problem Statement TitleAI-Driven Crop Disease Prediction and Management SystemDescriptionBackground: Crop diseases can devastate yields, leading to significant financial losses for farmers. Early detection and timely intervention are crucial for effective management.
+Description: Develop an AI-driven system that analyzes crop images and environmental data to predict potential disease outbreaks. This system will provide farmers with actionable insights and treatment recommendations to mitigate risks.
+Expected Solution: A mobile and web-based application that utilizes machine learning algorithms to identify crop diseases and suggest preventive measures and treatments based on real-time data.OrganizationMinistry of Agriculture and Farmers WelfareDepartmentUniversity of Agricultural Sciences, Dharwad (UASD), The Indian Council of Agricultural ResearchCategorySoftwareThemeAgriculture, FoodTech & Rural DevelopmentYoutube LinkDataset LinkContact info",Problem Statement ID,1638,Problem Statement Title,AI-Driven Crop Disease Prediction and Management System,https://www.sih.gov.in/sih2024PS,agriculture
+110,Ministry of Agriculture and Farmers Welfare,"Sustainable Fertilizer Usage Optimizer for Higher Yield×Problem Statement DetailsProblem Statement ID1639Problem Statement TitleSustainable Fertilizer Usage Optimizer for Higher YieldDescriptionBackground: Excessive and improper use of fertilizers leads to soil degradation and reduced agricultural productivity, negatively impacting farmers├ö├ç├û income.
+Description: Create a data-driven solution that recommends optimal fertilizer types and quantities based on soil health, crop type, and weather patterns, ensuring sustainable agricultural practices.
+Expected Solution: An application that analyzes soil data and provides tailored fertilizer recommendations, promoting sustainable farming while enhancing crop yield and farmer income.OrganizationMinistry of Agriculture and Farmers WelfareDepartmentUniversity of Agricultural Sciences, Dharwad (UASD), The Indian Council of Agricultural ResearchCategorySoftwareThemeAgriculture, FoodTech & Rural DevelopmentYoutube LinkDataset LinkContact info",Problem Statement ID,1639,Problem Statement Title,Sustainable Fertilizer Usage Optimizer for Higher Yield,https://www.sih.gov.in/sih2024PS,agriculture
+111,Ministry of Agriculture and Farmers Welfare,"Assured Contract Farming System for Stable Market Access×Problem Statement DetailsProblem Statement ID1640Problem Statement TitleAssured Contract Farming System for Stable Market AccessDescriptionBackground: Farmers often face uncertainties in market access, leading to fluctuating incomes. Contract farming can provide stability by ensuring farmers have guaranteed buyers for their produce.
+Description: Develop a comprehensive platform that facilitates assured contract farming agreements between farmers and buyers. This platform will enable transparent communication, secure contracts, and timely payments, ensuring farmers have a reliable market for their crops.
+Expected Solution: An online marketplace that connects farmers with potential buyers, offering tools for contract management, price negotiation, and secure payment processing, thereby enhancing income stability and reducing market risksOrganizationMinistry of Agriculture and Farmers WelfareDepartmentUniversity of Agricultural Sciences, Dharwad (UASD), The Indian Council of Agricultural ResearchCategorySoftwareThemeAgriculture, FoodTech & Rural DevelopmentYoutube LinkDataset LinkContact info",Problem Statement ID,1640,Problem Statement Title,Assured Contract Farming System for Stable Market Access,https://www.sih.gov.in/sih2024PS,agriculture
+118,"Ministry of Consumer Affairs, Food and Public Distribution","Development of AI-ML based models for predicting prices of agri-horticultural commodities such as pulses and vegetable (onion, potato, onion)×Problem Statement DetailsProblem Statement ID1647Problem Statement TitleDevelopment of AI-ML based models for predicting prices of agri-horticultural commodities such as pulses and vegetable (onion, potato, onion)DescriptionThe Department of Consumer Affairs monitors the daily prices of 22 essential food commodities through 550 price reporting centres across the country. The Department also maintains buffer stock of pulses, viz., gram, tur, urad, moon and masur, and onion for strategic market interventions to stabilize the volatility in prices. Decisions for market interventions such as release of stocks from the buffer are taken on the basis of the price trends and outlook.
+At present, the analyses of prices are based on the seasonality, historical and emerging trends, market intelligence inputs, crop sowing and production estimates. ARIMA based economic models have also been used to examine and forecast prices of pulses.OrganizationMinistry of Consumer Affairs, Food and Public DistributionDepartmentDepartment of Consumer AffairsCategorySoftwareThemeAgriculture, FoodTech & Rural DevelopmentYoutube LinkDataset LinkContact info",Problem Statement ID,1647,Problem Statement Title,"Development of AI-ML based models for predicting prices of agri-horticultural commodities such as pulses and vegetable (onion, potato, onion)",https://www.sih.gov.in/sih2024PS,agriculture
+122,Ministry of Defence,"Microphone array-based direction of arrival for gunshot detection×Problem Statement DetailsProblem Statement ID1651Problem Statement TitleMicrophone array-based direction of arrival for gunshot detectionDescription├ö├ç├│ Background: The Army of many developed countries has their own gunshot detector system which would alert the troop about the direction from where gun shot has been fired so that troop can take preventive measure to safeguard their soldiers
+├ö├ç├│ Description:
+The system consists of number of omnidirectional microphones preferably six. The output of microphone will be fed to the analog to digital converter and then this signal is fed to the FPGA . Inside FPGA, each channel will be filtered using Bandpass filter so as to limit the band to approx. 3Khz. After this sound classification and localization algorithm will deduce the direction from where the bullet has been fired and display the result on a Graphical LCD.
+├ö├ç├│ Expected Solution:
+An FPGA based solution with suitable algorithm for classification and localization of sound. The final result will be displayed on Graphic LCDOrganizationMinistry of DefenceDepartmentDefence Research and Devlopment Organisation (DRDO)CategorySoftwareThemeMiscellaneousYoutube LinkDataset LinkContact info",Problem Statement ID,1651,Problem Statement Title,Microphone array-based direction of arrival for gunshot detection,https://www.sih.gov.in/sih2024PS,agriculture
+141,"Ministry of Fisheries, Animal Husbandry and Dairying","Farmers Disease Diagnostic/Reporting Portal - Mobile Portal Al Based×Problem Statement DetailsProblem Statement ID1673Problem Statement TitleFarmers Disease Diagnostic/Reporting Portal - Mobile Portal Al BasedDescriptionBackground- Agricultural productivity and food security are heavily dependent on the health of crops and livestock. Farmers, especially in remote or resource-limited areas, often face challenges in diagnosing and reporting diseases that affect their livestock and crops. Early diagnosis and timely reporting are crucial for effective disease management and prevention of widespread outbreaks. Description - A mobile portal powered by Artificial lntelligence (Al) for disease diagnosis and reporting can revolutionize how farmers manage animal and plant health. This portal enables farmers to use their smartphones to access diagnostic tools, report symptoms, and receive actionable advice. Al algorithms can analyze reported data to provide accurate diagnoses and suggest appropriate treatments or interventions. This technology can empower farmers with the knowledge and tools to manage diseases more effectively, ensuring the health and productivity of their farms. lntegrate Al-based software with existing NDLM to allow farmers to submit images and descriptions of disease signs and symptoms. The Al will generate suspected disease/condition reports with preventive measures and send alerts to veterinarians for appropriate action (Al-based software, Mobile application). Expected Outcomes . Enhanced Disease Diagnosis: . Timely Reporting and lntervention: . lncreased Access to Expert Knowledge: . lmproved Farm Productivity. Data Collection and Analysis: Cost-Effective DiseaseManagement: Empowerment and Education of Farmers: lntegration with Existing Surveillance Systems . Community Engagement and Support: Sustainable Agriculture PracticesOrganizationMinistry of Fisheries, Animal Husbandry and DairyingDepartmentDepartment of Animal Husbandry & DairyingCategorySoftwareThemeAgriculture, FoodTech & Rural DevelopmentYoutube LinkDataset LinkContact info",Problem Statement ID,1673,Problem Statement Title,Farmers Disease Diagnostic/Reporting Portal - Mobile Portal Al Based,https://www.sih.gov.in/sih2024PS,agriculture
+160,Ministry of Jal Shakti,"Forecasting Future Water Requirements and Assessing Storage Capacities in Reservoirs×Problem Statement DetailsProblem Statement ID1692Problem Statement TitleForecasting Future Water Requirements and Assessing Storage Capacities in ReservoirsDescriptionBackground 
+Water resources are fundamental to sustaining human life, agriculture, industry and ecosystem. Accurate forecasting of future water requirements along with the assessment of current storage capacities are crucial for effective water resources management and planning. With growing population. The domestic, Industrial, Agricultural and ecological demands increase, which in turn leads to strain on existing water Infrastructure. 
+Description 
+Analyzing the storage capabilities of the reservoirs in the country is essential. It is also essential for the policy makers to plan for a sustainable water resource management. The challenge involves in creating a predictive model, that can accurately forecast the future water requirements and evaluate the current and future storage capabilities. The model must integrate various data sources, including historic water usage, climate projections, population growth trends, and agricultural practices. It should also account for variability in climate conditions, demographic shifts and changes in land use. A strategic planning and decision-making support system can to provide clear insights into future water demand and storage needs, by identifying potential risks. 
+Expected Solution 
+It is expected to assess the existing and future storage capabilities, identify the anticipated conditions and impact on the storage capabilities. Identify the potential gaps where additional storage and infrastructure capabilities are needed. It is also required to create a scenario taking into account the extreme weather events and population demands. The Policy makers should have an insight of water management issues for providing sustainable water management. A strategy should be evolved for enhancing water storage capacities, optimizing water usage and mitigating identifying risks.OrganizationMinistry of Jal ShaktiDepartmentDepartment of WR, RD & GRCategorySoftwareThemeSmart EducationYoutube LinkDataset LinkContact info",Problem Statement ID,1692,Problem Statement Title,Forecasting Future Water Requirements and Assessing Storage Capacities in Reservoirs,https://www.sih.gov.in/sih2024PS,agriculture
+172,Ministry of Panchayati Raj,"Gamification for Rural Planning using Drone land survey maps and GIS data.×Problem Statement DetailsProblem Statement ID1704Problem Statement TitleGamification for Rural Planning using Drone land survey maps and GIS data.DescriptionBackground
+1. Article 243G of the Constitution of India acknowledges Panchayats as institutions of local self-government and mandates them to prepare plans for economic development and social justice. As local government, Gram Panchayats (GPs) are responsible for delivery of basic services to local citizens and address the vulnerabilities of poor and marginalized ones. This can only be achieved through implementation of well thought out
+plans through efficient and responsible utilization of available resources.
+2. An efficient and robust planning process as part of GP├ö├ç├ûs core functioning becomes necessary. GP development plan should ideally match people├ö├ç├ûs needs and priorities with the available resources. It should be prepared through a fair, inclusive, transparent, and participatory process. The focus should be on local development issues, local perception of need and priority, local analysis of problems and solutions, and local resources management all within a collective local vision.
+3. Gram Panchayat Development Plans (GPDP) to be prepared for effective implementation of flagship schemes/ programmes on subjects of National importance.
+The formulation process of Panchayat Development Plans (PDP) must be comprehensive and based on participatory process, which inter alia involves the full convergence of the schemes of Central and State Governments related to 29 subjects listed in the Eleventh Schedule of the Constitution.
+4. A need was felt to take forward the Sustainable Development Goals (SDGs) up to the last mile, i.e., up to the GP level, leveraging a wide network and strong institutional mechanism of third tier of Government including Traditional Bodies of non-part IX areas.
+Accordingly, the Ministry has adopted a thematic approach aggregating 17 SDGs into 9 broad themes for Localization of Sustainable Development Goals (LSDGs) at grassroot level through Panchayats adopting ├ö├ç├┐Whole of Government and Whole of Society Approach├ö├ç├û and the PDPs will be prepared adopting thematic approach to achieve localization for SDGs in rural India.
+
+29 Subjects defined in the Eleventh Schedule
+1. Agriculture
+2. Poverty all eviation programme
+3. Land Improvement.
+4. Education
+5. Minor Irrigation
+6. Vocational education
+7. Animal Husbandary
+8. Adult and non-formal education
+9. Fisheries
+10. Libraries
+11. Social Forestery
+12. Cultural activites
+13. Minor forest produce
+14. Markets and fairs
+15. Small scale industires
+16. Health and Sanitation
+17. Khadi, village and cottage industries
+18. Family welfare
+19. Rural Housing
+20. Women and child development
+21. Drinking water
+22. Social Welfare
+23. Fuel and fodder
+24. Welfare of the weaker sections
+25. Roads
+26. Public distribution system
+27. Rural electrification
+28. Maintenance of community assets
+29. Non-Conventional energy
+
+Description
+Design a game for a Hackathon event that enhances participant engagement, fosters planning, and develops a better Panchayat/Village development
+The objective is to create a gamified experience that can help villagers/youth, etc. to prepare a village development plan. A simulated environment is needed to develop a self-sustained village development plan game where the user can plan various facilities in the
+
+village using the resources available. It is envisaged to develop ├ö├ç├┐Farmville├ö├ç├û kind of a game for a village. Developers can use any game development platform to create the game for android platform. SVAMITVA Scheme GIS data maps of villages will be provided as input.
+Key Components to include for the game app:
+Budget Estimate: Functionality to add the estimate for each type of activity for which planning is required. For example, if new/extension road needs to be constructed for the gram panchayat / village, it should allow us to add the budget for road feature planning.
+Work Model: Development of a game for taking up works under Gram Panchayat Development Plan (GPDP) such as road construction, drainage construction, establishment of toilets, streetlights, etc.
+The basic steps of the Game broadly involve: -
+i. Select the village, where development plan is required by the villagers.
+ii. Based on the input received such as the village building footprints, road network, etc., develop the 3D visualization of the existing village for which development plan is required.
+iii. Superimpose the SVAMITVA Scheme maps/drone data to have a real-world visualization of the village.
+iv. Developmental activities would provide the list of activities that a plan would be composed. For example, a new road laying for a stretch in the village, laying of
+drainage pipeline for the village, drinking water pipeline for all the villagers, etc.
+v. There is resource envelope/money available with Panchayats under different Schemes for different types of developmental work. Once the development activity
+as in point iv above is planned in the game, the amount shall be deducted from the Resource Envelope allocated to Panchayats.
+vi. Generate a more realistic 3D model with other existing features.
+vii. Arrive at a tentative estimate for the planning being performed.
+viii. Ability to provide a walkthrough of the 3D platform.
+ix. Ability to provide a fly-through of the 3D platform.
+A few examples of probable use cases are indicated below: -
+Case1: Road laying activity
+
+├ö├ç├│ The player selects the start point and endpoint with intermediate points wherever required for road construction. It needs to validate that any road laying activity may not be a duplicate road construction plan.
+├ö├ç├│ The player can select the type of the road, width of the road; height of the road etc., based on the selection, the road should be built in the game. Based on
+changing the parameters like type of road from BT road to cement road, it should be regenerated.
+├ö├ç├│ Once the road construction is done by the player, cost of construction should be auto generated.
+├ö├ç├│ Ability to measure the road dimensions and road shoulders.
+
+Case 2: Streetlight
+
+├ö├ç├│ The player selects the road where streetlight is required. The streetlight is added based on the game artefacts.
+├ö├ç├│ The player has option to check the light illumination based on the time of the day for best location for streetlight along the road. Option to change the type of lamp, based on the lamp change ├ö├ç├┤ the changes to reflect on the game for best results.
+├ö├ç├│ Once finalized, the cost estimate of the street lighting to be generated.
+
+Case 3: Ability to measure the building height and width of each side.
+
+├ö├ç├│ The player selects the village for developmental activity.
+├ö├ç├│ The player is presented with a 3D simulated environment representing selected village.
+├ö├ç├│ The player can measure the height of building and all sides to create the dimension of the house along with roof type area.
+
+Expected Solution
+Panchayats have been the fulcrum of local self-government since ancient times, exercising both executive and judicial powers over village-level issues. We plan to
+develop a virtual 3D environment-based gaming platform for village/Panchayat development plan activities.
+├ö├ç├│ A detailed game outlining the work model.
+├ö├ç├│ Prototypes or mock-ups of the game platform/interface.
+├ö├ç├│ Documentation on implementation guidelines and best practices for integrating the gamification system into the Hackathon event.
+1. Article 243G of the Constitution of India acknowledges Panchayats as institutions of local self-government and mandates them to prepare plans for economic development and social justice. As local government, Gram Panchayats (GPs) are responsible for delivery of basic services to local citizens and address the vulnerabilities of poor and marginalized ones. This can only be achieved through implementation of well thought out plans through efficient and responsible utilization of available resources.
+2. An efficient and robust planning process as part of GP├ö├ç├ûs core functioning becomes necessary. GP development plan should ideally match people├ö├ç├ûs needs and priorities with the available resources. It should be prepared through a fair, inclusive, transparent, and participatory process. The focus should be on local development issues, local perception of need and priority, local analysis of problems and solutions, and local resources management all within a collective local vision.
+3. Gram Panchayat Development Plans (GPDP) to be prepared for effective implementation of flagship schemes/ programmes on subjects of National importance.
+The formulation process of Panchayat Development Plans (PDP) must be comprehensive and based on participatory process, which inter alia involves the full convergence of the schemes of Central and State Governments related to 29 subjects listed in the Eleventh Schedule of the Constitution.
+4. A need was felt to take forward the Sustainable Development Goals (SDGs) up to the last mile, i.e., up to the GP level, leveraging a wide network and strong institutional mechanism of third tier of Government including Traditional Bodies of non-part IX areas.
+Accordingly, the Ministry has adopted a thematic approach aggregating 17 SDGs into 9
+broad themes for Localization of Sustainable Development Goals (LSDGs) at grassroot
+level through Panchayats adopting ├ö├ç├┐Whole of Government and Whole of Society
+Approach├ö├ç├û and the PDPs will be prepared adopting thematic approach to achieve
+localization for SDGs in rural India.
+
+
+29 Subjects defined in the Eleventh Schedule
+
+Description
+Design a game for a Hackathon event that enhances participant engagement, fosters
+planning, and develops a better Panchayat/Village development
+The objective is to create a gamified experience that can help villagers/youth, etc. to
+
+prepare a village development plan. A simulated environment is needed to develop a self-
+sustained village development plan game where the user can plan various facilities in the
+
+village using the resources available. It is envisaged to develop ├ö├ç├┐Farmville├ö├ç├û kind of a game
+for a village. Developers can use any game development platform to create the game for
+android platform. SVAMITVA Scheme GIS data maps of villages will be provided as input.
+Key Components to include for the game app:
+Budget Estimate: Functionality to add the estimate for each type of activity for which
+planning is required. For example, if new/extension road needs to be constructed for the
+gram panchayat / village, it should allow us to add the budget for road feature planning.
+Work Model: Development of a game for taking up works under Gram Panchayat
+Development Plan (GPDP) such as road construction, drainage construction,
+establishment of toilets, streetlights, etc.
+The basic steps of the Game broadly involve: -
+i. Select the village, where development plan is required by the villagers.
+ii. Based on the input received such as the village building footprints, road network,
+etc., develop the 3D visualization of the existing village for which development
+plan is required.
+iii. Superimpose the SVAMITVA Scheme maps/drone data to have a real-world
+visualization of the village.
+iv. Developmental activities would provide the list of activities that a plan would be
+composed. For example, a new road laying for a stretch in the village, laying of
+drainage pipeline for the village, drinking water pipeline for all the villagers, etc.
+v. There is resource envelope/money available with Panchayats under different
+Schemes for different types of developmental work. Once the development activity
+as in point iv above is planned in the game, the amount shall be deducted from the
+Resource Envelope allocated to Panchayats.
+vi. Generate a more realistic 3D model with other existing features.
+vii. Arrive at a tentative estimate for the planning being performed.
+viii. Ability to provide a walkthrough of the 3D platform.
+ix. Ability to provide a fly-through of the 3D platform.
+A few examples of probable use cases are indicated below: -
+Case1: Road laying activity
+
+├ö├ç├│ The player selects the start point and endpoint with intermediate points wherever
+required for road construction. It needs to validate that any road laying activity may
+not be a duplicate road construction plan.
+├ö├ç├│ The player can select the type of the road, width of the road; height of the road
+etc., based on the selection, the road should be built in the game. Based on
+changing the parameters like type of road from BT road to cement road, it should
+be regenerated.
+├ö├ç├│ Once the road construction is done by the player, cost of construction should be
+auto generated.
+├ö├ç├│ Ability to measure the road dimensions and road shoulders.
+
+Case 2: Streetlight
+
+├ö├ç├│ The player selects the road where streetlight is required. The streetlight is added
+based on the game artefacts.
+├ö├ç├│ The player has option to check the light illumination based on the time of the day
+for best location for streetlight along the road. Option to change the type of lamp,
+based on the lamp change ├ö├ç├┤ the changes to reflect on the game for best results.
+├ö├ç├│ Once finalized, the cost estimate of the street lighting to be generated.
+
+Case 3: Ability to measure the building height and width of each side.
+
+├ö├ç├│ The player selects the village for developmental activity.
+├ö├ç├│ The player is presented with a 3D simulated environment representing selected
+village.
+├ö├ç├│ The player can measure the height of building and all sides to create the dimension
+of the house along with roof type area.
+
+Expected Solution
+Panchayats have been the fulcrum of local self-government since ancient times,
+exercising both executive and judicial powers over village-level issues. We plan to
+develop a virtual 3D environment-based gaming platform for village/Panchayat
+development plan activities.
+├ö├ç├│ A detailed game outlining the work model.
+├ö├ç├│ Prototypes or mock-ups of the game platform/interface.
+├ö├ç├│ Documentation on implementation guidelines and best practices for integrating the
+gamification system into the Hackathon event.
+These are few of the cases described by this concept. Students should try to model maximum topics and also have a comprehensive guided documentation which leads to development of a super fine game.OrganizationMinistry of Panchayati RajDepartmentMinistry of Panchayati RajCategorySoftwareThemeRobotics and DronesYoutube LinkDataset Linkhttps://sih.gov.in/dataset/Data_set.pdfContact info",Problem Statement ID,1704,Problem Statement Title,Gamification for Rural Planning using Drone land survey maps and GIS data.,https://www.sih.gov.in/sih2024PS,agriculture
+173,Ministry of Panchayati Raj,"Development and Optimization of Al model for Feature identification/ Extraction from drone orthophotos.×Problem Statement DetailsProblem Statement ID1705Problem Statement TitleDevelopment and Optimization of Al model for Feature identification/ Extraction from drone orthophotos.DescriptionBackground
+1. The Hon├ö├ç├ûble Prime Minister launched the SVAMITVA Scheme on the National Panchayati Raj Day, 24th April 2020 with a resolve to enable the economic progress of Rural India by providing ├ö├ç┬úRecord of Rights├ö├ç├ÿ to every rural household owner. The scheme aims to demarcate inhabited (Abadi) land in rural areas through the latest surveying drone technology, Continuous Operating Reference System (CORS), and Geographic Information System (GIS) technology. The scheme covers multifarious aspects viz. facilitating monetization of properties and enabling bank loan; reducing property-related disputes; comprehensive village-level planning
+2. With the use latest drone technology and CORS technology for the Abadi land survey, the high resolution and accurate image base maps of 50 cm have facilitated creation of the most durable record of property holdings in these areas with no legacy revenue records. Such accurate image-based maps provide a clear demarcation of land holdings in a very short frame of time compared to on ground physical measurement and mapping of the land parcels.
+Description
+i. Develop an AI model capable of identifying key features in orthophotos with high precision: Use of AI/ML techniques for extraction of the following features from SVAMITVA Drone Imagery using a cloud-based solution: -
+a. Building footprint extraction (built-up area from the drone image and classified roof-top based on observation on the imagery as RCC, Tiled, Tin, and Others. These built up area can be used for various service such as solar energy calculation, property tax calculation, etc.)
+b. Road feature extraction
+c. Waterbodies extraction, etc
+ii. Achieve a target accuracy of 95% in feature identification.
+iii. Optimize the model for efficient processing and deployment.
+
+The broad scope of work includes:-
+i. Data Preparation: Utilize the SVAMITVA Scheme drone-labeled datasets for 10 villages to train and validate the AI model.
+ii. Model Development: Employ Convolutional Neural Networks (CNNs) or other suitable AI/ML models for image segmentation and feature identification.
+iii. Model Training: Efficient training of the model ensures it learns to identify the desired features accurately.
+iv. Model Optimization: Fine-tune the model to achieve the target accuracy of 95%, optimizing for speed and resource utilization.
+v. Testing and Validation: Rigorously test the model on a separate dataset to ensure its accuracy and reliability.
+vi. Deployment and Integration: Prepare the model for deployment and integration into the Ministry of Panchayati Raj├ö├ç├ûs existing systems for practical application.
+
+Expected Solution
+i. A fully trained and optimized AI model for feature identification in orthophotos.
+ii. Documentation detailing the model architecture, training process, and deployment guidelines.
+iii. A final report summarizing the project outcomes, including accuracy metrics and recommendations for future improvements.OrganizationMinistry of Panchayati RajDepartmentMinistry of Panchayati RajCategorySoftwareThemeRobotics and DronesYoutube LinkDataset Linkhttps://sih.gov.in/dataset/Data_set.pdfContact info",Problem Statement ID,1705,Problem Statement Title,Development and Optimization of Al model for Feature identification/ Extraction from drone orthophotos.,https://www.sih.gov.in/sih2024PS,agriculture
+227,Ministry of Communication,"AI based identification of Financial (Banking & Insurance) needs based on demography and economic / farming Cycle
+ ""While the Post Office Network serves everyone, everywhere, on all days, the need for various services including financial and insurance services has a seasonal variation to it. There is a need to time communication and support to customers at times they require it most based on their daily routines. A robust system to segment, target and focus on each customer based on their needs from time to time is needed for India Post to direct its service force to make efforts in response to such needs.""×Problem Statement DetailsProblem Statement ID1760Problem Statement TitleAI based identification of Financial (Banking & Insurance) needs based on demography and economic / farming Cycle
+ ""While the Post Office Network serves everyone, everywhere, on all days, the need for various services including financial and insurance services has a seasonal variation to it. There is a need to time communication and support to customers at times they require it most based on their daily routines. A robust system to segment, target and focus on each customer based on their needs from time to time is needed for India Post to direct its service force to make efforts in response to such needs.""DescriptionBackground: The Department of Posts has implemented various Post Office Savings Bank (POSB) Schemes in All over India uniformly. However, each socio-geographic formation at the state, district, block and village level has its own demographic realities that require a customised thrust for making the relevant financial and insurance services available to the served population around each post office.  For example,  in West Bengal, there are some villages where percentage of females are higher where if Melas for Sukanya Samriddhi Accounts ( SSA) and Mahila Samriddhi Samman Patras (MSSC) can be arranged, the effectiveness of the sales effort and the conversion rate will be higher. Similarly, in some villages the number of senior citizens are higher and higher  number of Senior Citizen Social Security (SCSS) accounts can be opened for their benefit to justify presence of post offices in these areas. But there is no such report from where it can be identified, where and when the need of which product is higher. All melas like SSA, MSSC, Postal Life Insurance (PLI) , Rural Postal Life Insurance ( RPLI)  have been arranged in villages without the knowledge of percentage of male/female/child and senior citizens resulting in moderate to mediocre success for the efforts.  
+Description: The Department of Posts has implemented various POSB Schemes in All over India uniformly. Actual demographic location-wise population is to be identified. In West Bengal, for example, there are some villages where percentage of females are higher, in some villages the number of senior citizens are higher. In some sectors demand young generation and service holders are much higher. The need of the youth and service holders are very different from the demands of other sector of people. Density of farmers and business-oriented people are higher in some areas.  All melas like SSA, MSSC, Public Provident Fund (PPF), Recurring Deposits (RD), Time Deposit ( TD)  PLI, RPLI have been arranged in every city and villages without the knowledge of percentage of male/female/child/senior citizens and other sectors of people and as a result the success of all the melas are found not satisfactory. 
+Expected Solution: The expected solution is pictorial data and actual demographic and economic location-wise population is to be identified.  The demographic and location-wise population data is to be taken as a fundamental data towards improvement of financial (banking & insurance) services.OrganizationMinistry of CommunicationDepartmentDepartment of PostsCategorySoftwareThemeMiscellaneousYoutube LinkDataset LinkContact info",Problem Statement ID,1760,Problem Statement Title,"AI based identification of Financial (Banking & Insurance) needs based on demography and economic / farming Cycle
+ ""While the Post Office Network serves everyone, everywhere, on all days, the need for various services including financial and insurance services has a seasonal variation to it. There is a need to time communication and support to customers at times they require it most based on their daily routines. A robust system to segment, target and focus on each customer based on their needs from time to time is needed for India Post to direct its service force to make efforts in response to such needs.""",https://www.sih.gov.in/sih2024PS,agriculture
+233,Ministry of Jal Shakti,"GOBARdhan - Low-cost enrichment models for F/L OM (Fermented / Liquied Organic Manure)×Problem Statement DetailsProblem Statement ID1768Problem Statement TitleGOBARdhan - Low-cost enrichment models for F/L OM (Fermented / Liquied Organic Manure)DescriptionBackground and Description: Fermented/Liquid Organic Manure (F/L OM) is a valuable resource for improving soil fertility and crop production at the village level. However, the nutrient content of F/L OM can vary widely, often being insufficient to meet the needs of various crops. Enrichment of F/L OM with additional nutrients or through enhanced fermentation processes can significantly improve its efficacy as an organic fertilizer. Despite this potential, current enrichment methods are often too costly or complex for small farmers to implement, limiting their ability to fully benefit from F/L OM.
+ 
+ Expected Solution: The creation of low-cost, scalable enrichment models for F/L OM that can be easily adopted by small farmers. These models should focus on enhancing the nutrient content of F/L OM through affordable additives or optimized fermentation techniques. The goal is to produce a more potent and consistent organic fertilizer that can boost crop yields while remaining accessible and practical for village-level production.OrganizationMinistry of Jal ShaktiDepartmentDepartment of Drinking Water and Sanitation (DDWS)CategoryHardwareThemeClean & Green TechnologyYoutube LinkDataset LinkContact info",Problem Statement ID,1768,Problem Statement Title,GOBARdhan - Low-cost enrichment models for F/L OM (Fermented / Liquied Organic Manure),https://www.sih.gov.in/sih2024PS,agriculture
+235,Ministry of Jal Shakti,"Personalized testing kits for testing Residual Silver ion level at delivery points×Problem Statement DetailsProblem Statement ID1771Problem Statement TitlePersonalized testing kits for testing Residual Silver ion level at delivery pointsDescriptionBackground and Description:
+ Under the Jal Jeevan Mission (JJM), ensuring the safety and quality of drinking water is critical. Residual silver ions are often used as a disinfectant, especially in cases where chlorine may not be suitable. However, the concentration of residual silver ions in drinking water must be carefully monitored to avoid potential health risks, as excessive levels can be harmful. Existing methods for testing silver ion levels are often complex, expensive, and inaccessible to rural populations. The objective of this challenge is to develop a personalized testing kit specifically for measuring residual silver ion levels in drinking water. The kit should be affordable, easy to use, and capable of delivering results with accuracy comparable to that of laboratory tests. This will empower rural households to monitor and ensure the safety of their drinking water, preventing potential silver ion overexposure.
+ 
+ Expected Solutions:
+ i. The device should be portable and capable of accurately detecting low levels of residual silver ions in drinking water, ensuring compliance with safety standards.
+ ii. The detected value should clearly indicate the concentration of silver ions in a 100 ml water sample, with results displayed in a digital format.
+ iii. The testing kit should be cost-effective, easy to carry, and simple to operate, requiring minimal training for rural users.
+ iv. It should be robust and reliable under the harsh environmental conditions often found in rural India, such as fluctuations in temperature and humidity.
+ v. The kit should deliver quick results, allowing users to promptly assess the safety of their water supply.
+ vi. Calibration of the testing kit should be easy to perform, ensuring accurate and consistent readings over time.
+ vii. The device should have low operational and maintenance costs, making it suitable for long-term use in rural settings.
+ viii. The testing kit must adhere to all relevant regulatory standards for water quality testing in India.
+ ix. It should be powered by lithium or another suitable battery, with a minimum operational time of 24 hours after full charging.
+ x. The device should pose no risk to users or the environment during its operation and disposal.OrganizationMinistry of Jal ShaktiDepartmentDepartment of Drinking Water and Sanitation (DDWS)CategoryHardwareThemeSmart AutomationYoutube LinkDataset LinkContact info",Problem Statement ID,1771,Problem Statement Title,Personalized testing kits for testing Residual Silver ion level at delivery points,https://www.sih.gov.in/sih2024PS,agriculture

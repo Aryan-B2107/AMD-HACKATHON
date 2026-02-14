@@ -1,0 +1,176 @@
+{
+  "name": "Tomatoes",
+  "variety": "Cherry Variety",
+  "icon": "🍅",
+  "totalDuration": "90-110 days",
+  "expectedYield": "10-15 lbs per plant",
+  "phases": [
+    {
+      "id": 1,
+      "title": "Site Preparation",
+      "icon": "🏗️",
+      "duration": "Days 1-14",
+      "description": "2 weeks",
+      "color": "#8B4513",
+      "tasks": [
+        {
+          "id": "prep1",
+          "title": "🧪 Soil Testing & Amendment",
+          "description": "Test and adjust soil pH to 6.0-6.8 for optimal tomato growth",
+          "materials": "pH test kit, lime (if needed), compost",
+          "priority": "high",
+          "estimatedTime": "2-3 hours",
+          "targetDays": "1-7"
+        },
+        {
+          "id": "prep2",
+          "title": "🏡 Bed Preparation",
+          "description": "Clear area, till soil 8-10 inches deep, create raised beds",
+          "materials": "Based on your field size",
+          "priority": "high",
+          "estimatedTime": "4-6 hours",
+          "targetDays": "7-14"
+        }
+      ]
+    },
+    {
+      "id": 2,
+      "title": "Seeding & Planting",
+      "icon": "🌱",
+      "duration": "Days 15-28",
+      "description": "2 weeks",
+      "color": "#228B22",
+      "tasks": [
+        {
+          "id": "seed1",
+          "title": "🌱 Start Seeds Indoors",
+          "description": "Start tomato seeds in trays 6-8 weeks before last frost date",
+          "materials": "2-3 seeds per cell, thin to strongest seedling",
+          "priority": "high",
+          "estimatedTime": "1-2 hours",
+          "targetDays": "15-21"
+        },
+        {
+          "id": "seed2",
+          "title": "💧 Setup Irrigation",
+          "description": "Install drip irrigation or soaker hoses for consistent watering",
+          "materials": "1-2 inches per week water capacity",
+          "priority": "medium",
+          "estimatedTime": "3-4 hours",
+          "targetDays": "15-25"
+        }
+      ]
+    },
+    {
+      "id": 3,
+      "title": "Vegetative Growth",
+      "icon": "🌿",
+      "duration": "Days 29-56",
+      "description": "4 weeks",
+      "color": "#32CD32",
+      "tasks": [
+        {
+          "id": "growth1",
+          "title": "🌱 Transplant Seedlings",
+          "description": "Move hardened seedlings outdoors after last frost threat",
+          "materials": "18-24 inches apart, 3-4 feet between rows",
+          "priority": "high",
+          "estimatedTime": "2-3 hours",
+          "targetDays": "29-35"
+        },
+        {
+          "id": "growth2",
+          "title": "🥄 First Fertilization",
+          "description": "Apply balanced fertilizer to establish strong root system",
+          "materials": "1-2 tablespoons per plant of compost or NPK",
+          "priority": "medium",
+          "estimatedTime": "30 minutes",
+          "targetDays": "35-45"
+        },
+        {
+          "id": "growth3",
+          "title": "🏗️ Install Supports",
+          "description": "Set up cages, stakes, or trellises for vine support",
+          "materials": "5-6 feet for indeterminate varieties",
+          "priority": "high",
+          "estimatedTime": "2-3 hours",
+          "targetDays": "35-50"
+        }
+      ]
+    },
+    {
+      "id": 4,
+      "title": "Flowering & Fruit Set",
+      "icon": "🌸",
+      "duration": "Days 57-77",
+      "description": "3 weeks",
+      "color": "#FF69B4",
+      "tasks": [
+        {
+          "id": "flower1",
+          "title": "✂️ Pruning & Maintenance",
+          "description": "Remove suckers and lower leaves touching soil",
+          "materials": "Weekly inspection and pruning",
+          "priority": "high",
+          "estimatedTime": "30-45 minutes weekly",
+          "targetDays": "57-77"
+        },
+        {
+          "id": "flower2",
+          "title": "🌸 Monitor Flowering",
+          "description": "Ensure good pollination and watch for early fruit development",
+          "materials": "Gently shake plants daily to aid pollination",
+          "priority": "medium",
+          "estimatedTime": "10 minutes daily",
+          "targetDays": "57-70"
+        },
+        {
+          "id": "flower3",
+          "title": "🛡️ Pest Prevention",
+          "description": "Apply preventive neem oil spray for common pests",
+          "materials": "Every 2 weeks, early morning or evening",
+          "priority": "high",
+          "estimatedTime": "20-30 minutes",
+          "targetDays": "57-77"
+        }
+      ]
+    },
+    {
+      "id": 5,
+      "title": "Harvest & Maintenance",
+      "icon": "🍅",
+      "duration": "Days 78-110",
+      "description": "4-5 weeks",
+      "color": "#FF4500",
+      "tasks": [
+        {
+          "id": "harvest1",
+          "title": "🍅 Begin Harvesting",
+          "description": "Pick tomatoes when they show first blush of color",
+          "materials": "Daily during peak season",
+          "priority": "high",
+          "estimatedTime": "15-30 minutes daily",
+          "targetDays": "78-85"
+        },
+        {
+          "id": "harvest2",
+          "title": "🍅 Continuous Care",
+          "description": "Maintain consistent watering and fertilization schedule",
+          "materials": "Reduce nitrogen, increase potassium",
+          "priority": "medium",
+          "estimatedTime": "20 minutes weekly",
+          "targetDays": "78-100"
+        },
+        {
+          "id": "harvest3",
+          "title": "📦 Storage & Processing",
+          "description": "Properly store harvested tomatoes and plan preservation",
+          "materials": "Ripen green tomatoes indoors at room temperature",
+          "priority": "low",
+          "estimatedTime": "Variable",
+          "targetDays": "78-110"
+        }
+      ]
+    }
+  ]
+}

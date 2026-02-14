@@ -1,0 +1,368 @@
+<!DOCTYPE html>
+<html lang="en">
+<head>
+    <meta charset="UTF-8">
+    <meta name="viewport" content="width=device-width, initial-scale=1.0">
+    <title>Farming Roadmap</title>
+    <link rel="preconnect" href="https://fonts.googleapis.com">
+    <link rel="preconnect" href="https://fonts.gstatic.com" crossorigin>
+    <link href="https://fonts.googleapis.com/css2?family=Inter:wght@400;500;600;700&display=swap" rel="stylesheet">
+    <script src="https://cdn.tailwindcss.com"></script>
+    <style>
+        body {
+            font-family: 'Inter', sans-serif;
+            background-color: #F0FFF0; /* A very light, minty green */
+        }
+
+        /* Custom styles for animations and interactivity */
+        .collapsible-content {
+            max-height: 0;
+            overflow: hidden;
+            transition: max-height 0.3s ease-out;
+        }
+        .collapsible-content.expanded {
+            max-height: 2000px; /* A large value to allow for smooth expansion */
+            transition: max-height 0.5s ease-in;
+        }
+        .chevron {
+            transition: transform 0.3s ease-in-out;
+        }
+        .chevron.rotated {
+            transform: rotate(180deg);
+        }
+        .priority-high { @apply bg-red-100 text-red-700; }
+        .priority-medium { @apply bg-yellow-100 text-yellow-700; }
+        .priority-low { @apply bg-green-100 text-green-700; }
+        /* Style for the hover/active state of clickable elements */
+        .clickable:hover { @apply bg-green-50; }
+        .clickable:active { transform: scale(0.98); }
+
+        /* The custom message box */
+        .message-box {
+            position: fixed;
+            top: 2rem;
+            left: 50%;
+            transform: translateX(-50%);
+            background-color: rgba(52, 211, 153, 0.9);
+            color: white;
+            padding: 1rem 2rem;
+            border-radius: 1rem;
+            box-shadow: 0 4px 6px rgba(0, 0, 0, 0.1);
+            z-index: 1000;
+            display: none;
+            text-align: center;
+        }
+
+        /* Styles for floating background emojis inside containers */
+        .floating-emoji-container {
+            position: absolute;
+            top: 0;
+            left: 0;
+            width: 100%;
+            height: 100%;
+            pointer-events: none; /* Allows clicks to pass through */
+            overflow: hidden;
+            z-index: 0; /* Ensures emojis are behind content but inside the card */
+        }
+        .floating-emoji {
+            position: absolute;
+            opacity: 0.15; /* Subtler opacity */
+            animation-name: float-and-wave-card;
+            animation-iteration-count: infinite;
+            animation-timing-function: linear;
+            font-size: 2rem;
+        }
+
+        /* Keyframes for floating animation inside a smaller container */
+        @keyframes float-and-wave-card {
+            0% { transform: translate(0, 0) scale(1); }
+            25% { transform: translate(2rem, -1rem) scale(1.1); }
+            50% { transform: translate(0, -2rem) scale(1.2); }
+            75% { transform: translate(-2rem, -1rem) scale(1.1); }
+            100% { transform: translate(0, 0) scale(1); }
+        }
+    </style>
+</head>
+<body class="min-h-screen flex flex-col items-center">
+
+<!-- Custom message box element -->
+<div id="message-box" class="message-box"></div>
+
+<div class="w-full space-y-6">
+
+    <!-- Header Card -->
+    <div class="bg-white p-8 rounded-b-3xl shadow-lg flex flex-col items-center text-center">
+        <svg xmlns="http://www.w3.org/2000/svg" class="h-16 w-16 text-green-600 mb-4" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2" stroke-linecap="round" stroke-linejoin="round">
+            <path d="M12 2L2 7l10 5 10-5-10-5zM2 17l10 5 10-5M2 12l10 5 10-5"></path>
+        </svg>
+        <h1 class="text-3xl font-bold text-gray-800 mb-2">Farming Roadmap</h1>
+        <p class="text-gray-500 mb-8">Your personalized guide to a successful harvest.</p>
+    </div>
+
+    <!-- Roadmap Container -->
+    <div class="roadmap-container bg-white p-6 rounded-t-3xl shadow-lg mt-6">
+        <div id="roadmapPhases" class="space-y-6">
+            <!-- Phases will be populated by JavaScript -->
+        </div>
+    </div>
+
+    <!-- Action Buttons Section -->
+    <div class="flex flex-col sm:flex-row items-center justify-center w-full space-y-4 sm:space-y-0 sm:space-x-4 p-4">
+        <button onclick="trackProgress()" class="w-full sm:w-auto px-6 py-3 bg-green-600 text-white font-semibold rounded-full shadow-md hover:bg-green-700 transition-colors duration-200">
+            📋 Track Progress
+        </button>
+        <button onclick="downloadRoadmap()" class="w-full sm:w-auto px-6 py-3 bg-gray-200 text-gray-800 font-semibold rounded-full shadow-md hover:bg-gray-300 transition-colors duration-200">
+            📄 Download
+        </button>
+        <button onclick="modifyPlan()" class="w-full sm:w-auto px-6 py-3 bg-gray-200 text-gray-800 font-semibold rounded-full shadow-md hover:bg-gray-300 transition-colors duration-200">
+            ⚙️ Modify Plan
+        </button>
+    </div>
+
+</div>
+
+<script>
+    // Custom message function to provide user feedback
+    function showMessage(message, duration = 3000) {
+        const messageBox = document.getElementById('message-box');
+        messageBox.textContent = message;
+        messageBox.style.display = 'block';
+        setTimeout(() => {
+            messageBox.style.display = 'none';
+        }, duration);
+    }
+
+    // Roadmap data - This is the JSON object that can be updated from Kotlin
+    let roadmapData = {
+        crop: {
+            name: "Tomatoes",
+            variety: "Cherry Variety",
+            icon: "🍅",
+            totalDuration: "90-110 days",
+            expectedYield: "10-15 lbs per plant"
+        },
+        phases: [
+            {
+                id: 1,
+                title: "Site Preparation",
+                icon: "🏗️",
+                duration: "Days 1-14",
+                description: "2 weeks",
+                tasks: [
+                    { id: "prep1", title: "🧪 Soil Testing & Amendment", description: "Test and adjust soil pH to 6.0-6.8 for optimal tomato growth", materials: "pH test kit, lime (if needed), compost", priority: "high", estimatedTime: "2-3 hours", targetDays: "1-7" },
+                    { id: "prep2", title: "🏡 Bed Preparation", description: "Clear area, till soil 8-10 inches deep, create raised beds", materials: "Based on your field size", priority: "high", estimatedTime: "4-6 hours", targetDays: "7-14" }
+                ]
+            },
+            {
+                id: 2,
+                title: "Seeding & Planting",
+                icon: "�",
+                duration: "Days 15-28",
+                description: "2 weeks",
+                tasks: [
+                    { id: "seed1", title: "🌱 Start Seeds Indoors", description: "Start tomato seeds in trays 6-8 weeks before last frost date", materials: "2-3 seeds per cell, thin to strongest seedling", priority: "high", estimatedTime: "1-2 hours", targetDays: "15-21" },
+                    { id: "seed2", title: "💧 Setup Irrigation", description: "Install drip irrigation or soaker hoses for consistent watering", materials: "1-2 inches per week water capacity", priority: "medium", estimatedTime: "3-4 hours", targetDays: "15-25" }
+                ]
+            },
+            {
+                id: 3,
+                title: "Vegetative Growth",
+                icon: "🌿",
+                duration: "Days 29-56",
+                description: "4 weeks",
+                tasks: [
+                    { id: "growth1", title: "🌱 Transplant Seedlings", description: "Move hardened seedlings outdoors after last frost threat", materials: "18-24 inches apart, 3-4 feet between rows", priority: "high", estimatedTime: "2-3 hours", targetDays: "29-35" },
+                    { id: "growth2", title: "🥄 First Fertilization", description: "Apply balanced fertilizer to establish strong root system", materials: "1-2 tablespoons per plant of compost or NPK", priority: "medium", estimatedTime: "30 minutes", targetDays: "35-45" },
+                    { id: "growth3", title: "🏗️ Install Supports", description: "Set up cages, stakes, or trellises for vine support", materials: "5-6 feet for indeterminate varieties", priority: "high", estimatedTime: "2-3 hours", targetDays: "35-50" }
+                ]
+            },
+            {
+                id: 4,
+                title: "Flowering & Fruit Set",
+                icon: "🌸",
+                duration: "Days 57-77",
+                description: "3 weeks",
+                tasks: [
+                    { id: "flower1", title: "✂️ Pruning & Maintenance", description: "Remove suckers and lower leaves touching soil", materials: "Weekly inspection and pruning", priority: "high", estimatedTime: "30-45 minutes weekly", targetDays: "57-77" },
+                    { id: "flower2", title: "🌸 Monitor Flowering", description: "Ensure good pollination and watch for early fruit development", materials: "Gently shake plants daily to aid pollination", priority: "medium", estimatedTime: "10 minutes daily", targetDays: "57-70" },
+                    { id: "flower3", title: "🛡️ Pest Prevention", description: "Apply preventive neem oil spray for common pests", materials: "Every 2 weeks, early morning or evening", priority: "high", estimatedTime: "20-30 minutes", targetDays: "57-77" }
+                ]
+            },
+            {
+                id: 5,
+                title: "Harvest & Maintenance",
+                icon: "🍅",
+                duration: "Days 78-110",
+                description: "4-5 weeks",
+                tasks: [
+                    { id: "harvest1", title: "🍅 Begin Harvesting", description: "Pick tomatoes when they show first blush of color", materials: "Daily during peak season", priority: "high", estimatedTime: "15-30 minutes daily", targetDays: "78-85" },
+                    { id: "harvest2", title: "🍅 Continuous Care", description: "Maintain consistent watering and fertilization schedule", materials: "Reduce nitrogen, increase potassium", priority: "medium", estimatedTime: "20 minutes weekly", targetDays: "78-100" },
+                    { id: "harvest3", title: "📦 Storage & Processing", description: "Properly store harvested tomatoes and plan preservation", materials: "Ripen green tomatoes indoors at room temperature", priority: "low", estimatedTime: "Variable", targetDays: "78-110" }
+                ]
+            }
+        ]
+    };
+
+    // Renders the full roadmap based on the current data
+    function renderRoadmap() {
+        const container = document.getElementById('roadmapPhases');
+        if (!container) return;
+        container.innerHTML = ''; // Clear previous content
+
+        // Render phases and tasks
+        roadmapData.phases.forEach(phase => {
+            const phaseElement = document.createElement('div');
+            // Ensure phase cards have position: relative and overflow: hidden for emojis to work inside
+            phaseElement.className = 'phase-card bg-white p-6 rounded-2xl shadow-sm border border-gray-200 transition-colors duration-200 cursor-pointer clickable relative overflow-hidden';
+
+            // Add a container for the floating emojis at the top of the card
+            const emojiContainer = document.createElement('div');
+            emojiContainer.className = 'floating-emoji-container';
+            phaseElement.appendChild(emojiContainer);
+
+            // Populate this container with emojis
+            populateContainerWithEmojis(emojiContainer, 10); // Adjust number for visual density
+
+            // Phase Header with interactive element
+            const headerContent = document.createElement('div');
+            headerContent.className = 'flex items-center justify-between z-10 relative'; // z-index ensures content is above emojis
+            headerContent.setAttribute('data-id', phase.id);
+            headerContent.innerHTML = `
+                <div class="flex items-center space-x-4">
+                    <div class="text-3xl">${phase.icon}</div>
+                    <div>
+                        <h3 class="text-xl font-semibold text-gray-800">${phase.title}</h3>
+                        <p class="text-sm text-gray-500">${phase.duration} • ${phase.description}</p>
+                    </div>
+                </div>
+                <svg class="chevron h-6 w-6 text-gray-400" xmlns="http://www.w3.org/2000/svg" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2" stroke-linecap="round" stroke-linejoin="round">
+                    <polyline points="6 9 12 15 18 9"></polyline>
+                </svg>
+            `;
+            phaseElement.appendChild(headerContent);
+
+            const collapsibleContent = document.createElement('div');
+            collapsibleContent.className = 'collapsible-content space-y-4 mt-4 relative z-10';
+
+            // Render tasks inside the collapsible content
+            phase.tasks.forEach(task => {
+                const taskCard = document.createElement('div');
+                const priorityClass = `priority-${task.priority.toLowerCase()}`;
+                const priorityText = task.priority.charAt(0).toUpperCase() + task.priority.slice(1);
+
+                // Add position:relative and overflow:hidden to task cards too
+                taskCard.className = 'task-card bg-slate-50 p-4 rounded-xl border border-gray-100 shadow-sm relative overflow-hidden';
+
+                const taskEmojiContainer = document.createElement('div');
+                taskEmojiContainer.className = 'floating-emoji-container';
+                taskCard.appendChild(taskEmojiContainer);
+                populateContainerWithEmojis(taskEmojiContainer, 5); // Fewer emojis for smaller cards
+
+                taskCard.innerHTML += `
+                    <h4 class="text-md font-semibold text-gray-700 relative z-10">${task.title}</h4>
+                    <p class="text-sm text-gray-600 my-2 relative z-10">${task.description}</p>
+                    <div class="flex items-center justify-between text-xs text-gray-400 mt-3 relative z-10">
+                        <span class="font-medium">Time: ${task.estimatedTime}</span>
+                        <span class="font-medium">Target: Day ${task.targetDays}</span>
+                    </div>
+                    <div class="text-xs font-semibold px-2 py-1 rounded-full ${priorityClass} mt-2 inline-block relative z-10">${priorityText} Priority</div>
+                `;
+                collapsibleContent.appendChild(taskCard);
+            });
+
+            phaseElement.appendChild(collapsibleContent);
+
+            // Add event listener for collapsing/expanding
+            headerContent.addEventListener('click', (event) => {
+                const content = phaseElement.querySelector('.collapsible-content');
+                const chevron = phaseElement.querySelector('.chevron');
+                if (content.classList.contains('expanded')) {
+                    content.classList.remove('expanded');
+                    chevron.classList.remove('rotated');
+                } else {
+                    content.classList.add('expanded');
+                    chevron.classList.add('rotated');
+                }
+            });
+            container.appendChild(phaseElement);
+        });
+    }
+
+    // Functions for button clicks (to be handled by Kotlin)
+    function trackProgress() {
+        if (window.Android && window.Android.trackProgress) {
+            window.Android.trackProgress();
+        } else {
+            showMessage('Track Progress feature called (native app not detected).');
+        }
+    }
+
+    function downloadRoadmap() {
+        if (window.Android && window.Android.downloadRoadmap) {
+            window.Android.downloadRoadmap();
+        } else {
+            showMessage('Download feature called (native app not detected).');
+        }
+    }
+
+    function modifyPlan() {
+        if (window.Android && window.Android.modifyPlan) {
+            window.Android.modifyPlan();
+        } else {
+            showMessage('Modify Plan feature called (native app not detected).');
+        }
+    }
+
+    // Public API for Kotlin to update the roadmap data
+    window.updateRoadmapData = function(newData) {
+        try {
+            if (typeof newData === 'string') {
+                roadmapData = JSON.parse(newData);
+            } else {
+                roadmapData = newData;
+            }
+            renderRoadmap();
+            return true;
+        } catch (e) {
+            console.error('Error updating roadmap data:', e);
+            return false;
+        }
+    };
+
+    // Function to create a single floating emoji element inside a specified container
+    function createEmoji(container) {
+        const emojis = ['🥕', '🍎', '🍓', '🥬', '🥦', '🌽', '🍊'];
+        const emoji = document.createElement('span');
+        emoji.className = 'floating-emoji';
+        emoji.textContent = emojis[Math.floor(Math.random() * emojis.length)];
+
+        // Randomize position, size, and animation
+        const startX = Math.random() * 100;
+        const startY = Math.random() * 100;
+        const size = 1.5 + Math.random() * 1.5; // 1.5 to 3rem
+        const duration = 10 + Math.random() * 5; // 10 to 15 seconds
+
+        emoji.style.left = `${startX}%`;
+        emoji.style.top = `${startY}%`;
+        emoji.style.fontSize = `${size}rem`;
+        emoji.style.animationDuration = `${duration}s`;
+        emoji.style.animationDelay = `${Math.random() * duration}s`;
+
+        container.appendChild(emoji);
+    }
+
+    // Function to populate a container with a certain number of emojis
+    function populateContainerWithEmojis(container, count) {
+        for (let i = 0; i < count; i++) {
+            createEmoji(container);
+        }
+    }
+
+    // Initial render when the page loads
+    document.addEventListener('DOMContentLoaded', () => {
+        renderRoadmap();
+    });
+</script>
+</body>
+</html>
+�

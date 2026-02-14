@@ -1,0 +1,953 @@
+<!DOCTYPE html>
+<html lang="en">
+<head>
+    <meta charset="UTF-8">
+    <meta name="viewport" content="width=device-width, initial-scale=1.0">
+    <title>Daily Task List</title>
+    <link rel="preconnect" href="https://fonts.googleapis.com">
+    <link rel="preconnect" href="https://fonts.gstatic.com" crossorigin>
+    <link href="https://fonts.googleapis.com/css2?family=Inter:wght@400;500;600;700&display=swap" rel="stylesheet">
+    <script src="https://cdn.tailwindcss.com"></script>
+    <style>
+        body {
+            font-family: 'Inter', sans-serif;
+            background-color: #F0FFF0; /* A very light, minty green */
+        }
+
+        /* Custom styles for animations and interactivity */
+        .collapsible-content {
+            max-height: 0;
+            overflow: hidden;
+            transition: max-height 0.3s ease-out;
+        }
+        .collapsible-content.expanded {
+            max-height: 2000px; /* A large value to allow for smooth expansion */
+            transition: max-height 0.5s ease-in;
+        }
+        .chevron {
+            transition: transform 0.3s ease-in-out;
+        }
+        .chevron.rotated {
+            transform: rotate(180deg);
+        }
+        .priority-high { @apply bg-red-100 text-red-700; }
+        .priority-medium { @apply bg-yellow-100 text-yellow-700; }
+        .priority-low { @apply bg-green-100 text-green-700; }
+        .priority-critical { @apply bg-red-200 text-red-800; }
+
+        /* Style for the hover/active state of clickable elements */
+        .clickable:hover { @apply bg-green-50; }
+        .clickable:active { transform: scale(0.98); }
+
+        /* The custom message box */
+        .message-box {
+            position: fixed;
+            top: 2rem;
+            left: 50%;
+            transform: translateX(-50%);
+            background-color: rgba(52, 211, 153, 0.9);
+            color: white;
+            padding: 1rem 2rem;
+            border-radius: 1rem;
+            box-shadow: 0 4px 6px rgba(0, 0, 0, 0.1);
+            z-index: 1000;
+            display: none;
+            text-align: center;
+        }
+
+        /* Styles for floating background emojis inside containers */
+        .floating-emoji-container {
+            position: absolute;
+            top: 0;
+            left: 0;
+            width: 100%;
+            height: 100%;
+            pointer-events: none; /* Allows clicks to pass through */
+            overflow: hidden;
+            z-index: 0; /* Ensures emojis are behind content but inside the card */
+        }
+        .floating-emoji {
+            position: absolute;
+            opacity: 0.15; /* Subtler opacity */
+            animation-name: float-and-wave-card;
+            animation-iteration-count: infinite;
+            animation-timing-function: linear;
+            font-size: 2rem;
+        }
+
+        /* Keyframes for floating animation inside a smaller container */
+        @keyframes float-and-wave-card {
+            0% { transform: translate(0, 0) scale(1); }
+            25% { transform: translate(2rem, -1rem) scale(1.1); }
+            50% { transform: translate(0, -2rem) scale(1.2); }
+            75% { transform: translate(-2rem, -1rem) scale(1.1); }
+            100% { transform: translate(0, 0) scale(1); }
+        }
+
+        /* Task completion styling */
+        .task-completed {
+            opacity: 0.7;
+            background-color: rgba(34, 197, 94, 0.1);
+        }
+
+        .task-completed .task-title {
+            text-decoration: line-through;
+        }
+
+        /* Progress ring styling */
+        .progress-ring {
+            transform: rotate(-90deg);
+        }
+
+        .progress-ring-circle {
+            transition: stroke-dasharray 0.35s;
+            transform-origin: 50% 50%;
+        }
+
+        /* Navigation tabs */
+        .nav-tab {
+            transition: all 0.2s ease;
+        }
+
+        .nav-tab.active {
+            background-color: rgb(34, 197, 94);
+            color: white;
+            box-shadow: 0 2px 4px rgba(34, 197, 94, 0.3);
+        }
+
+        /* Time period styling */
+        .time-morning { border-left-color: #3B82F6; }
+        .time-afternoon { border-left-color: #F59E0B; }
+        .time-evening { border-left-color: #8B5CF6; }
+        .time-night { border-left-color: #6366F1; }
+        .time-anytime { border-left-color: #6B7280; }
+    </style>
+</head>
+<body class="min-h-screen flex flex-col items-center">
+
+<!-- Custom message box element -->
+<div id="message-box" class="message-box"></div>
+
+<div class="w-full space-y-6">
+
+    <!-- Header Card -->
+    <div class="bg-white p-8 rounded-b-3xl shadow-lg flex flex-col items-center text-center">
+        <button onclick="goBack()" class="absolute top-6 left-6 text-2xl text-gray-600 hover:text-gray-800 transition-colors">
+            &larr;
+        </button>
+
+        <!-- Progress Ring -->
+        <div class="flex items-center gap-4 mb-4">
+            <div class="relative">
+                <svg class="w-16 h-16 progress-ring" viewBox="0 0 36 36">
+                    <path class="text-gray-200" stroke="currentColor" stroke-width="3" fill="transparent"
+                          d="M18 2.0845 a 15.9155 15.9155 0 0 1 0 31.831 a 15.9155 15.9155 0 0 1 0 -31.831"/>
+                    <path id="progress-circle" class="text-green-500 progress-ring-circle" stroke="currentColor"
+                          stroke-width="3" fill="transparent" stroke-dasharray="0, 100"
+                          d="M18 2.0845 a 15.9155 15.9155 0 0 1 0 31.831 a 15.9155 15.9155 0 0 1 0 -31.831"/>
+                </svg>
+                <div class="absolute inset-0 flex items-center justify-center">
+                    <span id="progress-percentage" class="text-lg font-bold text-gray-800">0%</span>
+                </div>
+            </div>
+            <div class="text-left">
+                <div id="completion-stats" class="text-sm text-gray-600">0 of 0 tasks</div>
+                <div class="text-xs text-gray-400">completed today</div>
+            </div>
+        </div>
+
+        <h1 id="taskListTitle" class="text-3xl font-bold text-gray-800 mb-2">Daily Task Schedule</h1>
+        <p id="taskListDescription" class="text-gray-500 mb-4">Your personalized farming task list</p>
+        <div id="currentDayInfo" class="text-sm font-medium text-green-600">Day 1 of 120</div>
+    </div>
+
+    <!-- Navigation Tabs -->
+    <div class="flex justify-center px-4">
+        <div class="bg-white rounded-2xl p-2 shadow-sm">
+            <div class="flex space-x-2">
+                <button onclick="switchView('today')" class="nav-tab active px-4 py-2 rounded-xl font-medium text-sm">Today</button>
+                <button onclick="switchView('upcoming')" class="nav-tab px-4 py-2 rounded-xl font-medium text-sm text-gray-600">Upcoming</button>
+                <button onclick="switchView('completed')" class="nav-tab px-4 py-2 rounded-xl font-medium text-sm text-gray-600">Completed</button>
+                <button onclick="switchView('calendar')" class="nav-tab px-4 py-2 rounded-xl font-medium text-sm text-gray-600">Calendar</button>
+            </div>
+        </div>
+    </div>
+
+    <!-- Task List Container -->
+    <div class="bg-white p-6 rounded-t-3xl shadow-lg mt-6">
+        <div id="taskContainer" class="space-y-6">
+            <!-- Tasks will be populated by JavaScript -->
+        </div>
+    </div>
+
+    <!-- Action Buttons Section -->
+    <div class="flex flex-col sm:flex-row items-center justify-center w-full space-y-4 sm:space-y-0 sm:space-x-4 p-4">
+        <button onclick="addCustomTask()" class="w-full sm:w-auto px-6 py-3 bg-green-600 text-white font-semibold rounded-full shadow-md hover:bg-green-700 transition-colors duration-200">
+            ➕ Add Task
+        </button>
+        <button onclick="exportProgress()" class="w-full sm:w-auto px-6 py-3 bg-gray-200 text-gray-800 font-semibold rounded-full shadow-md hover:bg-gray-300 transition-colors duration-200">
+            📊 Export Progress
+        </button>
+        <button onclick="setReminders()" class="w-full sm:w-auto px-6 py-3 bg-gray-200 text-gray-800 font-semibold rounded-full shadow-md hover:bg-gray-300 transition-colors duration-200">
+            🔔 Reminders
+        </button>
+    </div>
+
+</div>
+
+<script>
+    // Custom message function to provide user feedback
+    function showMessage(message, duration = 3000) {
+        const messageBox = document.getElementById('message-box');
+        messageBox.textContent = message;
+        messageBox.style.display = 'block';
+        setTimeout(() => {
+            messageBox.style.display = 'none';
+        }, duration);
+    }
+
+    // Task data - This is the JSON object that can be updated from Android
+    let taskData = {
+        title: "Pink Corn Daily Tasks",
+        description: "120-day comprehensive growing schedule",
+        totalDays: 120,
+        currentDay: 1,
+        crop: {
+            name: "Pink Corn",
+            variety: "Heirloom Sweet Pink",
+            icon: "🌽"
+        },
+        tasks: [
+            // Day 1 tasks
+            {
+                id: "d1-morning-1",
+                day: 1,
+                title: "Soil Testing Preparation",
+                description: "Conduct pH and nutrient testing to ensure soil pH is around 6.0-6.5 and nutrients are balanced.",
+                timeOfDay: "morning",
+                priority: "high",
+                estimatedTime: "2-4 hours",
+                category: "preparation",
+                materials: ["Soil test kit", "pH meter", "sampling tools", "notebook"],
+                weather_dependent: false,
+                completed: false
+            },
+            {
+                id: "d1-afternoon-1",
+                day: 1,
+                title: "Tool Inventory Check",
+                description: "Inspect and organize all farming tools and equipment needed for the season.",
+                timeOfDay: "afternoon",
+                priority: "medium",
+                estimatedTime: "1-2 hours",
+                category: "preparation",
+                materials: ["Tool maintenance kit", "cleaning supplies"],
+                weather_dependent: false,
+                completed: false
+            },
+            {
+                id: "d1-evening-1",
+                day: 1,
+                title: "Weather Planning",
+                description: "Check weather forecast for the next 7-10 days and plan activities accordingly.",
+                timeOfDay: "evening",
+                priority: "low",
+                estimatedTime: "30 minutes",
+                category: "planning",
+                materials: ["Weather app", "calendar"],
+                weather_dependent: false,
+                completed: false
+            },
+            // Day 2 tasks
+            {
+                id: "d2-morning-1",
+                day: 2,
+                title: "Field Survey",
+                description: "Walk the field to assess drainage, identify problem areas, and plan layout.",
+                timeOfDay: "morning",
+                priority: "high",
+                estimatedTime: "3-4 hours",
+                category: "preparation",
+                materials: ["Measuring tape", "stakes", "notebook"],
+                weather_dependent: true,
+                completed: false
+            },
+            {
+                id: "d2-afternoon-1",
+                day: 2,
+                title: "Equipment Preparation",
+                description: "Service and prepare plowing equipment for land preparation.",
+                timeOfDay: "afternoon",
+                priority: "medium",
+                estimatedTime: "2 hours",
+                category: "preparation",
+                materials: ["Tractor", "plow", "maintenance tools"],
+                weather_dependent: false,
+                completed: false
+            },
+            // Day 3 tasks
+            {
+                id: "d3-morning-1",
+                day: 3,
+                title: "Land Clearing",
+                description: "Clear any weeds, debris, and prepare the field for plowing.",
+                timeOfDay: "morning",
+                priority: "high",
+                estimatedTime: "4-6 hours",
+                category: "field_prep",
+                materials: ["Clearing tools", "protective equipment"],
+                weather_dependent: true,
+                completed: false
+            },
+            // Day 15 tasks (Sowing phase begins)
+            {
+                id: "d15-morning-1",
+                day: 15,
+                title: "Seed Selection and Treatment",
+                description: "Select high-quality pink corn seeds and treat them with organic antifungals to prevent early rot.",
+                timeOfDay: "morning",
+                priority: "critical",
+                estimatedTime: "2 hours",
+                category: "seeding",
+                materials: ["Pink corn seeds", "Trichoderma", "neem extract"],
+                weather_dependent: false,
+                completed: false
+            },
+            {
+                id: "d15-afternoon-1",
+                day: 15,
+                title: "Seed Sowing - First Section",
+                description: "Sow seeds 2.5-5 cm deep, spaced 20-25 cm apart in rows spaced 70-80 cm apart.",
+                timeOfDay: "afternoon",
+                priority: "critical",
+                estimatedTime: "4-6 hours",
+                category: "seeding",
+                materials: ["Seed planter", "measuring tools", "water"],
+                weather_dependent: true,
+                completed: false
+            },
+            // Day 30 tasks (Vegetative growth)
+            {
+                id: "d30-morning-1",
+                day: 30,
+                title: "First Weeding Session",
+                description: "Remove weeds manually or mechanically to prevent nutrient competition.",
+                timeOfDay: "morning",
+                priority: "high",
+                estimatedTime: "6-8 hours",
+                category: "maintenance",
+                materials: ["Hoe", "weeding tools", "mulch"],
+                weather_dependent: true,
+                completed: false
+            },
+            {
+                id: "d30-afternoon-1",
+                day: 30,
+                title: "Fertilizer Application",
+                description: "Apply nitrogen-rich fertilizer at V4-V6 stage to boost leaf development.",
+                timeOfDay: "afternoon",
+                priority: "high",
+                estimatedTime: "3-4 hours",
+                category: "nutrition",
+                materials: ["Urea", "compost tea", "spreader"],
+                weather_dependent: false,
+                completed: false
+            },
+            // Day 60 tasks (Flowering)
+            {
+                id: "d60-morning-1",
+                day: 60,
+                title: "Irrigation Management",
+                description: "Avoid water stress during flowering and silking to prevent kernel loss.",
+                timeOfDay: "morning",
+                priority: "critical",
+                estimatedTime: "2-3 hours",
+                category: "irrigation",
+                materials: ["Irrigation system", "soil moisture meter"],
+                weather_dependent: false,
+                completed: false
+            },
+            {
+                id: "d60-evening-1",
+                day: 60,
+                title: "Pest Monitoring",
+                description: "Monitor for corn borers or armyworms and apply organic control if detected.",
+                timeOfDay: "evening",
+                priority: "medium",
+                estimatedTime: "1-2 hours",
+                category: "pest_control",
+                materials: ["Neem oil spray", "pheromone traps", "flashlight"],
+                weather_dependent: false,
+                completed: false
+            },
+            // Day 90 tasks (Grain filling)
+            {
+                id: "d90-morning-1",
+                day: 90,
+                title: "Final Fertilizer Application",
+                description: "Apply potassium and phosphorus to improve kernel filling and color development.",
+                timeOfDay: "morning",
+                priority: "medium",
+                estimatedTime: "2 hours",
+                category: "nutrition",
+                materials: ["Bone meal", "potash", "spreader"],
+                weather_dependent: false,
+                completed: false
+            },
+            // Day 110 tasks (Pre-harvest)
+            {
+                id: "d110-morning-1",
+                day: 110,
+                title: "Harvest Readiness Check",
+                description: "Check that silks are brown and kernels are firm with pink hue indicating readiness.",
+                timeOfDay: "morning",
+                priority: "high",
+                estimatedTime: "2 hours",
+                category: "harvest_prep",
+                materials: ["Inspection tools", "sample collection bags"],
+                weather_dependent: false,
+                completed: false
+            },
+            {
+                id: "d110-afternoon-1",
+                day: 110,
+                title: "Harvest Equipment Check",
+                description: "Service and prepare harvesting equipment for optimal performance.",
+                timeOfDay: "afternoon",
+                priority: "high",
+                estimatedTime: "3 hours",
+                category: "harvest_prep",
+                materials: ["Corn picker", "maintenance tools", "storage containers"],
+                weather_dependent: false,
+                completed: false
+            }
+        ],
+        categories: {
+            preparation: { name: "Preparation", icon: "🏗️", color: "#F59E0B" },
+            planning: { name: "Planning", icon: "📋", color: "#3B82F6" },
+            field_prep: { name: "Field Prep", icon: "🚜", color: "#8B5CF6" },
+            seeding: { name: "Seeding", icon: "🌱", color: "#10B981" },
+            maintenance: { name: "Maintenance", icon: "🌿", color: "#34D399" },
+            nutrition: { name: "Nutrition", icon: "🧪", color: "#A78BFA" },
+            irrigation: { name: "Irrigation", icon: "💧", color: "#06B6D4" },
+            pest_control: { name: "Pest Control", icon: "🛡️", color: "#F43F5E" },
+            harvest_prep: { name: "Harvest Prep", icon: "🧺", color: "#EF4444" }
+        }
+    };
+
+    // Current state
+    let currentView = 'today';
+    let completedTasks = [];
+
+    // Load completed tasks from memory (since localStorage isn't supported)
+    function loadCompletedTasks() {
+        // In memory storage only - tasks reset on page reload
+        completedTasks = [];
+    }
+
+    // Save completed tasks to memory
+    function saveCompletedTasks() {
+        // In memory storage only - no persistent storage
+    }
+
+    // Initialize the app
+    document.addEventListener('DOMContentLoaded', function() {
+        loadCompletedTasks();
+        updateHeader();
+        renderTasks();
+        updateProgress();
+    });
+
+    // Update header information
+    function updateHeader() {
+        document.getElementById('taskListTitle').textContent = taskData.title;
+        document.getElementById('taskListDescription').textContent = taskData.description;
+        document.getElementById('currentDayInfo').textContent = `Day ${taskData.currentDay} of ${taskData.totalDays}`;
+    }
+
+    // Switch between different views
+    function switchView(view) {
+        currentView = view;
+
+        // Update active tab
+        document.querySelectorAll('.nav-tab').forEach(tab => {
+            tab.classList.remove('active');
+            tab.classList.add('text-gray-600');
+        });
+        event.target.classList.add('active');
+        event.target.classList.remove('text-gray-600');
+
+        renderTasks();
+    }
+
+    // Get tasks for current view
+    function getTasksForView() {
+        switch(currentView) {
+            case 'today':
+                return taskData.tasks.filter(task => task.day === taskData.currentDay);
+            case 'upcoming':
+                return taskData.tasks.filter(task => task.day > taskData.currentDay).slice(0, 20);
+            case 'completed':
+                return taskData.tasks.filter(task => completedTasks.includes(task.id));
+            case 'calendar':
+                return taskData.tasks;
+            default:
+                return [];
+        }
+    }
+
+    // Render tasks based on current view
+    function renderTasks() {
+        const container = document.getElementById('taskContainer');
+        container.innerHTML = '';
+
+        const tasks = getTasksForView();
+
+        if (tasks.length === 0) {
+            container.innerHTML = '<div class="text-center py-8 text-gray-500">No tasks to display</div>';
+            return;
+        }
+
+        if (currentView === 'today') {
+            renderTodayTasks(tasks, container);
+        } else if (currentView === 'upcoming') {
+            renderUpcomingTasks(tasks, container);
+        } else if (currentView === 'completed') {
+            renderCompletedTasks(tasks, container);
+        } else if (currentView === 'calendar') {
+            renderCalendarView(container);
+        }
+    }
+
+    // Render today's tasks grouped by time
+    function renderTodayTasks(tasks, container) {
+        const timeGroups = {
+            morning: [],
+            afternoon: [],
+            evening: [],
+            night: [],
+            anytime: []
+        };
+
+        tasks.forEach(task => {
+            timeGroups[task.timeOfDay].push(task);
+        });
+
+        const timeLabels = {
+            morning: { label: 'Morning Tasks', icon: '🌅' },
+            afternoon: { label: 'Afternoon Tasks', icon: '☀️' },
+            evening: { label: 'Evening Tasks', icon: '🌙' },
+            night: { label: 'Night Tasks', icon: '🌃' },
+            anytime: { label: 'Anytime Tasks', icon: '🕐' }
+        };
+
+        Object.keys(timeGroups).forEach(timeOfDay => {
+            if (timeGroups[timeOfDay].length > 0) {
+                const timeSection = createTimeSection(timeOfDay, timeGroups[timeOfDay], timeLabels[timeOfDay]);
+                container.appendChild(timeSection);
+            }
+        });
+    }
+
+    // Create time section
+    function createTimeSection(timeOfDay, tasks, timeInfo) {
+        const section = document.createElement('div');
+        section.className = `bg-white p-6 rounded-2xl shadow-sm border border-gray-200 transition-colors duration-200 relative overflow-hidden border-l-4 time-${timeOfDay}`;
+
+        // Add floating emoji container
+        const emojiContainer = document.createElement('div');
+        emojiContainer.className = 'floating-emoji-container';
+        section.appendChild(emojiContainer);
+        populateContainerWithEmojis(emojiContainer, 8);
+
+        section.innerHTML += `
+            <h3 class="text-lg font-semibold text-gray-800 mb-4 flex items-center gap-2 relative z-10">
+                <span class="text-xl">${timeInfo.icon}</span>
+                ${timeInfo.label}
+            </h3>
+            <div class="space-y-3 relative z-10" id="${timeOfDay}Tasks"></div>
+        `;
+
+        const tasksContainer = section.querySelector(`#${timeOfDay}Tasks`);
+        tasks.forEach(task => {
+            const taskElement = createTaskElement(task);
+            tasksContainer.appendChild(taskElement);
+        });
+
+        return section;
+    }
+
+    // Create individual task element
+    function createTaskElement(task) {
+        const isCompleted = completedTasks.includes(task.id);
+        const taskDiv = document.createElement('div');
+        taskDiv.className = `task-card bg-slate-50 p-4 rounded-xl border border-gray-100 shadow-sm transition-all duration-200 clickable relative overflow-hidden ${
+            isCompleted ? 'task-completed' : ''
+        }`;
+
+        // Add floating emoji container
+        const emojiContainer = document.createElement('div');
+        emojiContainer.className = 'floating-emoji-container';
+        taskDiv.appendChild(emojiContainer);
+
+        const categoryInfo = taskData.categories[task.category];
+        if (categoryInfo) {
+            populateContainerWithEmojis(emojiContainer, 5, [categoryInfo.icon]);
+        }
+
+        const priorityClass = `priority-${task.priority.toLowerCase()}`;
+        const priorityText = task.priority.charAt(0).toUpperCase() + task.priority.slice(1);
+
+        taskDiv.innerHTML += `
+            <div class="flex items-start justify-between mb-3 relative z-10">
+                <div class="flex items-start gap-3 flex-1">
+                    <button onclick="toggleTaskComplete('${task.id}')" class="w-6 h-6 border-2 border-gray-300 rounded-full flex items-center justify-center hover:border-green-500 transition-colors mt-1 ${
+                        isCompleted ? 'bg-green-500 border-green-500' : ''
+                    }">
+                        ${isCompleted ? '<span class="text-white text-sm">✓</span>' : ''}
+                    </button>
+                    <div class="flex-1">
+                        <h4 class="font-semibold text-gray-700 task-title ${isCompleted ? 'line-through opacity-60' : ''}">${task.title}</h4>
+                        <p class="text-sm text-gray-600 mt-1 ${isCompleted ? 'opacity-60' : ''}">${task.description}</p>
+                    </div>
+                </div>
+                <span class="text-xl">${categoryInfo ? categoryInfo.icon : '📋'}</span>
+            </div>
+
+            <div class="flex items-center justify-between text-xs text-gray-500 mt-3 relative z-10">
+                <div class="flex items-center gap-4">
+                    <span class="font-medium">⏱️ ${task.estimatedTime}</span>
+                    ${task.weather_dependent ? '<span class="font-medium">🌤️ Weather dependent</span>' : ''}
+                </div>
+                <span class="px-2 py-1 rounded-full font-medium ${priorityClass}">${priorityText}</span>
+            </div>
+
+            ${task.materials && task.materials.length > 0 ? `
+            <div class="mt-3 relative z-10">
+                <div class="text-xs text-gray-500 mb-1">Materials needed:</div>
+                <div class="flex flex-wrap gap-1">
+                    ${task.materials.map(material => `<span class="bg-gray-100 text-gray-600 px-2 py-1 rounded-full text-xs">${material}</span>`).join('')}
+                </div>
+            </div>` : ''}
+        `;
+
+        return taskDiv;
+    }
+
+    // Render upcoming tasks
+    function renderUpcomingTasks(tasks, container) {
+        // Group by day
+        const dayGroups = {};
+        tasks.forEach(task => {
+            if (!dayGroups[task.day]) {
+                dayGroups[task.day] = [];
+            }
+            dayGroups[task.day].push(task);
+        });
+
+        Object.keys(dayGroups).sort((a, b) => parseInt(a) - parseInt(b)).forEach(day => {
+            const daySection = document.createElement('div');
+            daySection.className = 'phase-card bg-white p-6 rounded-2xl shadow-sm border border-gray-200 transition-colors duration-200 cursor-pointer clickable relative overflow-hidden';
+
+            // Add floating emoji container
+            const emojiContainer = document.createElement('div');
+            emojiContainer.className = 'floating-emoji-container';
+            daySection.appendChild(emojiContainer);
+            populateContainerWithEmojis(emojiContainer, 10);
+
+            // Phase Header with interactive element
+            const headerContent = document.createElement('div');
+            headerContent.className = 'flex items-center justify-between z-10 relative';
+            headerContent.innerHTML = `
+                <div class="flex items-center space-x-4">
+                    <div class="text-3xl">📅</div>
+                    <div>
+                        <h3 class="text-xl font-semibold text-gray-800">Day ${day}</h3>
+                        <p class="text-sm text-gray-500">${dayGroups[day].length} task${dayGroups[day].length > 1 ? 's' : ''} scheduled</p>
+                    </div>
+                </div>
+                <svg class="chevron h-6 w-6 text-gray-400" xmlns="http://www.w3.org/2000/svg" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2" stroke-linecap="round" stroke-linejoin="round">
+                    <polyline points="6 9 12 15 18 9"></polyline>
+                </svg>
+            `;
+            daySection.appendChild(headerContent);
+
+            const collapsibleContent = document.createElement('div');
+            collapsibleContent.className = 'collapsible-content space-y-4 mt-4 relative z-10';
+
+            dayGroups[day].forEach(task => {
+                const taskElement = createTaskElement(task);
+                collapsibleContent.appendChild(taskElement);
+            });
+
+            daySection.appendChild(collapsibleContent);
+
+            // Add event listener for collapsing/expanding
+            headerContent.addEventListener('click', (event) => {
+                const content = daySection.querySelector('.collapsible-content');
+                const chevron = daySection.querySelector('.chevron');
+                if (content.classList.contains('expanded')) {
+                    content.classList.remove('expanded');
+                    chevron.classList.remove('rotated');
+                } else {
+                    content.classList.add('expanded');
+                    chevron.classList.add('rotated');
+                }
+            });
+
+            container.appendChild(daySection);
+        });
+    }
+
+    // Render completed tasks
+    function renderCompletedTasks(tasks, container) {
+        tasks.forEach(task => {
+            const taskElement = createTaskElement(task);
+            container.appendChild(taskElement);
+        });
+    }
+
+    // Render calendar view (simplified)
+    function renderCalendarView(container) {
+        const calendarDiv = document.createElement('div');
+        calendarDiv.className = 'bg-white p-6 rounded-2xl shadow-sm';
+        calendarDiv.innerHTML = `
+            <h3 class="text-lg font-semibold text-gray-800 mb-4">Task Calendar Overview</h3>
+            <div class="text-sm text-gray-600">Calendar view coming soon...</div>
+        `;
+        container.appendChild(calendarDiv);
+    }
+
+    // Toggle task completion
+    function toggleTaskComplete(taskId) {
+        const isCompleted = completedTasks.includes(taskId);
+
+        if (isCompleted) {
+            completedTasks = completedTasks.filter(id => id !== taskId);
+        } else {
+            completedTasks.push(taskId);
+        }
+
+        saveCompletedTasks();
+        updateProgress();
+        renderTasks();
+        showMessage(isCompleted ? 'Task unmarked as complete' : 'Task marked as complete!');
+    }
+
+    // Update progress display
+    function updateProgress() {
+        const todayTasks = taskData.tasks.filter(task => task.day === taskData.currentDay);
+        const todayCompleted = todayTasks.filter(task => completedTasks.includes(task.id));
+
+        const percentage = todayTasks.length > 0 ? Math.round((todayCompleted.length / todayTasks.length) * 100) : 0;
+
+        document.getElementById('progress-percentage').textContent = `${percentage}%`;
+        document.getElementById('completion-stats').textContent = `${todayCompleted.length} of ${todayTasks.length} tasks`;
+
+        // Update progress ring
+        const circle = document.getElementById('progress-circle');
+        const circumference = 2 * Math.PI * 15.9155;
+        const strokeDasharray = `${(percentage / 100) * circumference} ${circumference}`;
+        circle.style.strokeDasharray = strokeDasharray;
+    }
+
+    // Function to create a single floating emoji element inside a specified container
+    function createEmoji(container, emojiSet = ['🌽', '🌱', '🚜', '💧', '🌾', '🧺']) {
+        const emoji = document.createElement('span');
+        emoji.className = 'floating-emoji';
+        emoji.textContent = emojiSet[Math.floor(Math.random() * emojiSet.length)];
+
+        // Randomize position, size, and animation
+        const startX = Math.random() * 100;
+        const startY = Math.random() * 100;
+        const size = 1.5 + Math.random() * 1.5; // 1.5 to 3rem
+        const duration = 10 + Math.random() * 5; // 10 to 15 seconds
+
+        emoji.style.left = `${startX}%`;
+        emoji.style.top = `${startY}%`;
+        emoji.style.fontSize = `${size}rem`;
+        emoji.style.animationDuration = `${duration}s`;
+        emoji.style.animationDelay = `${Math.random() * duration}s`;
+
+        container.appendChild(emoji);
+    }
+
+    // Function to populate a container with a certain number of emojis
+    function populateContainerWithEmojis(container, count, emojiSet) {
+        for (let i = 0; i < count; i++) {
+            createEmoji(container, emojiSet);
+        }
+    }
+
+    // Button functions (for Android integration)
+    function goBack() {
+        if (window.Android && window.Android.goBack) {
+            window.Android.goBack();
+        } else {
+            showMessage('Go back feature called (native app not detected).');
+        }
+    }
+
+    function addCustomTask() {
+        if (window.Android && window.Android.addCustomTask) {
+            window.Android.addCustomTask();
+        } else {
+            showMessage('Add custom task feature called (native app not detected).');
+        }
+    }
+
+    function exportProgress() {
+        if (window.Android && window.Android.exportProgress) {
+            window.Android.exportProgress();
+        } else {
+            showMessage('Export progress feature called (native app not detected).');
+        }
+    }
+
+    function setReminders() {
+        if (window.Android && window.Android.setReminders) {
+            window.Android.setReminders();
+        } else {
+            showMessage('Set reminders feature called (native app not detected).');
+        }
+    }
+
+    // Public API for Android to update task data
+    window.updateTaskData = function(newData) {
+        try {
+            if (typeof newData === 'string') {
+                taskData = JSON.parse(newData);
+            } else {
+                taskData = newData;
+            }
+            updateHeader();
+            renderTasks();
+            updateProgress();
+            return true;
+        } catch (e) {
+            console.error('Error updating task data:', e);
+            return false;
+        }
+    };
+
+    // Public API for Android to set current day
+    window.setCurrentDay = function(day) {
+        try {
+            taskData.currentDay = parseInt(day);
+            updateHeader();
+            if (currentView === 'today') {
+                renderTasks();
+            }
+            updateProgress();
+            showMessage(`Current day set to ${day}`);
+            return true;
+        } catch (e) {
+            console.error('Error setting current day:', e);
+            return false;
+        }
+    };
+
+    // Public API for Android to mark task as complete
+    window.markTaskComplete = function(taskId) {
+        try {
+            if (!completedTasks.includes(taskId)) {
+                completedTasks.push(taskId);
+                saveCompletedTasks();
+                updateProgress();
+                renderTasks();
+                showMessage('Task marked as complete!');
+            }
+            return true;
+        } catch (e) {
+            console.error('Error marking task complete:', e);
+            return false;
+        }
+    };
+
+    // Public API for Android to get completion status
+    window.getCompletionStatus = function() {
+        try {
+            const todayTasks = taskData.tasks.filter(task => task.day === taskData.currentDay);
+            const todayCompleted = todayTasks.filter(task => completedTasks.includes(task.id));
+
+            return {
+                totalTasks: todayTasks.length,
+                completedTasks: todayCompleted.length,
+                percentage: todayTasks.length > 0 ? Math.round((todayCompleted.length / todayTasks.length) * 100) : 0,
+                completedTaskIds: completedTasks
+            };
+        } catch (e) {
+            console.error('Error getting completion status:', e);
+            return null;
+        }
+    };
+
+    // Public API for Android to add a custom task
+    window.addTask = function(taskData) {
+        try {
+            if (typeof taskData === 'string') {
+                taskData = JSON.parse(taskData);
+            }
+
+            // Generate unique ID if not provided
+            if (!taskData.id) {
+                taskData.id = 'custom-' + Date.now() + '-' + Math.random().toString(36).substr(2, 9);
+            }
+
+            // Set defaults
+            taskData.completed = false;
+            taskData.day = taskData.day || taskData.currentDay;
+            taskData.timeOfDay = taskData.timeOfDay || 'anytime';
+            taskData.priority = taskData.priority || 'medium';
+            taskData.category = taskData.category || 'planning';
+            taskData.weather_dependent = taskData.weather_dependent || false;
+            taskData.materials = taskData.materials || [];
+
+            // Add to tasks array
+            taskData.tasks.push(taskData);
+
+            // Refresh display if viewing relevant day
+            if (currentView === 'today' && taskData.day === taskData.currentDay) {
+                renderTasks();
+            } else if (currentView === 'upcoming' && taskData.day > taskData.currentDay) {
+                renderTasks();
+            }
+
+            showMessage('Custom task added successfully!');
+            return true;
+        } catch (e) {
+            console.error('Error adding custom task:', e);
+            return false;
+        }
+    };
+
+    // Public API for Android to reset all progress
+    window.resetProgress = function() {
+        try {
+            completedTasks = [];
+            saveCompletedTasks();
+            updateProgress();
+            renderTasks();
+            showMessage('Progress reset successfully!');
+            return true;
+        } catch (e) {
+            console.error('Error resetting progress:', e);
+            return false;
+        }
+    };
+
+    // Utility function to get task by ID
+    function getTaskById(taskId) {
+        return taskData.tasks.find(task => task.id === taskId);
+    }
+
+    // Initialize app on load
+    window.addEventListener('load', function() {
+        // Additional initialization if needed
+        console.log('Pink Corn Daily Task List initialized');
+    });
+
+</script>
+
+</body>
+</html>

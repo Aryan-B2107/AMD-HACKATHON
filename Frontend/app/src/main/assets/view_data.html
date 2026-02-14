@@ -1,0 +1,774 @@
+<!DOCTYPE html>
+<html lang="en">
+<head>
+    <meta charset="UTF-8">
+    <meta name="viewport" content="width=device-width, initial-scale=1.0, user-scalable=no">
+    <title>Farm Data Insights - Dashboard</title>
+    <script src="https://cdnjs.cloudflare.com/ajax/libs/react/18.2.0/umd/react.production.min.js"></script>
+    <script src="https://cdnjs.cloudflare.com/ajax/libs/react-dom/18.2.0/umd/react-dom.production.min.js"></script>
+    <script src="https://cdnjs.cloudflare.com/ajax/libs/babel-standalone/7.23.5/babel.min.js"></script>
+    <script src="https://cdnjs.cloudflare.com/ajax/libs/recharts/2.8.0/umd/Recharts.js"></script>
+    <style>
+        * {
+            margin: 0;
+            padding: 0;
+            box-sizing: border-box;
+            -webkit-tap-highlight-color: transparent;
+        }
+
+        body {
+            font-family: -apple-system, BlinkMacSystemFont, 'Segoe UI', Roboto, sans-serif;
+            background: linear-gradient(135deg, #e8f5e8 0%, #f0f8e8 100%);
+            min-height: 100vh;
+            color: #2d4a2d;
+            line-height: 1.5;
+            -webkit-font-smoothing: antialiased;
+            -moz-osx-font-smoothing: grayscale;
+        }
+
+        #root {
+            width: 100%;
+            min-height: 100vh;
+        }
+
+        .dashboard-container {
+            padding: 16px;
+            max-width: 100%;
+            margin: 0 auto;
+        }
+
+        .header {
+            text-align: center;
+            margin-bottom: 24px;
+            padding: 20px 16px;
+            background: rgba(255, 255, 255, 0.9);
+            border-radius: 16px;
+            box-shadow: 0 4px 12px rgba(0, 0, 0, 0.1);
+            backdrop-filter: blur(10px);
+        }
+
+        .header h1 {
+            color: #4a7c4a;
+            font-size: 24px;
+            margin-bottom: 8px;
+            font-weight: 700;
+            display: flex;
+            align-items: center;
+            justify-content: center;
+            gap: 8px;
+        }
+
+        .header p {
+            color: #6b8e6b;
+            font-size: 14px;
+            font-weight: 500;
+        }
+
+        .stats-grid {
+            display: grid;
+            grid-template-columns: repeat(2, 1fr);
+            gap: 12px;
+            margin-bottom: 20px;
+        }
+
+        .stat-card {
+            background: rgba(255, 255, 255, 0.95);
+            border-radius: 12px;
+            padding: 16px;
+            box-shadow: 0 2px 8px rgba(0, 0, 0, 0.1);
+            text-align: center;
+            border-left: 4px solid #7ba77b;
+        }
+
+        .stat-number {
+            font-size: 24px;
+            font-weight: 700;
+            color: #4a7c4a;
+            margin-bottom: 4px;
+        }
+
+        .stat-label {
+            font-size: 12px;
+            color: #6b8e6b;
+            font-weight: 500;
+            text-transform: uppercase;
+            letter-spacing: 0.5px;
+        }
+
+        .chart-section {
+            background: rgba(255, 255, 255, 0.95);
+            border-radius: 16px;
+            padding: 20px;
+            margin-bottom: 20px;
+            box-shadow: 0 4px 12px rgba(0, 0, 0, 0.1);
+            backdrop-filter: blur(10px);
+        }
+
+        .chart-title {
+            color: #4a7c4a;
+            font-size: 18px;
+            font-weight: 700;
+            margin-bottom: 16px;
+            display: flex;
+            align-items: center;
+            gap: 8px;
+        }
+
+        .chart-container {
+            width: 100%;
+            height: 250px;
+            display: flex;
+            align-items: center;
+            justify-content: center;
+        }
+
+        .filters-section {
+            background: rgba(255, 255, 255, 0.95);
+            border-radius: 12px;
+            padding: 16px;
+            margin-bottom: 20px;
+            box-shadow: 0 2px 8px rgba(0, 0, 0, 0.1);
+        }
+
+        .filter-title {
+            color: #4a7c4a;
+            font-size: 16px;
+            font-weight: 600;
+            margin-bottom: 12px;
+        }
+
+        .filter-chips {
+            display: flex;
+            flex-wrap: wrap;
+            gap: 8px;
+        }
+
+        .filter-chip {
+            background: #f8fdf8;
+            color: #4a7c4a;
+            border: 2px solid #e0f0e0;
+            border-radius: 20px;
+            padding: 8px 16px;
+            font-size: 12px;
+            font-weight: 600;
+            cursor: pointer;
+            transition: all 0.2s ease;
+            min-height: 36px;
+            display: flex;
+            align-items: center;
+        }
+
+        .filter-chip.active {
+            background: #7ba77b;
+            color: white;
+            border-color: #7ba77b;
+        }
+
+        .filter-chip:active {
+            transform: scale(0.95);
+        }
+
+        .insights-grid {
+            display: grid;
+            grid-template-columns: 1fr;
+            gap: 16px;
+        }
+
+        .insight-card {
+            background: linear-gradient(135deg, #f8fdf8 0%, #f0f9f0 100%);
+            border-radius: 12px;
+            padding: 16px;
+            border-left: 4px solid #7ba77b;
+            box-shadow: 0 2px 8px rgba(0, 0, 0, 0.05);
+        }
+
+        .insight-title {
+            color: #4a7c4a;
+            font-size: 14px;
+            font-weight: 700;
+            margin-bottom: 8px;
+            display: flex;
+            align-items: center;
+            gap: 6px;
+        }
+
+        .insight-text {
+            color: #2d4a2d;
+            font-size: 13px;
+            line-height: 1.4;
+        }
+
+        .progress-bar {
+            width: 100%;
+            height: 6px;
+            background: #e0f0e0;
+            border-radius: 3px;
+            margin: 8px 0;
+            overflow: hidden;
+        }
+
+        .progress-fill {
+            height: 100%;
+            background: linear-gradient(90deg, #7ba77b, #6b966b);
+            border-radius: 3px;
+            transition: width 0.3s ease;
+        }
+
+        .data-point {
+            display: flex;
+            justify-content: space-between;
+            align-items: center;
+            padding: 8px 0;
+            border-bottom: 1px solid #f0f9f0;
+        }
+
+        .data-point:last-child {
+            border-bottom: none;
+        }
+
+        .data-label {
+            color: #4a7c4a;
+            font-size: 13px;
+            font-weight: 500;
+        }
+
+        .data-value {
+            color: #2d4a2d;
+            font-size: 13px;
+            font-weight: 700;
+        }
+
+        .loading-state {
+            display: flex;
+            flex-direction: column;
+            align-items: center;
+            justify-content: center;
+            height: 200px;
+            color: #6b8e6b;
+        }
+
+        .loading-spinner {
+            width: 40px;
+            height: 40px;
+            border: 3px solid #e0f0e0;
+            border-top: 3px solid #7ba77b;
+            border-radius: 50%;
+            animation: spin 1s linear infinite;
+            margin-bottom: 16px;
+        }
+
+        @keyframes spin {
+            0% { transform: rotate(0deg); }
+            100% { transform: rotate(360deg); }
+        }
+
+        /* Responsive adjustments */
+        @media screen and (max-width: 480px) {
+            .dashboard-container {
+                padding: 12px;
+            }
+
+            .header h1 {
+                font-size: 20px;
+            }
+
+            .chart-container {
+                height: 200px;
+            }
+
+            .stats-grid {
+                grid-template-columns: repeat(2, 1fr);
+                gap: 10px;
+            }
+
+            .stat-card {
+                padding: 12px;
+            }
+
+            .stat-number {
+                font-size: 20px;
+            }
+        }
+
+        @media screen and (min-width: 768px) {
+            .dashboard-container {
+                max-width: 1200px;
+                padding: 24px;
+            }
+
+            .stats-grid {
+                grid-template-columns: repeat(4, 1fr);
+            }
+
+            .insights-grid {
+                grid-template-columns: repeat(2, 1fr);
+            }
+        }
+    </style>
+</head>
+<body>
+<div id="root"></div>
+
+<script type="text/babel">
+    const { useState, useEffect } = React;
+    const { PieChart, Pie, Cell, BarChart, Bar, XAxis, YAxis, CartesianGrid, Tooltip, ResponsiveContainer, LineChart, Line } = Recharts;
+
+    // Sample data matching your survey structure
+    const sampleData = [
+        {
+            id: 1,
+            ageGroup: "18–25",
+            occupation: "Student",
+            currentlyGrowing: "Yes",
+            plantTypes: "Vegetables, Herbs/Medicinal plants",
+            availableSpace: "Small backyard (< 200 sq. ft.)",
+            timePerWeek: "1–3 hours",
+            knowledgeSource: "YouTube/Online content",
+            challenges: "Lack of knowledge about soil/fertilizers, Pests and diseases",
+            appInterest: "Yes",
+            seriousness: 4,
+            recommendation: 5
+        },
+        {
+            id: 2,
+            ageGroup: "26–40",
+            occupation: "Working Professional",
+            currentlyGrowing: "No",
+            plantTypes: "Flowers/Ornamentals",
+            availableSpace: "Balcony / Pots only",
+            timePerWeek: "Less than 1 hour",
+            knowledgeSource: "Books",
+            challenges: "Lack of space, Lack of time",
+            appInterest: "Maybe",
+            seriousness: 3,
+            recommendation: 4
+        },
+        {
+            id: 3,
+            ageGroup: "18–25",
+            occupation: "Student",
+            currentlyGrowing: "Yes",
+            plantTypes: "Herbs/Medicinal plants, Vegetables",
+            availableSpace: "Balcony / Pots only",
+            timePerWeek: "1–3 hours",
+            knowledgeSource: "YouTube/Online content",
+            challenges: "Lack of time, Watering issues",
+            appInterest: "Yes",
+            seriousness: 5,
+            recommendation: 5
+        },
+        {
+            id: 4,
+            ageGroup: "41–60",
+            occupation: "Homemaker",
+            currentlyGrowing: "Yes",
+            plantTypes: "Vegetables, Fruits, Herbs/Medicinal plants",
+            availableSpace: "Large garden/farm (> 1000 sq. ft.)",
+            timePerWeek: "More than 7 hours",
+            knowledgeSource: "Family/Friends",
+            challenges: "Pests and diseases",
+            appInterest: "Yes",
+            seriousness: 5,
+            recommendation: 4
+        },
+        {
+            id: 5,
+            ageGroup: "26–40",
+            occupation: "Working Professional",
+            currentlyGrowing: "No",
+            plantTypes: "Vegetables",
+            availableSpace: "Small backyard (< 200 sq. ft.)",
+            timePerWeek: "3–7 hours",
+            knowledgeSource: "Agricultural experts",
+            challenges: "Lack of knowledge about soil/fertilizers",
+            appInterest: "Maybe",
+            seriousness: 2,
+            recommendation: 3
+        },
+        {
+            id: 6,
+            ageGroup: "Above 60",
+            occupation: "Retired",
+            currentlyGrowing: "Yes",
+            plantTypes: "Flowers/Ornamentals, Fruits",
+            availableSpace: "Medium garden (200–1000 sq. ft.)",
+            timePerWeek: "3–7 hours",
+            knowledgeSource: "Books",
+            challenges: "Watering issues",
+            appInterest: "No",
+            seriousness: 3,
+            recommendation: 2
+        },
+        {
+            id: 7,
+            ageGroup: "26–40",
+            occupation: "Farmer",
+            currentlyGrowing: "Yes",
+            plantTypes: "Vegetables, Fruits",
+            availableSpace: "Large garden/farm (> 1000 sq. ft.)",
+            timePerWeek: "More than 7 hours",
+            knowledgeSource: "Agricultural experts",
+            challenges: "Pests and diseases",
+            appInterest: "Yes",
+            seriousness: 5,
+            recommendation: 5
+        },
+        {
+            id: 8,
+            ageGroup: "Below 18",
+            occupation: "Student",
+            currentlyGrowing: "No",
+            plantTypes: "Herbs/Medicinal plants",
+            availableSpace: "Balcony / Pots only",
+            timePerWeek: "1–3 hours",
+            knowledgeSource: "YouTube/Online content",
+            challenges: "Lack of knowledge about soil/fertilizers, Lack of space",
+            appInterest: "Yes",
+            seriousness: 3,
+            recommendation: 4
+        }
+    ];
+
+    const DataVisualizer = () => {
+        const [data, setData] = useState([]);
+        const [loading, setLoading] = useState(true);
+        const [activeFilter, setActiveFilter] = useState('all');
+
+        useEffect(() => {
+            // Simulate data loading
+            setTimeout(() => {
+                setData(sampleData);
+                setLoading(false);
+            }, 1500);
+        }, []);
+
+        const filterData = (filterType) => {
+            if (filterType === 'all') return data;
+            if (filterType === 'growing') return data.filter(d => d.currentlyGrowing === 'Yes');
+            if (filterType === 'interested') return data.filter(d => d.appInterest === 'Yes');
+            return data;
+        };
+
+        const filteredData = filterData(activeFilter);
+
+        // Calculate statistics
+        const stats = {
+            total: data.length,
+            currentlyGrowing: data.filter(d => d.currentlyGrowing === 'Yes').length,
+            highInterest: data.filter(d => d.appInterest === 'Yes').length,
+            avgSeriousness: Math.round((data.reduce((sum, d) => sum + d.seriousness, 0) / data.length) * 10) / 10
+        };
+
+        // Prepare chart data
+        const ageGroupData = Object.entries(
+            data.reduce((acc, d) => {
+                acc[d.ageGroup] = (acc[d.ageGroup] || 0) + 1;
+                return acc;
+            }, {})
+        ).map(([name, value]) => ({ name, value }));
+
+        const occupationData = Object.entries(
+            data.reduce((acc, d) => {
+                acc[d.occupation] = (acc[d.occupation] || 0) + 1;
+                return acc;
+            }, {})
+        ).map(([name, value]) => ({ name, value }));
+
+        const spaceData = Object.entries(
+            data.reduce((acc, d) => {
+                acc[d.availableSpace] = (acc[d.availableSpace] || 0) + 1;
+                return acc;
+            }, {})
+        ).map(([name, value]) => ({ name, value })).map(item => ({
+            name: item.name.replace(/\(.*?\)/g, '').trim(),
+            fullName: item.name,
+            value: item.value
+        }));
+
+        const timeSpentData = Object.entries(
+            data.reduce((acc, d) => {
+                acc[d.timePerWeek] = (acc[d.timePerWeek] || 0) + 1;
+                return acc;
+            }, {})
+        ).map(([name, value]) => ({ name, value }));
+
+        const appInterestData = Object.entries(
+            data.reduce((acc, d) => {
+                acc[d.appInterest] = (acc[d.appInterest] || 0) + 1;
+                return acc;
+            }, {})
+        ).map(([name, value]) => ({ name, value }));
+
+        const seriousnessData = data.map((d, index) => ({
+            name: `User ${index + 1}`,
+            seriousness: d.seriousness,
+            recommendation: d.recommendation
+        }));
+
+        const COLORS = ['#7ba77b', '#6b966b', '#5a8a5a', '#9bb89b', '#4a7c4a', '#8fad8f'];
+
+        if (loading) {
+            return (
+                <div className="dashboard-container">
+                    <div className="header">
+                        <h1>🌱 Farm Data Insights</h1>
+                        <p>Loading your farming community data...</p>
+                    </div>
+                    <div className="loading-state">
+                        <div className="loading-spinner"></div>
+                        <p>Analyzing survey responses...</p>
+                    </div>
+                </div>
+            );
+        }
+
+        return (
+            <div className="dashboard-container">
+                <div className="header">
+                    <h1>🌱 Farm Data Insights</h1>
+                    <p>Understanding our farming community survey results</p>
+                </div>
+
+                {/* Statistics Cards */}
+                <div className="stats-grid">
+                    <div className="stat-card">
+                        <div className="stat-number">{stats.total}</div>
+                        <div className="stat-label">Total Responses</div>
+                    </div>
+                    <div className="stat-card">
+                        <div className="stat-number">{stats.currentlyGrowing}</div>
+                        <div className="stat-label">Currently Growing</div>
+                    </div>
+                    <div className="stat-card">
+                        <div className="stat-number">{stats.highInterest}</div>
+                        <div className="stat-label">App Interest (Yes)</div>
+                    </div>
+                    <div className="stat-card">
+                        <div className="stat-number">{stats.avgSeriousness}</div>
+                        <div className="stat-label">Avg. Seriousness</div>
+                    </div>
+                </div>
+
+                {/* Filters */}
+                <div className="filters-section">
+                    <div className="filter-title">Filter Survey Data</div>
+                    <div className="filter-chips">
+                        <div
+                            className={`filter-chip ${activeFilter === 'all' ? 'active' : ''}`}
+                            onClick={() => setActiveFilter('all')}
+                        >
+                            All Responses
+                        </div>
+                        <div
+                            className={`filter-chip ${activeFilter === 'growing' ? 'active' : ''}`}
+                            onClick={() => setActiveFilter('growing')}
+                        >
+                            Currently Growing
+                        </div>
+                        <div
+                            className={`filter-chip ${activeFilter === 'interested' ? 'active' : ''}`}
+                            onClick={() => setActiveFilter('interested')}
+                        >
+                            App Interested
+                        </div>
+                    </div>
+                </div>
+
+                {/* Age Group Distribution */}
+                <div className="chart-section">
+                    <div className="chart-title">👥 Age Group Distribution</div>
+                    <div className="chart-container">
+                        <ResponsiveContainer width="100%" height="100%">
+                            <PieChart>
+                                <Pie
+                                    data={ageGroupData}
+                                    cx="50%"
+                                    cy="50%"
+                                    outerRadius={80}
+                                    fill="#8884d8"
+                                    dataKey="value"
+                                    label={({ name, percent }) => `${name} ${(percent * 100).toFixed(0)}%`}
+                                >
+                                    {ageGroupData.map((entry, index) => (
+                                        <Cell key={`cell-${index}`} fill={COLORS[index % COLORS.length]} />
+                                    ))}
+                                </Pie>
+                                <Tooltip />
+                            </PieChart>
+                        </ResponsiveContainer>
+                    </div>
+                </div>
+
+                {/* Occupation Distribution */}
+                <div className="chart-section">
+                    <div className="chart-title">💼 Occupation Breakdown</div>
+                    <div className="chart-container">
+                        <ResponsiveContainer width="100%" height="100%">
+                            <BarChart data={occupationData}>
+                                <CartesianGrid strokeDasharray="3 3" />
+                                <XAxis dataKey="name" tick={{ fontSize: 12 }} angle={-45} textAnchor="end" />
+                                <YAxis tick={{ fontSize: 12 }} />
+                                <Tooltip />
+                                <Bar dataKey="value" fill="#7ba77b" radius={[4, 4, 0, 0]} />
+                            </BarChart>
+                        </ResponsiveContainer>
+                    </div>
+                </div>
+
+                {/* Available Space Analysis */}
+                <div className="chart-section">
+                    <div className="chart-title">🏡 Available Growing Space</div>
+                    <div className="chart-container">
+                        <ResponsiveContainer width="100%" height="100%">
+                            <BarChart data={spaceData}>
+                                <CartesianGrid strokeDasharray="3 3" />
+                                <XAxis dataKey="name" tick={{ fontSize: 10 }} angle={-45} textAnchor="end" />
+                                <YAxis tick={{ fontSize: 12 }} />
+                                <Tooltip formatter={[undefined, 'Count']} labelFormatter={(label) => {
+                                    const item = spaceData.find(d => d.name === label);
+                                    return item ? item.fullName : label;
+                                }} />
+                                <Bar dataKey="value" fill="#6b966b" radius={[4, 4, 0, 0]} />
+                            </BarChart>
+                        </ResponsiveContainer>
+                    </div>
+                </div>
+
+                {/* Time Spent per Week */}
+                <div className="chart-section">
+                    <div className="chart-title">⏰ Time Spent on Plant Care</div>
+                    <div className="chart-container">
+                        <ResponsiveContainer width="100%" height="100%">
+                            <PieChart>
+                                <Pie
+                                    data={timeSpentData}
+                                    cx="50%"
+                                    cy="50%"
+                                    outerRadius={80}
+                                    fill="#8884d8"
+                                    dataKey="value"
+                                    label={({ name, percent }) => `${(percent * 100).toFixed(0)}%`}
+                                >
+                                    {timeSpentData.map((entry, index) => (
+                                        <Cell key={`cell-${index}`} fill={COLORS[index % COLORS.length]} />
+                                    ))}
+                                </Pie>
+                                <Tooltip />
+                            </PieChart>
+                        </ResponsiveContainer>
+                    </div>
+                </div>
+
+                {/* App Interest */}
+                <div className="chart-section">
+                    <div className="chart-title">📱 Mobile App Interest</div>
+                    <div className="chart-container">
+                        <ResponsiveContainer width="100%" height="100%">
+                            <BarChart data={appInterestData}>
+                                <CartesianGrid strokeDasharray="3 3" />
+                                <XAxis dataKey="name" tick={{ fontSize: 12 }} />
+                                <YAxis tick={{ fontSize: 12 }} />
+                                <Tooltip />
+                                <Bar dataKey="value" fill="#5a8a5a" radius={[4, 4, 0, 0]} />
+                            </BarChart>
+                        </ResponsiveContainer>
+                    </div>
+                </div>
+
+                {/* Seriousness vs Recommendation */}
+                <div className="chart-section">
+                    <div className="chart-title">📊 Engagement Levels</div>
+                    <div className="chart-container">
+                        <ResponsiveContainer width="100%" height="100%">
+                            <LineChart data={seriousnessData}>
+                                <CartesianGrid strokeDasharray="3 3" />
+                                <XAxis dataKey="name" tick={{ fontSize: 10 }} />
+                                <YAxis domain={[0, 5]} tick={{ fontSize: 12 }} />
+                                <Tooltip />
+                                <Line type="monotone" dataKey="seriousness" stroke="#7ba77b" strokeWidth={3} name="Seriousness Level" />
+                                <Line type="monotone" dataKey="recommendation" stroke="#4a7c4a" strokeWidth={3} name="Recommendation Likelihood" />
+                            </LineChart>
+                        </ResponsiveContainer>
+                    </div>
+                </div>
+
+                {/* Insights */}
+                <div className="insights-grid">
+                    <div className="insight-card">
+                        <div className="insight-title">🎯 Key Insight</div>
+                        <div className="insight-text">
+                            {Math.round((stats.currentlyGrowing / stats.total) * 100)}% of respondents are currently growing plants, showing strong practical engagement in cultivation.
+                        </div>
+                    </div>
+
+                    <div className="insight-card">
+                        <div className="insight-title">📈 App Potential</div>
+                        <div className="insight-text">
+                            {Math.round((stats.highInterest / stats.total) * 100)}% are interested in using a mobile app for personalized cultivation guidance.
+                        </div>
+                    </div>
+
+                    <div className="insight-card">
+                        <div className="insight-title">🌟 User Commitment</div>
+                        <div className="insight-text">
+                            Average seriousness level of {stats.avgSeriousness}/5 indicates dedicated users willing to invest time in farming activities.
+                        </div>
+                    </div>
+
+                    <div className="insight-card">
+                        <div className="insight-title">🔍 Common Challenges</div>
+                        <div className="insight-text">
+                            Most frequent challenges include lack of knowledge about soil/fertilizers, pests and diseases, and space limitations.
+                        </div>
+                    </div>
+                </div>
+
+                {/* Detailed User Data */}
+                <div className="chart-section">
+                    <div className="chart-title">📋 Survey Response Details</div>
+                    {filteredData.map(user => (
+                        <div key={user.id} className="data-point">
+                            <div className="data-label">
+                                {user.ageGroup} - {user.occupation}
+                            </div>
+                            <div className="data-value">
+                                {user.currentlyGrowing === 'Yes' ? '🌱' : '⏳'}
+                                {user.appInterest === 'Yes' ? ' 🔥' : user.appInterest === 'Maybe' ? ' 🔶' : ' ❌'}
+                                {' '}({user.seriousness}/5)
+                            </div>
+                        </div>
+                    ))}
+                </div>
+            </div>
+        );
+    };
+
+    // Main App Component
+    const App = () => {
+        return <DataVisualizer />;
+    };
+
+    ReactDOM.render(<App />, document.getElementById('root'));
+
+    // Expose functions for Android WebView
+    window.updateDashboardData = (jsonData) => {
+        try {
+            const newData = JSON.parse(jsonData);
+            // This would need to be implemented with state management
+            console.log('Dashboard data updated:', newData);
+        } catch (error) {
+            console.error('Error updating dashboard data:', error);
+        }
+    };
+
+    window.exportDashboardData = () => {
+        // Export current dashboard state
+        return JSON.stringify({
+            timestamp: new Date().toISOString(),
+            totalResponses: sampleData.length,
+            summary: "Survey dashboard data export"
+        });
+    };
+</script>
+</body>
+</html>

@@ -1,0 +1,576 @@
+    <!DOCTYPE html>
+    <html lang="en">
+    <head>
+        <meta charset="UTF-8">
+        <meta name="viewport" content="width=device-width, initial-scale=1.0, user-scalable=no">
+        <title>Choose Your Plant - Farm App</title>
+        <style>
+            * {
+                margin: 0;
+                padding: 0;
+                box-sizing: border-box;
+                -webkit-tap-highlight-color: transparent;
+            }
+
+            body {
+                font-family: -apple-system, BlinkMacSystemFont, 'Segoe UI', Roboto, sans-serif;
+                background: linear-gradient(135deg, #e8f5e8 0%, #f0f8e8 100%);
+                min-height: 100vh;
+                color: #2d4a2d;
+                line-height: 1.5;
+                -webkit-font-smoothing: antialiased;
+                -moz-osx-font-smoothing: grayscale;
+                padding: 20px;
+            }
+
+            .container {
+                max-width: 600px;
+                margin: 0 auto;
+                background: rgba(255, 255, 255, 0.95);
+                border-radius: 20px;
+                padding: 30px;
+                box-shadow: 0 10px 30px rgba(0, 0, 0, 0.1);
+                backdrop-filter: blur(10px);
+            }
+
+            .header {
+                text-align: center;
+                margin-bottom: 30px;
+            }
+
+            .header h1 {
+                color: #4a7c4a;
+                font-size: 28px;
+                font-weight: 700;
+                margin-bottom: 10px;
+                display: flex;
+                align-items: center;
+                justify-content: center;
+                gap: 10px;
+            }
+
+            .header p {
+                color: #6b8e6b;
+                font-size: 16px;
+                font-weight: 500;
+            }
+
+            .plant-grid {
+                display: grid;
+                grid-template-columns: repeat(auto-fit, minmax(160px, 1fr));
+                gap: 15px;
+                margin-bottom: 30px;
+            }
+
+            .plant-option {
+                background: linear-gradient(135deg, #f8fdf8 0%, #f0f9f0 100%);
+                border: 3px solid #e0f0e0;
+                border-radius: 16px;
+                padding: 20px;
+                text-align: center;
+                cursor: pointer;
+                transition: all 0.3s ease;
+                position: relative;
+                overflow: hidden;
+            }
+
+            .plant-option:hover {
+                transform: translateY(-2px);
+                box-shadow: 0 8px 25px rgba(123, 167, 123, 0.2);
+                border-color: #7ba77b;
+            }
+
+            .plant-option.selected {
+                background: linear-gradient(135deg, #7ba77b 0%, #6b966b 100%);
+                border-color: #4a7c4a;
+                color: white;
+                transform: scale(1.05);
+                box-shadow: 0 8px 25px rgba(123, 167, 123, 0.4);
+            }
+
+            .plant-option:active {
+                transform: scale(0.98);
+            }
+
+            .plant-emoji {
+                font-size: 40px;
+                margin-bottom: 10px;
+                display: block;
+                transition: transform 0.3s ease;
+            }
+
+            .plant-option:hover .plant-emoji {
+                transform: scale(1.1);
+            }
+
+            .plant-name {
+                font-size: 14px;
+                font-weight: 600;
+                color: #4a7c4a;
+                text-transform: capitalize;
+                letter-spacing: 0.5px;
+            }
+
+            .plant-option.selected .plant-name {
+                color: white;
+            }
+
+            .plant-scientific {
+                font-size: 11px;
+                color: #6b8e6b;
+                margin-top: 5px;
+                font-style: italic;
+            }
+
+            .plant-option.selected .plant-scientific {
+                color: rgba(255, 255, 255, 0.8);
+            }
+
+            .selection-info {
+                background: rgba(123, 167, 123, 0.1);
+                border: 2px solid rgba(123, 167, 123, 0.2);
+                border-radius: 12px;
+                padding: 15px;
+                margin-bottom: 25px;
+                text-align: center;
+                min-height: 50px;
+                display: flex;
+                align-items: center;
+                justify-content: center;
+                transition: all 0.3s ease;
+            }
+
+            .selection-info.has-selection {
+                background: rgba(123, 167, 123, 0.2);
+                border-color: #7ba77b;
+            }
+
+            .selection-text {
+                color: #4a7c4a;
+                font-weight: 500;
+                font-size: 14px;
+            }
+
+            .selected-plant {
+                color: #2d4a2d;
+                font-weight: 700;
+                text-transform: capitalize;
+            }
+
+            .action-buttons {
+                display: flex;
+                gap: 15px;
+                justify-content: center;
+            }
+
+            .btn {
+                padding: 15px 30px;
+                border: none;
+                border-radius: 25px;
+                font-size: 16px;
+                font-weight: 600;
+                cursor: pointer;
+                transition: all 0.3s ease;
+                min-width: 120px;
+                position: relative;
+                overflow: hidden;
+            }
+
+            .btn-primary {
+                background: linear-gradient(135deg, #7ba77b 0%, #6b966b 100%);
+                color: white;
+                box-shadow: 0 4px 15px rgba(123, 167, 123, 0.3);
+            }
+
+            .btn-primary:hover {
+                transform: translateY(-2px);
+                box-shadow: 0 6px 20px rgba(123, 167, 123, 0.4);
+            }
+
+            .btn-primary:disabled {
+                background: #ccc;
+                color: #888;
+                cursor: not-allowed;
+                transform: none;
+                box-shadow: none;
+            }
+
+            .btn-secondary {
+                background: transparent;
+                color: #4a7c4a;
+                border: 2px solid #7ba77b;
+            }
+
+            .btn-secondary:hover {
+                background: #7ba77b;
+                color: white;
+            }
+
+            .btn:active {
+                transform: scale(0.95);
+            }
+
+            .search-container {
+                margin-bottom: 25px;
+                position: relative;
+            }
+
+            .search-input {
+                width: 100%;
+                padding: 15px 20px;
+                border: 2px solid #e0f0e0;
+                border-radius: 25px;
+                font-size: 16px;
+                background: rgba(248, 253, 248, 0.8);
+                transition: all 0.3s ease;
+                outline: none;
+            }
+
+            .search-input:focus {
+                border-color: #7ba77b;
+                background: white;
+                box-shadow: 0 0 0 3px rgba(123, 167, 123, 0.1);
+            }
+
+            .search-input::placeholder {
+                color: #6b8e6b;
+            }
+
+            .plant-category {
+                margin-bottom: 25px;
+            }
+
+            .category-title {
+                color: #4a7c4a;
+                font-size: 18px;
+                font-weight: 600;
+                margin-bottom: 15px;
+                text-align: center;
+            }
+
+            /* Animation for selection */
+            .plant-option::after {
+                content: '';
+                position: absolute;
+                top: 50%;
+                left: 50%;
+                width: 0;
+                height: 0;
+                background: rgba(255, 255, 255, 0.2);
+                border-radius: 50%;
+                transform: translate(-50%, -50%);
+                transition: all 0.6s ease;
+            }
+
+            .plant-option.selected::after {
+                width: 100%;
+                height: 100%;
+            }
+
+            /* Fade-out animation for page transitions */
+            .fade-out {
+                animation: fadeOut 0.4s ease-out forwards;
+            }
+
+            @keyframes fadeOut {
+                from { opacity: 1; }
+                to { opacity: 0; }
+            }
+
+            /* Responsive design */
+            @media screen and (max-width: 480px) {
+                .container {
+                    padding: 20px;
+                    margin: 10px;
+                }
+
+                .plant-grid {
+                    grid-template-columns: repeat(2, 1fr);
+                    gap: 12px;
+                }
+
+                .plant-option {
+                    padding: 15px;
+                }
+
+                .plant-emoji {
+                    font-size: 32px;
+                }
+
+                .action-buttons {
+                    flex-direction: column;
+                }
+
+                .btn {
+                    width: 100%;
+                }
+            }
+
+            @media screen and (max-width: 320px) {
+                .plant-grid {
+                    grid-template-columns: 1fr;
+                }
+            }
+        </style>
+    </head>
+    <body>
+    <div class="container">
+        <div class="header">
+            <h1>🌿 Choose Your Plant</h1>
+            <p>Select the plant you want to grow and get personalized guidance</p>
+        </div>
+
+        <div class="search-container">
+            <input
+                    type="text"
+                    id="searchInput"
+                    class="search-input"
+                    placeholder="Search for a plant..."
+                    autocomplete="off"
+            >
+        </div>
+
+        <div class="selection-info" id="selectionInfo">
+            <span class="selection-text">Choose a plant to get started with your cultivation journey</span>
+        </div>
+
+        <div class="plant-category">
+            <div class="plant-grid" id="plantGrid">
+                <!-- Plants will be dynamically generated here -->
+            </div>
+        </div>
+
+        <div class="action-buttons">
+            <button class="btn btn-secondary" onclick="clearSelection()">Clear Selection</button>
+            <button class="btn btn-primary" id="continueBtn" onclick="proceedWithSelection()" disabled>
+                Continue Growing
+            </button>
+        </div>
+    </div>
+
+    <script>
+        const plants = [
+            {
+                id: 'bottle_gourd',
+                name: 'Bottle Gourd',
+                emoji: '🥒',
+                scientific: 'Lagenaria siceraria',
+                category: 'vegetable'
+            },
+            {
+                id: 'brinjal',
+                name: 'Brinjal',
+                emoji: '🍆',
+                scientific: 'Solanum melongena',
+                category: 'vegetable'
+            },
+            {
+                id: 'chilli',
+                name: 'Chilli',
+                emoji: '🌶️',
+                scientific: 'Capsicum annuum',
+                category: 'vegetable'
+            },
+            {
+                id: 'coriander',
+                name: 'Coriander',
+                emoji: '🌿',
+                scientific: 'Coriandrum sativum',
+                category: 'herb'
+            },
+            {
+                id: 'curry_leaves',
+                name: 'Curry Leaves',
+                emoji: '🍃',
+                scientific: 'Murraya koenigii',
+                category: 'herb'
+            },
+            {
+                id: 'lemongrass',
+                name: 'Lemongrass',
+                emoji: '🌾',
+                scientific: 'Cymbopogon citratus',
+                category: 'herb'
+            },
+            {
+                id: 'mint',
+                name: 'Mint',
+                emoji: '🌱',
+                scientific: 'Mentha',
+                category: 'herb'
+            },
+            {
+                id: 'okra',
+                name: 'Okra',
+                emoji: '🥬',
+                scientific: 'Abelmoschus esculentus',
+                category: 'vegetable'
+            },
+            {
+                id: 'spinach',
+                name: 'Spinach',
+                emoji: '🥬',
+                scientific: 'Spinacia oleracea',
+                category: 'vegetable'
+            },
+            {
+                id: 'tomato',
+                name: 'Tomato',
+                emoji: '🍅',
+                scientific: 'Solanum lycopersicum',
+                category: 'vegetable'
+            },
+            {
+                id: 'tulsi',
+                name: 'Tulsi',
+                emoji: '🌿',
+                scientific: 'Ocimum tenuiflorum',
+                category: 'herb'
+            }
+        ];
+
+        let selectedPlant = null;
+        let filteredPlants = [...plants];
+
+        function renderPlants() {
+            const plantGrid = document.getElementById('plantGrid');
+            plantGrid.innerHTML = '';
+
+            filteredPlants.forEach(plant => {
+                const plantElement = document.createElement('div');
+                plantElement.className = `plant-option ${selectedPlant === plant.id ? 'selected' : ''}`;
+                plantElement.onclick = () => selectPlant(plant.id);
+
+                plantElement.innerHTML = `
+                    <span class="plant-emoji">${plant.emoji}</span>
+                    <div class="plant-name">${plant.name}</div>
+                    <div class="plant-scientific">${plant.scientific}</div>
+                `;
+
+                plantGrid.appendChild(plantElement);
+            });
+        }
+
+        function selectPlant(plantId) {
+            selectedPlant = plantId;
+            updateUI();
+
+            // Add haptic feedback if available
+            if ('vibrate' in navigator) {
+                navigator.vibrate(50);
+            }
+        }
+
+        function updateUI() {
+            const selectionInfo = document.getElementById('selectionInfo');
+            const continueBtn = document.getElementById('continueBtn');
+
+            if (selectedPlant) {
+                const plant = plants.find(p => p.id === selectedPlant);
+                selectionInfo.className = 'selection-info has-selection';
+                selectionInfo.innerHTML = `
+                    <span class="selection-text">
+                        Great choice! You've selected <span class="selected-plant">${plant.name}</span> ${plant.emoji}
+                    </span>
+                `;
+                continueBtn.disabled = false;
+            } else {
+                selectionInfo.className = 'selection-info';
+                selectionInfo.innerHTML = `
+                    <span class="selection-text">Choose a plant to get started with your cultivation journey</span>
+                `;
+                continueBtn.disabled = true;
+            }
+
+            renderPlants();
+        }
+
+        function clearSelection() {
+            selectedPlant = null;
+            updateUI();
+        }
+
+        function proceedWithSelection() {
+            if (!selectedPlant) return;
+
+            // Add a fade-out effect to the body before redirecting
+            document.body.classList.add('fade-out');
+
+            // Redirect after a short delay to allow for the animation
+            setTimeout(() => {
+                window.location.href = 'small_scale_roadmap.html';
+            }, 400); // 400ms to match the fade-out animation duration
+        }
+
+        function filterPlants(searchTerm) {
+            filteredPlants = plants.filter(plant =>
+                plant.name.toLowerCase().includes(searchTerm.toLowerCase()) ||
+                plant.scientific.toLowerCase().includes(searchTerm.toLowerCase())
+            );
+            renderPlants();
+        }
+
+        // Search functionality
+        document.getElementById('searchInput').addEventListener('input', (e) => {
+            filterPlants(e.target.value);
+        });
+
+        // Initialize the page
+        renderPlants();
+
+        // Expose functions for Android WebView
+        window.getSelectedPlant = () => {
+            return selectedPlant;
+        };
+
+        window.setSelectedPlant = (plantId) => {
+            if (plants.find(p => p.id === plantId)) {
+                selectPlant(plantId);
+            }
+        };
+
+        window.getAllPlants = () => {
+            return plants;
+        };
+
+        // Add keyboard navigation
+        document.addEventListener('keydown', (e) => {
+            if (e.key === 'Enter' && selectedPlant) {
+                proceedWithSelection();
+            }
+            if (e.key === 'Escape') {
+                clearSelection();
+            }
+        });
+
+        // Add swipe gestures for mobile
+        let startX, startY;
+
+        document.addEventListener('touchstart', (e) => {
+            startX = e.touches[0].clientX;
+            startY = e.touches[0].clientY;
+        });
+
+        document.addEventListener('touchend', (e) => {
+            if (!startX || !startY) return;
+
+            let endX = e.changedTouches[0].clientX;
+            let endY = e.changedTouches[0].clientY;
+
+            let diffX = startX - endX;
+            let diffY = startY - endY;
+
+            if (Math.abs(diffX) > Math.abs(diffY) && Math.abs(diffX) > 50) {
+                if (diffX > 0) {
+                    // Swiped left - could implement plant navigation
+                } else {
+                    // Swiped right - could implement plant navigation
+                }
+            }
+
+            startX = null;
+            startY = null;
+        });
+    </script>
+    </body>
+    </html>
